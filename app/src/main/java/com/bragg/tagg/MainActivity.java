@@ -45,9 +45,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
 
-//        SongInfo s = new SongInfo("Example SN", "Example AN", "https://s0.vocaroo.com/media/download_temp/Vocaroo_s0kj2Wak9cTB.mp3");
-//        songs.add(s);
-
         songAdapter = new SongAdapter(this, songs);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
