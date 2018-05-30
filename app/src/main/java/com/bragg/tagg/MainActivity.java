@@ -100,7 +100,11 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     Thread.sleep(1000);
                     if (mediaPlayer != null) {
-                        seekBar.setProgress(mediaPlayer.getCurrentPosition());
+                        if (Build.VERSION.SDK_INT >= 24) {
+                            seekBar.setProgress(mediaPlayer.getCurrentPosition(), true);
+                        } else {
+                            seekBar.setProgress(mediaPlayer.getCurrentPosition());
+                        }
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
