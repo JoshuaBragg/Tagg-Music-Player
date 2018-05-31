@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        seekBar = (SeekBar) findViewById(R.id.seekBar);
+        recyclerView = findViewById(R.id.recyclerView);
+        seekBar = findViewById(R.id.seekBar);
 
         songAdapter = new SongAdapter(this, songs);
 
