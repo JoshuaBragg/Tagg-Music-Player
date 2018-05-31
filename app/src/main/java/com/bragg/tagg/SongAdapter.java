@@ -46,11 +46,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         final SongInfo c = songs.get(i);
         holder.songName.setText(c.songName);
         holder.artistName.setText(c.artistName);
-        holder.actionBtn.setOnClickListener(new View.OnClickListener() {
+        holder.getView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(holder.actionBtn, v, c, i);
+                    onItemClickListener.onItemClick(holder.btn, v, c, i);
                 }
             }
         });
@@ -63,13 +63,18 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
 
     public class SongHolder extends RecyclerView.ViewHolder {
         TextView songName, artistName;
-        Button actionBtn;
+        View view;
+        Button btn;
 
         public SongHolder(View itemView) {
             super(itemView);
+            view = itemView;
             songName = (TextView) itemView.findViewById(R.id.songNameTextView);
             artistName = (TextView) itemView.findViewById(R.id.artistNameTextView);
-            actionBtn = (Button) itemView.findViewById(R.id.actionBtn);
+        }
+
+        public View getView() {
+            return view;
         }
     }
 }

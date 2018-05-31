@@ -60,17 +60,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(final Button b, View v, final SongInfo si, int position) {
                 try {
-                    if (b.getText().toString().equals("Stop")) {
-                        b.setText("Play");
+                    if (isPlaying) {
+                        //b.setText("Play");
                         mediaPlayer.stop();
                         mediaPlayer.reset();
                         mediaPlayer.release();
                         mediaPlayer = null;
                         isPlaying = false;
+                        //seekBarThread.stop();
                     } else {
+                        Log.i("MED", "START");
                         mediaPlayer = new MediaPlayer();
+                        Log.i("MED", "1");
                         mediaPlayer.setDataSource(si.getSongUrl());
+                        Log.i("MED", "2");
                         mediaPlayer.prepareAsync();
+                        Log.i("MED", "3");
                         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             @Override
                             public void onPrepared(MediaPlayer mediaPlayer) {
@@ -79,9 +84,11 @@ public class MainActivity extends AppCompatActivity {
                                 seekBar.setMax(mediaPlayer.getDuration());
                             }
                         });
-                        b.setText("Stop");
+                        Log.i("MED", "4");
+                        //b.setText("Stop");
                         isPlaying = true;
-                        seekBarThread.start();
+                        if (!seekBarThread.isAlive())
+                            seekBarThread.start();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -96,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     public class SeekBarThread extends Thread {
         @Override
         public void run() {
-            while (isPlaying) {
+            while (true) {
                 try {
                     Thread.sleep(1000);
                     if (mediaPlayer != null) {
