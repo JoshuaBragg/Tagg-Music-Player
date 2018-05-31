@@ -30,12 +30,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<SongInfo> songs = new ArrayList<>();
     RecyclerView recyclerView;
-    SeekBar seekBar;
-    SongAdapter songAdapter;
-    MediaPlayer mediaPlayer;
-    boolean isPlaying;
+    MediaController mediaController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,81 +39,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recyclerView);
-        seekBar = findViewById(R.id.seekBar);
 
-        songAdapter = new SongAdapter(this, songs);
+        mediaController = new MediaController(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(songAdapter);
-
-        isPlaying = false;
-        final Thread seekBarThread = new SeekBarThread();
-
-        songAdapter.setOnItemClickListener(new SongAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(final Button b, View v, final SongInfo si, int position) {
-                try {
-                    if (isPlaying) {
-                        //b.setText("Play");
-                        mediaPlayer.stop();
-                        mediaPlayer.reset();
-                        mediaPlayer.release();
-                        mediaPlayer = null;
-                        isPlaying = false;
-                        //seekBarThread.stop();
-                    } else {
-                        Log.i("MED", "START");
-                        mediaPlayer = new MediaPlayer();
-                        Log.i("MED", "1");
-                        mediaPlayer.setDataSource(si.getSongUrl());
-                        Log.i("MED", "2");
-                        mediaPlayer.prepareAsync();
-                        Log.i("MED", "3");
-                        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                            @Override
-                            public void onPrepared(MediaPlayer mediaPlayer) {
-                                mediaPlayer.start();
-                                seekBar.setProgress(0);
-                                seekBar.setMax(mediaPlayer.getDuration());
-                            }
-                        });
-                        Log.i("MED", "4");
-                        //b.setText("Stop");
-                        isPlaying = true;
-                        if (!seekBarThread.isAlive())
-                            seekBarThread.start();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
+        recyclerView.setAdapter(mediaController.getSongAdapter());
 
         CheckPermission();
-    }
-
-    public class SeekBarThread extends Thread {
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    Thread.sleep(1000);
-                    if (mediaPlayer != null) {
-                        if (Build.VERSION.SDK_INT >= 24) {
-                            seekBar.setProgress(mediaPlayer.getCurrentPosition(), true);
-                        } else {
-                            seekBar.setProgress(mediaPlayer.getCurrentPosition());
-                        }
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     private void CheckPermission() {
@@ -127,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
         }
-        loadSongs();
+        mediaController.loadSongs();
     }
 
     @Override
@@ -135,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case 123:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    loadSongs();
+                    mediaController.loadSongs();
                 } else {
                     Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
                     CheckPermission();
@@ -144,31 +75,6 @@ public class MainActivity extends AppCompatActivity {
 
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
-    private void loadSongs() {
-        String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
-        ContentResolver contentResolver = getContentResolver();
-        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor cursor = contentResolver.query(uri, null, selection, null, null);
-
-        if(cursor != null){
-            if(cursor.moveToFirst()){
-                do{
-                    String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
-                    String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                    String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-
-                    SongInfo s = new SongInfo(name,artist,url);
-                    songs.add(s);
-
-                }while (cursor.moveToNext());
-            }
-
-            cursor.close();
-            songAdapter = new SongAdapter(MainActivity.this, songs);
-
         }
     }
 }
