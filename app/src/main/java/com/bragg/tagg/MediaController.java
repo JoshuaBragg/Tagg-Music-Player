@@ -40,22 +40,21 @@ public class MediaController {
                         mediaPlayer.release();
                         mediaPlayer = null;
                         isPlaying = false;
-                    } else {
-                        mediaPlayer = new MediaPlayer();
-                        mediaPlayer.setDataSource(si.getSongUrl());
-                        mediaPlayer.prepareAsync();
-                        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                            @Override
-                            public void onPrepared(MediaPlayer mediaPlayer) {
-                                mediaPlayer.start();
-                                seekBar.setProgress(0);
-                                seekBar.setMax(mediaPlayer.getDuration());
-                            }
-                        });
-                        isPlaying = true;
-                        if (!seekBarThread.isAlive())
-                            seekBarThread.start();
                     }
+                    mediaPlayer = new MediaPlayer();
+                    mediaPlayer.setDataSource(si.getSongUrl());
+                    mediaPlayer.prepareAsync();
+                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mediaPlayer) {
+                            mediaPlayer.start();
+                            seekBar.setProgress(0);
+                            seekBar.setMax(mediaPlayer.getDuration());
+                        }
+                    });
+                    isPlaying = true;
+                    if (!seekBarThread.isAlive())
+                        seekBarThread.start();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -88,7 +87,6 @@ public class MediaController {
 
             cursor.close();
             songAdapter = new SongAdapter(mainActivity, songs);
-
         }
     }
 
