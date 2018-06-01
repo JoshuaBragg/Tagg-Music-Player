@@ -23,6 +23,7 @@ public class MediaController {
     private MediaPlayer mediaPlayer;
     private MainActivity mainActivity;
     private final Thread seekBarThread = new SeekBarThread();
+    private SongInfo currSong;
 
     public MediaController(MainActivity m) {
         mainActivity = m;
@@ -41,6 +42,7 @@ public class MediaController {
                 mediaPlayer = null;
             }
             mediaPlayer = new MediaPlayer();
+            setOnCompletion();
             mediaPlayer.setDataSource(songInfo.getSongUrl());
             mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -62,11 +64,26 @@ public class MediaController {
             sN.setText(songInfo.getSongName());
             aN.setText(songInfo.getArtistName());
 
+            currSong = songInfo;
+
             if (!seekBarThread.isAlive())
                 seekBarThread.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setOnCompletion() {
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                if (songs.indexOf(currSong) != songs.size() - 1) {
+                    playSong(songs.get(songs.indexOf(currSong) + 1));
+                } else {
+                    playSong(songs.get(0));
+                }
+            }
+        });
     }
 
     protected void playSong() {
