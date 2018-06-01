@@ -34,7 +34,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:layout_weight=".5"
         android:orientation="horizontal"
         android:background="@color/colorPrimary">
@@ -55,6 +55,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/hkgrot_semibold"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:paddingLeft="10dp"
                 android:paddingStart="10dp"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
@@ -65,6 +67,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/hkgrot_reg"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:paddingLeft="10dp"
                 android:paddingStart="10dp"
                 android:textColor="@color/colorTextSecondary" />
