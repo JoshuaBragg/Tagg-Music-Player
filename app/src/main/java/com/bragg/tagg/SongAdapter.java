@@ -18,11 +18,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
 
     private ArrayList<SongInfo> songs;
     private Context context;
+    private MediaController mediaController;
 
     private OnItemClickListener onItemClickListener;
 
-    SongAdapter(Context context, ArrayList<SongInfo> songs) {
+    SongAdapter(Context context, MediaController mediaController, ArrayList<SongInfo> songs) {
         this.context = context;
+        this.mediaController = mediaController;
         this.songs = songs;
     }
 
@@ -42,17 +44,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final SongHolder holder, int i) {
+    public void onBindViewHolder(@NonNull SongHolder holder, int i) {
         final SongInfo c = songs.get(i);
         holder.songName.setText(c.songName);
         holder.artistName.setText(c.artistName);
         holder.getView().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(holder.btn, v, c, holder.getAdapterPosition());
-                }
-            }
+            public void onClick(View v) { mediaController.playSong(c); }
         });
     }
 
@@ -64,13 +62,12 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     public class SongHolder extends RecyclerView.ViewHolder {
         TextView songName, artistName;
         View view;
-        Button btn;
 
         public SongHolder(View itemView) {
             super(itemView);
             view = itemView;
-            songName = (TextView) itemView.findViewById(R.id.songNameTextView);
-            artistName = (TextView) itemView.findViewById(R.id.artistNameTextView);
+            songName = itemView.findViewById(R.id.songNameTextView);
+            artistName = itemView.findViewById(R.id.artistNameTextView);
         }
 
         public View getView() {

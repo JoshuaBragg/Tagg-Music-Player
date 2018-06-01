@@ -20,46 +20,42 @@ public class MediaController {
     private boolean isPlaying;
     private MediaPlayer mediaPlayer;
     private MainActivity mainActivity;
+    private final Thread seekBarThread = new SeekBarThread();
 
     public MediaController(MainActivity m) {
         mainActivity = m;
         seekBar = m.findViewById(R.id.seekBar);
         songs = new ArrayList<>();
-        songAdapter = new SongAdapter(m, songs);
-
+        songAdapter = new SongAdapter(m, this, songs);
         isPlaying = false;
-        final Thread seekBarThread = new SeekBarThread();
+    }
 
-        songAdapter.setOnItemClickListener(new SongAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(final Button b, View v, final SongInfo si, int position) {
-                try {
-                    if (isPlaying) {
-                        mediaPlayer.stop();
-                        mediaPlayer.reset();
-                        mediaPlayer.release();
-                        mediaPlayer = null;
-                        isPlaying = false;
-                    }
-                    mediaPlayer = new MediaPlayer();
-                    mediaPlayer.setDataSource(si.getSongUrl());
-                    mediaPlayer.prepareAsync();
-                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mediaPlayer) {
-                            mediaPlayer.start();
-                            seekBar.setProgress(0);
-                            seekBar.setMax(mediaPlayer.getDuration());
-                        }
-                    });
-                    isPlaying = true;
-                    if (!seekBarThread.isAlive())
-                        seekBarThread.start();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    protected void playSong(SongInfo songInfo) {
+        try {
+            if (isPlaying) {
+                mediaPlayer.stop();
+                mediaPlayer.reset();
+                mediaPlayer.release();
+                mediaPlayer = null;
+                isPlaying = false;
             }
-        });
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setDataSource(songInfo.getSongUrl());
+            mediaPlayer.prepareAsync();
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    mediaPlayer.start();
+                    seekBar.setProgress(0);
+                    seekBar.setMax(mediaPlayer.getDuration());
+                }
+            });
+            isPlaying = true;
+            if (!seekBarThread.isAlive())
+                seekBarThread.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public SongAdapter getSongAdapter() {
@@ -86,7 +82,7 @@ public class MediaController {
             }
 
             cursor.close();
-            songAdapter = new SongAdapter(mainActivity, songs);
+            songAdapter = new SongAdapter(mainActivity, this, songs);
         }
     }
 
