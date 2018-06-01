@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Tagg</string>
+    <string name="title_activity_currently_playing_view">CurrentlyPlayingView</string>
 </resources>

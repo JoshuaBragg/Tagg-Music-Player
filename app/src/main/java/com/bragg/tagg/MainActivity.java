@@ -1,6 +1,7 @@
 package com.bragg.tagg;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -10,8 +11,10 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
@@ -54,6 +57,15 @@ public class MainActivity extends AppCompatActivity {
                     mediaController.playSong();
                     pausePlayBtn.setBackgroundResource(R.drawable.baseline_pause_circle_outline_white_18);
                 }
+            }
+        });
+
+        View botBar = findViewById(R.id.botBar);
+        botBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CurrentlyPlayingView.class);
+                startActivity(intent);
             }
         });
     }

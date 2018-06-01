@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -140,7 +142,7 @@ public class MediaController {
         }
     }
 
-    public class SeekBarThread extends Thread {
+    public class SeekBarThread extends Thread{
         @Override
         public void run() {
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
