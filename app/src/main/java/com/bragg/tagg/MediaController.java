@@ -116,6 +116,26 @@ public class MediaController {
     public class SeekBarThread extends Thread {
         @Override
         public void run() {
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                    // Only update the mediaPlayer position if the user moved seekBar
+                    if (b) {
+                        mediaPlayer.seekTo(seekBar.getProgress());
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    // User started touching seekBar
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    // User stopped touching seekBar
+                }
+            });
+
             while (true) {
                 try {
                     Thread.sleep(1000);
