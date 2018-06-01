@@ -7,25 +7,42 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Toolbar"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Songs"
+            android:textSize="20sp"
+            android:textColor="@color/colorTextPrimary"/>
+    </android.support.v7.widget.Toolbar>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/colourTertiary">
 
     </android.support.v7.widget.RecyclerView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:layout_weight=".5"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary">
 
         <Button
             android:id="@+id/pausePlayBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/baseline_play_circle_filled_black_24dp"/>
+            android:background="@drawable/baseline_play_circle_outline_white_18" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,11 +53,11 @@
                 android:id="@+id/songNameBotTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                 android:fontFamily="@font/hkgrot_semibold"
                 android:paddingLeft="10dp"
                 android:paddingStart="10dp"
-                android:textColor="@color/colorTextPrimary"/>
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:textColor="@color/colorTextPrimary" />
 
             <TextView
                 android:id="@+id/artistNameBotTextView"
@@ -49,13 +66,14 @@
                 android:fontFamily="@font/hkgrot_reg"
                 android:paddingLeft="10dp"
                 android:paddingStart="10dp"
-                android:textColor="@color/colorTextSecondary"/>
+                android:textColor="@color/colorTextSecondary" />
 
             <SeekBar
                 android:id="@+id/seekBar"
                 style="@android:style/Widget.DeviceDefault.SeekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:thumbTint="@color/colorAccent"
                 android:padding="40dp" />
         </LinearLayout>
     </LinearLayout>

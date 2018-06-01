@@ -1,15 +1,8 @@
 package com.bragg.tagg;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
-import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,16 +10,10 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CursorAdapter;
-import android.widget.SeekBar;
 import android.widget.Toast;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Songs");
 
         recyclerView = findViewById(R.id.recyclerView);
 
@@ -60,10 +50,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (mediaController.isPlaying()) {
                     mediaController.pauseSong();
-                    pausePlayBtn.setBackgroundResource(R.drawable.baseline_play_circle_filled_black_24dp);
+                    pausePlayBtn.setBackgroundResource(R.drawable.baseline_play_circle_outline_white_18);
                 } else {
                     mediaController.playSong();
-                    pausePlayBtn.setBackgroundResource(R.drawable.baseline_pause_circle_filled_black_24dp);
+                    pausePlayBtn.setBackgroundResource(R.drawable.baseline_pause_circle_outline_white_18);
                 }
             }
         });
