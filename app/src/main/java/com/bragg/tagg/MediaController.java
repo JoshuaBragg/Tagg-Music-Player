@@ -6,9 +6,11 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,8 +52,16 @@ public class MediaController {
                 }
             });
             isPlaying = true;
+
             Button btn = mainActivity.findViewById(R.id.pausePlayBtn);
             btn.setBackgroundResource(R.drawable.baseline_pause_circle_filled_black_24dp);
+
+            TextView sN = mainActivity.findViewById(R.id.songNameBotTextView);
+            TextView aN = mainActivity.findViewById(R.id.artistNameBotTextView);
+
+            sN.setText(songInfo.getSongName());
+            aN.setText(songInfo.getArtistName());
+
             if (!seekBarThread.isAlive())
                 seekBarThread.start();
         } catch (IOException e) {

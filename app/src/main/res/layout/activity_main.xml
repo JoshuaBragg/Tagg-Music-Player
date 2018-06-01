@@ -33,15 +33,21 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/songNameTextView"
+                android:id="@+id/songNameBotTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:textColor="@color/colorTextPrimary"/>
 
             <TextView
-                android:id="@+id/artistNameTextView"
+                android:id="@+id/artistNameBotTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:textColor="@color/colorTextSecondary"/>
 
             <SeekBar
                 android:id="@+id/seekBar"
