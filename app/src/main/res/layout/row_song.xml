@@ -19,6 +19,7 @@
                 android:layout_height="wrap_content"
                 android:text="Song Name"
                 android:textColor="@color/colorTextPrimary"
+                android:fontFamily="@font/hkgrot_semibold"
                 android:textSize="20sp" />
 
             <TextView
@@ -26,6 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Artist Name"
+                android:fontFamily="@font/hkgrot_reg"
                 android:textColor="@color/colorTextSecondary"/>
 
         </LinearLayout>
