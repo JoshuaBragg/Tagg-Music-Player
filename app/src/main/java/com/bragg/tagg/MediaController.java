@@ -5,11 +5,8 @@ import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -19,20 +16,19 @@ import java.util.ArrayList;
 
 public class MediaController {
     private SongAdapter songAdapter;
-    private SeekBar seekBar;
     private ArrayList<SongInfo> songs;
     private boolean isPlaying;
     private MediaPlayer mediaPlayer;
     private MainActivity mainActivity;
-    private final Thread seekBarThread = new SeekBarThread();
     private SongInfo currSong;
+    private SeekBarController seekBarController;
 
     public MediaController(MainActivity m) {
         mainActivity = m;
-        seekBar = m.findViewById(R.id.seekBar);
         songs = new ArrayList<>();
         songAdapter = new SongAdapter(m, this, songs);
         isPlaying = false;
+        seekBarController = new SeekBarController(this, m);
     }
 
     protected void playSong(SongInfo songInfo) {
@@ -51,8 +47,8 @@ public class MediaController {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     mediaPlayer.start();
-                    seekBar.setProgress(0);
-                    seekBar.setMax(mediaPlayer.getDuration());
+                    seekBarController.setProgress(0);
+                    seekBarController.setMax(mediaPlayer.getDuration());
                 }
             });
             isPlaying = true;
@@ -68,11 +64,19 @@ public class MediaController {
 
             currSong = songInfo;
 
-            if (!seekBarThread.isAlive())
-                seekBarThread.start();
+            seekBarController.startThread();
+            Log.i("q", "1");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void seekTo(int ms) {
+        mediaPlayer.seekTo(ms);
+    }
+
+    public int getCurrentPosition() {
+        return mediaPlayer.getCurrentPosition();
     }
 
     private void setOnCompletion() {
@@ -139,46 +143,6 @@ public class MediaController {
 
             cursor.close();
             songAdapter = new SongAdapter(mainActivity, this, songs);
-        }
-    }
-
-    public class SeekBarThread extends Thread{
-        @Override
-        public void run() {
-            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    // Only update the mediaPlayer position if the user moved seekBar
-                    if (b) {
-                        mediaPlayer.seekTo(seekBar.getProgress());
-                    }
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                    // User started touching seekBar
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                    // User stopped touching seekBar
-                }
-            });
-
-            while (true) {
-                try {
-                    Thread.sleep(1000);
-                    if (mediaPlayer != null) {
-                        if (Build.VERSION.SDK_INT >= 24) {
-                            seekBar.setProgress(mediaPlayer.getCurrentPosition(), true);
-                        } else {
-                            seekBar.setProgress(mediaPlayer.getCurrentPosition());
-                        }
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }
