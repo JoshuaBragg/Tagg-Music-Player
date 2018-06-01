@@ -49,6 +49,24 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(mediaController.getSongAdapter());
 
         CheckPermission();
+
+        final Button pausePlayBtn = findViewById(R.id.pausePlayBtn);
+
+        pausePlayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!mediaController.songLoaded()) {
+                    return;
+                }
+                if (mediaController.isPlaying()) {
+                    mediaController.pauseSong();
+                    pausePlayBtn.setBackgroundResource(R.drawable.baseline_play_circle_filled_black_24dp);
+                } else {
+                    mediaController.playSong();
+                    pausePlayBtn.setBackgroundResource(R.drawable.baseline_pause_circle_filled_black_24dp);
+                }
+            }
+        });
     }
 
     private void CheckPermission() {

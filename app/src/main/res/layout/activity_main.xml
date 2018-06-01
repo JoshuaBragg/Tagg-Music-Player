@@ -25,7 +25,7 @@
             android:id="@+id/pausePlayBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/baseline_pause_circle_filled_black_24dp"/>
+            android:background="@drawable/baseline_play_circle_filled_black_24dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"

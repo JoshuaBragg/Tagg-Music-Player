@@ -37,7 +37,6 @@ public class MediaController {
                 mediaPlayer.reset();
                 mediaPlayer.release();
                 mediaPlayer = null;
-                isPlaying = false;
             }
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setDataSource(songInfo.getSongUrl());
@@ -51,6 +50,8 @@ public class MediaController {
                 }
             });
             isPlaying = true;
+            Button btn = mainActivity.findViewById(R.id.pausePlayBtn);
+            btn.setBackgroundResource(R.drawable.baseline_pause_circle_filled_black_24dp);
             if (!seekBarThread.isAlive())
                 seekBarThread.start();
         } catch (IOException e) {
@@ -58,8 +59,34 @@ public class MediaController {
         }
     }
 
+    protected void playSong() {
+        if (mediaPlayer != null) {
+            Button btn = mainActivity.findViewById(R.id.pausePlayBtn);
+            btn.setBackgroundResource(R.drawable.baseline_pause_circle_filled_black_24dp);
+            mediaPlayer.start();
+            isPlaying = true;
+        }
+    }
+
+    protected void pauseSong() {
+        if (mediaPlayer.isPlaying()) {
+            Button btn = mainActivity.findViewById(R.id.pausePlayBtn);
+            btn.setBackgroundResource(R.drawable.baseline_play_circle_filled_black_24dp);
+            mediaPlayer.pause();
+            isPlaying = false;
+        }
+    }
+
     public SongAdapter getSongAdapter() {
         return songAdapter;
+    }
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public boolean songLoaded() {
+        return mediaPlayer != null;
     }
 
     void loadSongs() {
