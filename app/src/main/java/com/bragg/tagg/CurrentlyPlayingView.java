@@ -17,6 +17,5 @@ public class CurrentlyPlayingView extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //mediaController = (MediaController) getIntent().getSerializableExtra("MediaController");
     }
 }

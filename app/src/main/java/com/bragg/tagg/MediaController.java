@@ -65,7 +65,6 @@ public class MediaController {
             currSong = songInfo;
 
             seekBarController.startThread();
-            Log.i("q", "1");
         } catch (IOException e) {
             e.printStackTrace();
         }
