@@ -6,38 +6,46 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".CurrentlyPlayingView"
-    tools:showIn="@layout/activity_currently_playing_view">
+    tools:showIn="@layout/activity_currently_playing_view"
+    android:background="@color/colourTertiary">
 
     <Button
+        android:background="@drawable/baseline_play_circle_outline_white_18"
         android:id="@+id/pausePlayBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Button" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="79dp"/>
 
     <TextView
         android:id="@+id/songNameBotTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="173dp"
-        android:text="TextView" />
+        android:layout_marginTop="208dp"
+        android:text="Song Name"
+        android:textColor="@color/colorTextPrimary"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+        android:layout_centerInParent="true" />
 
     <TextView
         android:id="@+id/artistNameBotTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="100dp"
-        android:text="TextView" />
+        android:layout_centerInParent="true"
+        android:text="Artist"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+        android:layout_below="@+id/songNameBotTextView"
+        android:textColor="@color/colorTextSecondary"
+        android:paddingTop="10dp"/>
 
     <SeekBar
         android:id="@+id/seekBar"
-        android:layout_width="190dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="125dp" />
+        android:layout_marginBottom="20dp" />
 </RelativeLayout>
