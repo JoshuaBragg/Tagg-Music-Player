@@ -1,6 +1,8 @@
 package com.bragg.tagg;
 
-public class SongInfo {
+import java.io.Serializable;
+
+public class SongInfo implements Serializable {
     public String songName, artistName, songUrl;
 
     public SongInfo(String songName, String artistName, String songUrl) {
@@ -19,5 +21,9 @@ public class SongInfo {
 
     public String getSongUrl() {
         return songUrl;
+    }
+
+    public String toString() {
+        return songName + " - " + artistName + " - " + songUrl;
     }
 }

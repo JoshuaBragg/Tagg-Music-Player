@@ -1,5 +1,6 @@
 package com.bragg.tagg;
 import android.os.Build;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.SeekBar;
 
 public class SeekBarController {
@@ -7,7 +8,7 @@ public class SeekBarController {
     private MediaController mediaController;
     private SeekBarThread seekBarThread;
 
-    public SeekBarController(MediaController mediaController, MainActivity m) {
+    public SeekBarController(MediaController mediaController, AppCompatActivity m) {
         this.mediaController = mediaController;
         seekBarThread = new SeekBarThread();
         seekBar = m.findViewById(R.id.seekBar);

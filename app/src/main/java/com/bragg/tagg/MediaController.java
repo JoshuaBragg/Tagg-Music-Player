@@ -4,11 +4,10 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -18,17 +17,33 @@ public class MediaController {
     private SongAdapter songAdapter;
     private ArrayList<SongInfo> songs;
     private boolean isPlaying;
-    private MediaPlayer mediaPlayer;
-    private MainActivity mainActivity;
+    private SerMediaPlayer mediaPlayer;
+    private AppCompatActivity activity;
     private SongInfo currSong;
     private SeekBarController seekBarController;
 
     public MediaController(MainActivity m) {
-        mainActivity = m;
+        activity = m;
         songs = new ArrayList<>();
         songAdapter = new SongAdapter(m, this, songs);
         isPlaying = false;
         seekBarController = new SeekBarController(this, m);
+    }
+
+    public MediaController() {}
+
+    public void dupMediaController(AppCompatActivity m, ArrayList<SongInfo> songs, SerMediaPlayer mediaPlayer, SongInfo currSong) {
+        activity = m;
+        this.songs = songs;
+        songAdapter = new SongAdapter(m, this, songs);
+        seekBarController = new SeekBarController(this, m);
+        if (mediaPlayer != null) {
+            isPlaying = true;
+            this.mediaPlayer = mediaPlayer;
+            playSong(currSong);
+        } else {
+            isPlaying = false;
+        }
     }
 
     protected void playSong(SongInfo songInfo) {
@@ -39,10 +54,12 @@ public class MediaController {
                 mediaPlayer.release();
                 mediaPlayer = null;
             }
-            mediaPlayer = new MediaPlayer();
+            mediaPlayer = new SerMediaPlayer();
             setOnCompletion();
+
             mediaPlayer.setDataSource(songInfo.getSongUrl());
             mediaPlayer.prepareAsync();
+
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
@@ -53,17 +70,16 @@ public class MediaController {
             });
             isPlaying = true;
 
-            Button btn = mainActivity.findViewById(R.id.pausePlayBtn);
+            Button btn = activity.findViewById(R.id.pausePlayBtn);
             btn.setBackgroundResource(R.drawable.baseline_pause_circle_outline_white_18);
 
-            TextView sN = mainActivity.findViewById(R.id.songNameBotTextView);
-            TextView aN = mainActivity.findViewById(R.id.artistNameBotTextView);
+            TextView sN = activity.findViewById(R.id.songNameBotTextView);
+            TextView aN = activity.findViewById(R.id.artistNameBotTextView);
 
             sN.setText(songInfo.getSongName());
             aN.setText(songInfo.getArtistName());
 
             currSong = songInfo;
-
             seekBarController.startThread();
         } catch (IOException e) {
             e.printStackTrace();
@@ -93,7 +109,7 @@ public class MediaController {
 
     protected void playSong() {
         if (mediaPlayer != null) {
-            Button btn = mainActivity.findViewById(R.id.pausePlayBtn);
+            Button btn = activity.findViewById(R.id.pausePlayBtn);
             btn.setBackgroundResource(R.drawable.baseline_pause_circle_outline_white_18);
             mediaPlayer.start();
             isPlaying = true;
@@ -102,7 +118,7 @@ public class MediaController {
 
     protected void pauseSong() {
         if (mediaPlayer.isPlaying()) {
-            Button btn = mainActivity.findViewById(R.id.pausePlayBtn);
+            Button btn = activity.findViewById(R.id.pausePlayBtn);
             btn.setBackgroundResource(R.drawable.baseline_play_circle_outline_white_18);
             mediaPlayer.pause();
             isPlaying = false;
@@ -111,6 +127,18 @@ public class MediaController {
 
     public SongAdapter getSongAdapter() {
         return songAdapter;
+    }
+
+    public ArrayList<SongInfo> getSongs() {
+        return songs;
+    }
+
+    public SerMediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
+    public SongInfo getCurrSong() {
+        return currSong;
     }
 
     public boolean isPlaying() {
@@ -123,7 +151,7 @@ public class MediaController {
 
     void loadSongs() {
         String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
-        ContentResolver contentResolver = mainActivity.getContentResolver();
+        ContentResolver contentResolver = activity.getContentResolver();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor cursor = contentResolver.query(uri, null, selection, null, null);
 
@@ -141,7 +169,7 @@ public class MediaController {
             }
 
             cursor.close();
-            songAdapter = new SongAdapter(mainActivity, this, songs);
+            songAdapter = new SongAdapter(activity, this, songs);
         }
     }
 }
