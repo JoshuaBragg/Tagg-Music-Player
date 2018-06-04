@@ -37,10 +37,10 @@ public class CurrentlyPlayingView extends AppCompatActivity {
                 }
                 if (mediaController.isPlaying()) {
                     mediaController.pauseSong();
-                    pausePlayBtn.setBackgroundResource(R.drawable.baseline_play_circle_outline_white_18);
+                    pausePlayBtn.setBackgroundResource(R.drawable.baseline_play_arrow_white_18);
                 } else {
                     mediaController.playSong();
-                    pausePlayBtn.setBackgroundResource(R.drawable.baseline_pause_circle_outline_white_18);
+                    pausePlayBtn.setBackgroundResource(R.drawable.baseline_pause_white_18);
                 }
             }
         });

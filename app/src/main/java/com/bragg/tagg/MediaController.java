@@ -71,7 +71,7 @@ public class MediaController {
             isPlaying = true;
 
             Button btn = activity.findViewById(R.id.pausePlayBtn);
-            btn.setBackgroundResource(R.drawable.baseline_pause_circle_outline_white_18);
+            btn.setBackgroundResource(R.drawable.baseline_pause_white_18);
 
             TextView sN = activity.findViewById(R.id.songNameBotTextView);
             TextView aN = activity.findViewById(R.id.artistNameBotTextView);
@@ -110,7 +110,7 @@ public class MediaController {
     protected void playSong() {
         if (mediaPlayer != null) {
             Button btn = activity.findViewById(R.id.pausePlayBtn);
-            btn.setBackgroundResource(R.drawable.baseline_pause_circle_outline_white_18);
+            btn.setBackgroundResource(R.drawable.baseline_pause_white_18);
             mediaPlayer.start();
             isPlaying = true;
         }
@@ -119,7 +119,7 @@ public class MediaController {
     protected void pauseSong() {
         if (mediaPlayer.isPlaying()) {
             Button btn = activity.findViewById(R.id.pausePlayBtn);
-            btn.setBackgroundResource(R.drawable.baseline_play_circle_outline_white_18);
+            btn.setBackgroundResource(R.drawable.baseline_play_arrow_white_18);
             mediaPlayer.pause();
             isPlaying = false;
         }

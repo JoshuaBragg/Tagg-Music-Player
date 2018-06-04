@@ -9,43 +9,85 @@
     tools:showIn="@layout/activity_currently_playing_view"
     android:background="@color/colourTertiary">
 
-    <Button
-        android:background="@drawable/baseline_play_circle_outline_white_18"
-        android:id="@+id/pausePlayBtn"
+    <LinearLayout
+        android:id="@+id/songNameBotTextViewHolder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="79dp"/>
+        android:paddingRight="25dp"
+        android:paddingLeft="25dp"
+        android:paddingTop="150dp"
+        android:layout_centerHorizontal="true">
 
-    <TextView
-        android:id="@+id/songNameBotTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="208dp"
-        android:text="Song Name"
-        android:textColor="@color/colorTextPrimary"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-        android:layout_centerInParent="true" />
+        <TextView
+            android:id="@+id/songNameBotTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Song Name"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+            android:textColor="@color/colorTextPrimary" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/artistNameBotTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/songNameBotTextViewHolder"
         android:layout_centerInParent="true"
+        android:paddingTop="10dp"
         android:text="Artist"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-        android:layout_below="@+id/songNameBotTextView"
-        android:textColor="@color/colorTextSecondary"
-        android:paddingTop="10dp"/>
+        android:textColor="@color/colorTextSecondary" />
 
-    <SeekBar
-        android:id="@+id/seekBar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp" />
+        android:background="@color/colorSecondary">
+
+        <Button
+            android:id="@+id/pausePlayBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/seekBar"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
+            android:background="@drawable/baseline_play_arrow_white_18" />
+
+        <Button
+            android:id="@+id/skipNextBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/seekBar"
+            android:layout_toRightOf="@+id/pausePlayBtn"
+            android:layout_toEndOf="@+id/pausePlayBtn"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
+            android:background="@drawable/baseline_skip_next_white_18" />
+
+        <Button
+            android:id="@+id/skipPrevBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/seekBar"
+            android:layout_toLeftOf="@+id/pausePlayBtn"
+            android:layout_toStartOf="@+id/pausePlayBtn"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
+            android:background="@drawable/baseline_skip_previous_white_18" />
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="75dp"
+            android:layout_marginStart="75dp" />
+
+    </RelativeLayout>
 </RelativeLayout>
