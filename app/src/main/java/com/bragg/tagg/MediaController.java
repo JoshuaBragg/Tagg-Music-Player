@@ -43,11 +43,7 @@ public class MediaController {
         this.isPlaying = isPlaying;
         songLoaded = true;
         this.currSong = currSong;
-        if (isPlaying) {
-            this.mediaPlayer = SerMediaPlayer.getSelf(); // TODO: I can proll get rid of this
-//            Log.i("w", "" + currSong);
-//            playSong(currSong);
-        }
+        this.mediaPlayer = SerMediaPlayer.getSelf();
     }
 
     protected void updateGui() {
@@ -61,8 +57,17 @@ public class MediaController {
         sN.setText(currSong.getSongName());
         aN.setText(currSong.getArtistName());
 
-        Button btn = activity.findViewById(R.id.pausePlayBtn);
-        btn.setBackgroundResource(R.drawable.baseline_pause_white_18);
+        updateButton();
+    }
+
+    protected void updateButton() {
+        if (isPlaying) {
+            Button btn = activity.findViewById(R.id.pausePlayBtn);
+            btn.setBackgroundResource(R.drawable.baseline_pause_white_18);
+        } else {
+            Button btn = activity.findViewById(R.id.pausePlayBtn);
+            btn.setBackgroundResource(R.drawable.baseline_play_arrow_white_18);
+        }
     }
 
     protected void playSong(SongInfo songInfo) {
@@ -123,21 +128,17 @@ public class MediaController {
 
     protected void playSong() {
         if (mediaPlayer != null) {
-            Button btn = activity.findViewById(R.id.pausePlayBtn);
-            btn.setBackgroundResource(R.drawable.baseline_pause_white_18);
             mediaPlayer.start();
-            updateGui();
             isPlaying = true;
+            updateGui();
         }
     }
 
     protected void pauseSong() {
         if (mediaPlayer.isPlaying()) {
-            Button btn = activity.findViewById(R.id.pausePlayBtn);
-            btn.setBackgroundResource(R.drawable.baseline_play_arrow_white_18);
             mediaPlayer.pause();
-            updateGui();
             isPlaying = false;
+            updateGui();
         }
     }
 

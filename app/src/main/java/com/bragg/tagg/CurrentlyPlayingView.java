@@ -27,6 +27,7 @@ public class CurrentlyPlayingView extends AppCompatActivity {
         boolean isPlaying = getIntent().getBooleanExtra("isPlaying", false);
         mediaController.dupMediaController(this, songs, currSong, isPlaying);
         mediaController.updateGui();
+        mediaController.updateButton();
 
         final Button pausePlayBtn = findViewById(R.id.pausePlayBtn);
 
@@ -38,10 +39,8 @@ public class CurrentlyPlayingView extends AppCompatActivity {
                 }
                 if (mediaController.isPlaying()) {
                     mediaController.pauseSong();
-                    pausePlayBtn.setBackgroundResource(R.drawable.baseline_play_arrow_white_18);
                 } else {
                     mediaController.playSong();
-                    pausePlayBtn.setBackgroundResource(R.drawable.baseline_pause_white_18);
                 }
             }
         });
