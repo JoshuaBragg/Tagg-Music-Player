@@ -12,6 +12,7 @@
             android:layout_weight="1"
             android:padding="10dp"
             android:background="@color/colorSecondary"
+            android:foreground="@drawable/custom_ripple_effect"
             android:orientation="vertical">
 
             <TextView
