@@ -18,14 +18,15 @@ public class CurrentlyPlayingView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currently_playing_view);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mediaController = new MediaController();
         ArrayList<SongInfo> songs = (ArrayList<SongInfo>) getIntent().getSerializableExtra("songs");
-        SerMediaPlayer serMediaPlayer = (SerMediaPlayer) getIntent().getSerializableExtra("mediaPlayer");
         SongInfo currSong = (SongInfo) getIntent().getSerializableExtra("currSong");
-        mediaController.dupMediaController(this, songs, serMediaPlayer, currSong);
+        boolean isPlaying = getIntent().getBooleanExtra("isPlaying", false);
+        mediaController.dupMediaController(this, songs, currSong, isPlaying);
+        mediaController.updateGui();
 
         final Button pausePlayBtn = findViewById(R.id.pausePlayBtn);
 

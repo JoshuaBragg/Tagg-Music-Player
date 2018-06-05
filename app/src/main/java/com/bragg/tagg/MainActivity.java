@@ -66,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CurrentlyPlayingView.class);
                 intent.putExtra("songs", mediaController.getSongs());
-                intent.putExtra("mediaPlayer", mediaController.getMediaPlayer());
                 intent.putExtra("currSong", mediaController.getCurrSong());
+                intent.putExtra("isPlaying", mediaController.isPlaying());
                 startActivity(intent);
             }
         });

@@ -21,6 +21,7 @@ public class MediaController {
     private AppCompatActivity activity;
     private SongInfo currSong;
     private SeekBarController seekBarController;
+    private boolean songLoaded;
 
     public MediaController(MainActivity m) {
         activity = m;
@@ -28,22 +29,40 @@ public class MediaController {
         songAdapter = new SongAdapter(m, this, songs);
         isPlaying = false;
         seekBarController = new SeekBarController(this, m);
+        mediaPlayer = SerMediaPlayer.getSelf();
+        songLoaded = false;
     }
 
     public MediaController() {}
 
-    public void dupMediaController(AppCompatActivity m, ArrayList<SongInfo> songs, SerMediaPlayer mediaPlayer, SongInfo currSong) {
+    public void dupMediaController(AppCompatActivity m, ArrayList<SongInfo> songs, SongInfo currSong, boolean isPlaying) {
         activity = m;
         this.songs = songs;
         songAdapter = new SongAdapter(m, this, songs);
         seekBarController = new SeekBarController(this, m);
-        if (mediaPlayer != null) {
-            isPlaying = true;
-            this.mediaPlayer = mediaPlayer;
-            playSong(currSong);
-        } else {
-            isPlaying = false;
+        this.isPlaying = isPlaying;
+        songLoaded = true;
+        this.currSong = currSong;
+        if (isPlaying) {
+            this.mediaPlayer = SerMediaPlayer.getSelf(); // TODO: I can proll get rid of this
+//            Log.i("w", "" + currSong);
+//            playSong(currSong);
         }
+    }
+
+    protected void updateGui() {
+        if (currSong == null) {
+            return;
+        }
+
+        TextView sN = activity.findViewById(R.id.songNameBotTextView);
+        TextView aN = activity.findViewById(R.id.artistNameBotTextView);
+
+        sN.setText(currSong.getSongName());
+        aN.setText(currSong.getArtistName());
+
+        Button btn = activity.findViewById(R.id.pausePlayBtn);
+        btn.setBackgroundResource(R.drawable.baseline_pause_white_18);
     }
 
     protected void playSong(SongInfo songInfo) {
@@ -52,9 +71,10 @@ public class MediaController {
                 mediaPlayer.stop();
                 mediaPlayer.reset();
                 mediaPlayer.release();
-                mediaPlayer = null;
             }
-            mediaPlayer = new SerMediaPlayer();
+
+            SerMediaPlayer.resetNull();
+            mediaPlayer = SerMediaPlayer.getSelf();
             setOnCompletion();
 
             mediaPlayer.setDataSource(songInfo.getSongUrl());
@@ -68,19 +88,13 @@ public class MediaController {
                     seekBarController.setMax(mediaPlayer.getDuration());
                 }
             });
+
             isPlaying = true;
-
-            Button btn = activity.findViewById(R.id.pausePlayBtn);
-            btn.setBackgroundResource(R.drawable.baseline_pause_white_18);
-
-            TextView sN = activity.findViewById(R.id.songNameBotTextView);
-            TextView aN = activity.findViewById(R.id.artistNameBotTextView);
-
-            sN.setText(songInfo.getSongName());
-            aN.setText(songInfo.getArtistName());
+            songLoaded = true;
 
             currSong = songInfo;
             seekBarController.startThread();
+            updateGui();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -112,6 +126,7 @@ public class MediaController {
             Button btn = activity.findViewById(R.id.pausePlayBtn);
             btn.setBackgroundResource(R.drawable.baseline_pause_white_18);
             mediaPlayer.start();
+            updateGui();
             isPlaying = true;
         }
     }
@@ -121,6 +136,7 @@ public class MediaController {
             Button btn = activity.findViewById(R.id.pausePlayBtn);
             btn.setBackgroundResource(R.drawable.baseline_play_arrow_white_18);
             mediaPlayer.pause();
+            updateGui();
             isPlaying = false;
         }
     }
@@ -133,10 +149,6 @@ public class MediaController {
         return songs;
     }
 
-    public SerMediaPlayer getMediaPlayer() {
-        return mediaPlayer;
-    }
-
     public SongInfo getCurrSong() {
         return currSong;
     }
@@ -146,7 +158,7 @@ public class MediaController {
     }
 
     public boolean songLoaded() {
-        return mediaPlayer != null;
+        return songLoaded;
     }
 
     void loadSongs() {
