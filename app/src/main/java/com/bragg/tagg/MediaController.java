@@ -21,7 +21,6 @@ public class MediaController {
     private AppCompatActivity activity;
     private SongInfo currSong;
     private SeekBarController seekBarController;
-    private boolean songLoaded;
 
     public MediaController(MainActivity m) {
         activity = m;
@@ -30,7 +29,6 @@ public class MediaController {
         isPlaying = false;
         seekBarController = new SeekBarController(this, m);
         mediaPlayer = SerMediaPlayer.getSelf();
-        songLoaded = false;
     }
 
     public MediaController() {}
@@ -41,7 +39,6 @@ public class MediaController {
         songAdapter = new SongAdapter(m, this, songs);
         seekBarController = new SeekBarController(this, m);
         this.isPlaying = isPlaying;
-        songLoaded = true;
         this.currSong = currSong;
         this.mediaPlayer = SerMediaPlayer.getSelf();
     }
@@ -95,7 +92,6 @@ public class MediaController {
             });
 
             isPlaying = true;
-            songLoaded = true;
 
             currSong = songInfo;
             seekBarController.startThread();
@@ -159,7 +155,7 @@ public class MediaController {
     }
 
     public boolean songLoaded() {
-        return songLoaded;
+        return currSong != null;
     }
 
     void loadSongs() {

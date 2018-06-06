@@ -62,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
         botBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!mediaController.songLoaded()) {
+                    return;
+                }
                 Intent intent = new Intent(MainActivity.this, CurrentlyPlayingView.class);
                 intent.putExtra("songs", mediaController.getSongs());
                 intent.putExtra("currSong", mediaController.getCurrSong());
