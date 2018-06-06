@@ -19,6 +19,6 @@ public class SerMediaPlayer extends MediaPlayer implements Serializable {
     }
 
     public static void resetNull() {
-        self = new SerMediaPlayer();
+        self = null;
     }
 }

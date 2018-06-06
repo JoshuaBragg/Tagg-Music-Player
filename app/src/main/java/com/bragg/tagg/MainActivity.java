@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         pausePlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!mediaController.songLoaded()) {
+                if (mediaController == null) {
                     return;
                 }
                 if (mediaController.isPlaying()) {

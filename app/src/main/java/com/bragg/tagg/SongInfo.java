@@ -26,4 +26,8 @@ public class SongInfo implements Serializable {
     public String toString() {
         return songName + " - " + artistName + " - " + songUrl;
     }
+
+    public boolean equals(Object o) {
+        return o instanceof SongInfo && ((SongInfo)o).getSongName().equals(songName) && ((SongInfo)o).getArtistName().equals(artistName) && ((SongInfo)o).getSongUrl().equals(songUrl);
+    }
 }

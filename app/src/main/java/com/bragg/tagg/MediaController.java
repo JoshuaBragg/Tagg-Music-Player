@@ -37,10 +37,14 @@ public class MediaController {
         activity = m;
         this.songs = songs;
         songAdapter = new SongAdapter(m, this, songs);
+        this.mediaPlayer = SerMediaPlayer.getSelf();
+        setOnCompletion();
         seekBarController = new SeekBarController(this, m);
+        seekBarController.startThread();
+        seekBarController.setMax(mediaPlayer.getDuration());
+        seekBarController.setProgress(mediaPlayer.getCurrentPosition());
         this.isPlaying = isPlaying;
         this.currSong = currSong;
-        this.mediaPlayer = SerMediaPlayer.getSelf();
     }
 
     protected void updateGui() {
@@ -74,14 +78,11 @@ public class MediaController {
                 mediaPlayer.reset();
                 mediaPlayer.release();
             }
-
             SerMediaPlayer.resetNull();
             mediaPlayer = SerMediaPlayer.getSelf();
             setOnCompletion();
-
             mediaPlayer.setDataSource(songInfo.getSongUrl());
             mediaPlayer.prepareAsync();
-
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
@@ -90,7 +91,6 @@ public class MediaController {
                     seekBarController.setMax(mediaPlayer.getDuration());
                 }
             });
-
             isPlaying = true;
 
             currSong = songInfo;
@@ -131,7 +131,7 @@ public class MediaController {
     }
 
     protected void pauseSong() {
-        if (mediaPlayer.isPlaying()) {
+        if (mediaPlayer != null) {
             mediaPlayer.pause();
             isPlaying = false;
             updateGui();
@@ -156,6 +156,10 @@ public class MediaController {
 
     public boolean songLoaded() {
         return currSong != null;
+    }
+
+    public void killThread() {
+        seekBarController.kill();
     }
 
     void loadSongs() {

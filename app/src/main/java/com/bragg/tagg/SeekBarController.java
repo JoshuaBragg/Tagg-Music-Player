@@ -66,4 +66,8 @@ public class SeekBarController {
             }
         }
     }
+
+    public void kill() {
+        seekBarThread.interrupt();
+    }
 }
