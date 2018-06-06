@@ -7,11 +7,13 @@ public class SeekBarController {
     private SeekBar seekBar;
     private MediaController mediaController;
     private SeekBarThread seekBarThread;
+    private boolean running;
 
     public SeekBarController(MediaController mediaController, AppCompatActivity m) {
         this.mediaController = mediaController;
         seekBarThread = new SeekBarThread();
         seekBar = m.findViewById(R.id.seekBar);
+        running = true;
     }
 
     public void startThread() {
@@ -50,7 +52,7 @@ public class SeekBarController {
                 }
             });
 
-            while (true) {
+            while (running) {
                 try {
                     Thread.sleep(1000);
                     if (mediaController.songLoaded()) {
@@ -69,5 +71,6 @@ public class SeekBarController {
 
     public void kill() {
         seekBarThread.interrupt();
+        running = false;
     }
 }
