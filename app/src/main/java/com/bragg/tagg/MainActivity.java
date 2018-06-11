@@ -15,24 +15,23 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Observer;
 
-public class MainActivity extends AppCompatActivity implements Obs {
+public class MainActivity extends AppCompatActivity implements Observer {
 
-    RecyclerView recyclerView;
-    MediaController mediaController;
-    SongAdapter songAdapter;
-    ArrayList<SongInfo> songs;
+    private RecyclerView recyclerView;
+    private MediaController mediaController;
+    private SongAdapter songAdapter;
+    private ArrayList<SongInfo> songs;
+    private SeekBarController seekBarController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements Obs {
         mediaController = MediaController.getSelf();
         mediaController.setSongs(songs);
         mediaController.attach(this);
+        seekBarController = new SeekBarController(this);
 
         CheckPermission();
 
@@ -153,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements Obs {
     @Override
     public void update(Observable observable, Object data) {
         if (data instanceof SongInfo) {
+            seekBarController.startThread();
             TextView songName = findViewById(R.id.songNameBotTextView);
             TextView artistName = findViewById(R.id.artistNameBotTextView);
 
@@ -160,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements Obs {
             artistName.setText( ((SongInfo)data).getArtistName() );
         }
         else if (data instanceof Boolean) {
+            seekBarController.startThread();
             boolean playing = (Boolean)data;
             Button pausePlayBtn = findViewById(R.id.pausePlayBtn);
             if (playing) {
@@ -168,5 +170,11 @@ public class MainActivity extends AppCompatActivity implements Obs {
                 pausePlayBtn.setBackgroundResource(R.drawable.baseline_play_arrow_white_18);
             }
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        seekBarController.killThread();
     }
 }

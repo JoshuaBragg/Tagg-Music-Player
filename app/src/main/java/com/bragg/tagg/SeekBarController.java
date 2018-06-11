@@ -1,7 +1,10 @@
 package com.bragg.tagg;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.SeekBar;
+
+import java.util.Observable;
 
 public class SeekBarController {
     private SeekBar seekBar;
@@ -9,28 +12,25 @@ public class SeekBarController {
     private SeekBarThread seekBarThread;
     private boolean running;
 
-    public SeekBarController(MediaController mediaController, AppCompatActivity m) {
-        this.mediaController = mediaController;
+    public SeekBarController(AppCompatActivity m) {
         seekBarThread = new SeekBarThread();
         seekBar = m.findViewById(R.id.seekBar);
-        running = true;
+        running = false;
+        mediaController = MediaController.getSelf();
+        if (mediaController.songLoaded()) {
+            seekBar.setMax(mediaController.getDuration());
+            seekBar.setProgress(mediaController.getCurrentPosition());
+        }
     }
 
     public void startThread() {
         try {
             if (!seekBarThread.isAlive())
+                running = true;
                 seekBarThread.start();
         } catch (IllegalThreadStateException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setProgress(int amount) {
-        seekBar.setProgress(amount);
-    }
-
-    public void setMax(int amount) {
-        seekBar.setMax(amount);
     }
 
     public class SeekBarThread extends Thread{
@@ -60,6 +60,7 @@ public class SeekBarController {
                 try {
                     Thread.sleep(1000);
                     if (mediaController.songLoaded()) {
+                        seekBar.setMax(mediaController.getDuration());
                         if (Build.VERSION.SDK_INT >= 24) {
                             seekBar.setProgress(mediaController.getCurrentPosition(), true);
                         } else {
@@ -70,13 +71,14 @@ public class SeekBarController {
                     e.printStackTrace();
                 } catch (IllegalStateException e) {
                     e.printStackTrace();
-                    kill();  // Commit suicide
+                    killThread();  // Commit suicide
                 }
             }
         }
     }
 
-    public void kill() {
+    public void killThread() {
+        running = false;
         seekBarThread.interrupt();
         running = false;
     }

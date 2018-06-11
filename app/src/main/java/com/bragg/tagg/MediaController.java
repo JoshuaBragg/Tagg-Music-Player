@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 
 public class MediaController extends Observable {
 
@@ -17,20 +18,20 @@ public class MediaController extends Observable {
 
     ////////////////////////////// Observer  ///////////////////////////////
 
-    private List<Obs> observers = new ArrayList<>();
+    private List<Observer> observers = new ArrayList<>();
 
-    public void attach(Obs observer) { observers.add(observer); }
+    public void attach(Observer observer) { observers.add(observer); }
 
-    public void detach(Obs observer) { observers.remove(observer); }
+    public void detach(Observer observer) { observers.remove(observer); }
 
     private void notifyAllObservers(Boolean playing) {
-        for (Obs o : observers) {
+        for (Observer o : observers) {
             o.update(this, playing);
         }
     }
 
     private void notifyAllObservers(SongInfo song) {
-        for (Obs o : observers) {
+        for (Observer o : observers) {
             o.update(this, song);
         }
     }
@@ -71,9 +72,21 @@ public class MediaController extends Observable {
                 mediaPlayer.release();
             }
             mediaPlayer = new MediaPlayer();
-            setOnCompletion();
+
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    if (songs.indexOf(currSong) != songs.size() - 1) {
+                        playSong(songs.get(songs.indexOf(currSong) + 1));
+                    } else {
+                        playSong(songs.get(0));
+                    }
+                }
+            });
+
             mediaPlayer.setDataSource(songInfo.getSongUrl());
             mediaPlayer.prepareAsync();
+
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
@@ -98,17 +111,8 @@ public class MediaController extends Observable {
         return mediaPlayer.getCurrentPosition();
     }
 
-    private void setOnCompletion() {
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                if (songs.indexOf(currSong) != songs.size() - 1) {
-                    playSong(songs.get(songs.indexOf(currSong) + 1));
-                } else {
-                    playSong(songs.get(0));
-                }
-            }
-        });
+    public int getDuration() {
+        return mediaPlayer.getDuration();
     }
 
     protected void playSong() {
