@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".CurrentlyPlayingView"
+    tools:context=".CurrentlyPlayingActivity"
     tools:showIn="@layout/activity_currently_playing_view"
     android:background="@color/colourTertiary">
 
     <LinearLayout
-        android:id="@+id/songNameBotTextViewHolder"
+        android:id="@+id/songNameTextViewHolder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingRight="25dp"
@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true">
 
         <TextView
-            android:id="@+id/songNameBotTextView"
+            android:id="@+id/songNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Song Name"
@@ -29,10 +29,10 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/artistNameBotTextView"
+        android:id="@+id/artistNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/songNameBotTextViewHolder"
+        android:layout_below="@+id/songNameTextViewHolder"
         android:layout_centerInParent="true"
         android:paddingTop="10dp"
         android:text="Artist"

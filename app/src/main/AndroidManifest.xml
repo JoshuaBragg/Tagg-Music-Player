@@ -15,6 +15,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:configChanges="orientation"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CurrentlyPlayingView"
+            android:name=".CurrentlyPlayingActivity"
             android:label="Current Song"
             android:theme="@style/AppTheme">
 

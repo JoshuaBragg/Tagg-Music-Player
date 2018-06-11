@@ -17,8 +17,12 @@ public class SeekBarController {
     }
 
     public void startThread() {
-        if (!seekBarThread.isAlive())
-            seekBarThread.start();
+        try {
+            if (!seekBarThread.isAlive())
+                seekBarThread.start();
+        } catch (IllegalThreadStateException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setProgress(int amount) {
@@ -64,6 +68,9 @@ public class SeekBarController {
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                    kill();  // Commit suicide
                 }
             }
         }

@@ -1,85 +1,76 @@
 package com.bragg.tagg;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Observable;
 
-public class MediaController {
-    private SongAdapter songAdapter;
+public class MediaController extends Observable {
+
     private ArrayList<SongInfo> songs;
-    private boolean isPlaying;
-    private SerMediaPlayer mediaPlayer;
-    private AppCompatActivity activity;
+    private MediaPlayer mediaPlayer;
     private SongInfo currSong;
-    private SeekBarController seekBarController;
 
-    public MediaController(MainActivity m) {
-        activity = m;
-        songs = new ArrayList<>();
-        songAdapter = new SongAdapter(m, this, songs);
-        isPlaying = false;
-        seekBarController = new SeekBarController(this, m);
-        mediaPlayer = SerMediaPlayer.getSelf();
+    ////////////////////////////// Observer  ///////////////////////////////
+
+    private List<Obs> observers = new ArrayList<>();
+
+    public void attach(Obs observer) { observers.add(observer); }
+
+    public void detach(Obs observer) { observers.remove(observer); }
+
+    private void notifyAllObservers(Boolean playing) {
+        for (Obs o : observers) {
+            o.update(this, playing);
+        }
     }
 
-    public MediaController() {}
+    private void notifyAllObservers(SongInfo song) {
+        for (Obs o : observers) {
+            o.update(this, song);
+        }
+    }
 
-    public void dupMediaController(AppCompatActivity m, ArrayList<SongInfo> songs, SongInfo currSong, boolean isPlaying) {
-        activity = m;
+    public HashMap getState() {
+        HashMap out = new HashMap();
+        out.put("playing", isPlaying());
+        out.put("songName", currSong != null ? currSong.getSongName() : "");
+        out.put("artistName", currSong != null ? currSong.getArtistName() : "");
+        return out;
+    }
+
+    ////////////////////////////// Observer  ///////////////////////////////
+
+    ////////////////////////////// Singleton ///////////////////////////////
+
+    private static final MediaController self = new MediaController();
+
+    private MediaController() {
+        mediaPlayer = new MediaPlayer();
+    }
+
+    public static MediaController getSelf() {
+        return self;
+    }
+
+    ////////////////////////////// Singleton ///////////////////////////////
+
+    public void setSongs(ArrayList<SongInfo> songs) {
         this.songs = songs;
-        songAdapter = new SongAdapter(m, this, songs);
-        this.mediaPlayer = SerMediaPlayer.getSelf();
-        setOnCompletion();
-        seekBarController = new SeekBarController(this, m);
-        seekBarController.startThread();
-        seekBarController.setMax(mediaPlayer.getDuration());
-        seekBarController.setProgress(mediaPlayer.getCurrentPosition());
-        this.isPlaying = isPlaying;
-        this.currSong = currSong;
-    }
-
-    protected void updateGui() {
-        if (currSong == null) {
-            return;
-        }
-
-        TextView sN = activity.findViewById(R.id.songNameBotTextView);
-        TextView aN = activity.findViewById(R.id.artistNameBotTextView);
-
-        sN.setText(currSong.getSongName());
-        aN.setText(currSong.getArtistName());
-
-        updateButton();
-    }
-
-    protected void updateButton() {
-        if (isPlaying) {
-            Button btn = activity.findViewById(R.id.pausePlayBtn);
-            btn.setBackgroundResource(R.drawable.baseline_pause_white_18);
-        } else {
-            Button btn = activity.findViewById(R.id.pausePlayBtn);
-            btn.setBackgroundResource(R.drawable.baseline_play_arrow_white_18);
-        }
     }
 
     protected void playSong(SongInfo songInfo) {
         try {
-            if (isPlaying) {
+            if (mediaPlayer.isPlaying()) {
                 mediaPlayer.stop();
                 mediaPlayer.reset();
                 mediaPlayer.release();
             }
-            SerMediaPlayer.resetNull();
-            mediaPlayer = SerMediaPlayer.getSelf();
+            mediaPlayer = new MediaPlayer();
             setOnCompletion();
             mediaPlayer.setDataSource(songInfo.getSongUrl());
             mediaPlayer.prepareAsync();
@@ -87,15 +78,13 @@ public class MediaController {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     mediaPlayer.start();
-                    seekBarController.setProgress(0);
-                    seekBarController.setMax(mediaPlayer.getDuration());
                 }
             });
-            isPlaying = true;
 
             currSong = songInfo;
-            seekBarController.startThread();
-            updateGui();
+
+            notifyAllObservers(currSong);
+            notifyAllObservers(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -125,21 +114,15 @@ public class MediaController {
     protected void playSong() {
         if (mediaPlayer != null) {
             mediaPlayer.start();
-            isPlaying = true;
-            updateGui();
+            notifyAllObservers(true);
         }
     }
 
     protected void pauseSong() {
         if (mediaPlayer != null) {
             mediaPlayer.pause();
-            isPlaying = false;
-            updateGui();
+            notifyAllObservers(false);
         }
-    }
-
-    public SongAdapter getSongAdapter() {
-        return songAdapter;
     }
 
     public ArrayList<SongInfo> getSongs() {
@@ -151,38 +134,10 @@ public class MediaController {
     }
 
     public boolean isPlaying() {
-        return isPlaying;
+        return mediaPlayer.isPlaying();
     }
 
     public boolean songLoaded() {
         return currSong != null;
-    }
-
-    public void killThread() {
-        seekBarController.kill();
-    }
-
-    void loadSongs() {
-        String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
-        ContentResolver contentResolver = activity.getContentResolver();
-        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor cursor = contentResolver.query(uri, null, selection, null, null);
-
-        if(cursor != null){
-            if(cursor.moveToFirst()){
-                do{
-                    String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
-                    String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                    String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-
-                    SongInfo s = new SongInfo(name,artist,url);
-                    songs.add(s);
-
-                }while (cursor.moveToNext());
-            }
-
-            cursor.close();
-            songAdapter = new SongAdapter(activity, this, songs);
-        }
     }
 }
