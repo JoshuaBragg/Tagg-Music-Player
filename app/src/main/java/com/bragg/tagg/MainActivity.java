@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,6 +18,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -30,7 +32,7 @@ import java.util.Observer;
 import java.util.PriorityQueue;
 import java.util.regex.Pattern;
 
-public class MainActivity extends AppCompatActivity implements Observer {
+public class MainActivity extends AppCompatActivity implements Observer, NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
@@ -51,6 +53,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        NavigationView navigationView = findViewById(R.id.navView);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
 
         recyclerView = findViewById(R.id.recyclerView);
         songs = new ArrayList<>();
@@ -205,5 +211,22 @@ public class MainActivity extends AppCompatActivity implements Observer {
     public void finish() {
         super.finish();
         seekBarController.killThread();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.songMenu) {
+            item.setChecked(true);
+            Toast.makeText(this, "Songs", Toast.LENGTH_LONG).show();
+        }
+
+        else if (id == R.id.playlistMenu) {
+            item.setChecked(true);
+            Toast.makeText(this, "Playlist", Toast.LENGTH_LONG).show();
+        }
+
+        return false;
     }
 }

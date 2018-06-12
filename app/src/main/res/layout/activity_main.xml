@@ -11,19 +11,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
     </LinearLayout>
+
+    <include layout="@layout/content_main"/>
 
     <android.support.design.widget.NavigationView
         app:headerLayout="@layout/header"
+        android:id="@+id/navView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:menu="@menu/drawer_menu"
-        android:layout_gravity="start">
-
+        android:layout_gravity="start"
+        app:itemIconTint="@color/colorTextPrimary"
+        app:itemTextAppearance="@color/colorTextPrimary">
     </android.support.design.widget.NavigationView>
-
-    <include layout="@layout/content_main"/>
 
 </android.support.v4.widget.DrawerLayout>
