@@ -2,13 +2,10 @@ package com.bragg.tagg;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
@@ -84,7 +81,7 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
         super.finish();
         mediaController.detach(this);
         seekBarController.killThread();
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.empty_transition, R.anim.slide_out_down);
     }
 
     @Override

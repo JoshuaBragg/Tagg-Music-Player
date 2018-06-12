@@ -18,18 +18,15 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.PriorityQueue;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements Observer, NavigationView.OnNavigationItemSelectedListener {
@@ -101,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements Observer, Navigat
                 if (!mediaController.songLoaded()) { return; }
                 Intent intent = new Intent(MainActivity.this, CurrentlyPlayingActivity.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                overridePendingTransition(R.anim.slide_in_up, R.anim.empty_transition);
             }
         });
     }
