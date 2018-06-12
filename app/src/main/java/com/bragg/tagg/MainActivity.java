@@ -29,7 +29,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.regex.Pattern;
 
-public class MainActivity extends AppCompatActivity implements Observer, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements Observer, Navigat
     private MediaController mediaController;
     private SongAdapter songAdapter;
     private ArrayList<SongInfo> songs;
-    private SeekBarController seekBarController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements Observer, Navigat
         songs = new ArrayList<>();
         mediaController = MediaController.getSelf();
         mediaController.setSongs(songs);
-        mediaController.attach(this);
-        seekBarController = new SeekBarController(this);
 
         CheckPermission();
 
@@ -69,38 +66,6 @@ public class MainActivity extends AppCompatActivity implements Observer, Navigat
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(songAdapter);
-
-        setClickListeners();
-    }
-
-    private void setClickListeners() {
-        Button pausePlayBtn = findViewById(R.id.pausePlayBtn);
-
-        pausePlayBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mediaController == null) {
-                    return;
-                }
-                if (mediaController.isPlaying()) {
-                    mediaController.pauseSong();
-                } else {
-                    mediaController.playSong();
-                }
-            }
-        });
-
-        View botBar = findViewById(R.id.botBar);
-
-        botBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!mediaController.songLoaded()) { return; }
-                Intent intent = new Intent(MainActivity.this, CurrentlyPlayingActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_up, R.anim.empty_transition);
-            }
-        });
     }
 
     private void CheckPermission() {
@@ -162,52 +127,6 @@ public class MainActivity extends AppCompatActivity implements Observer, Navigat
             cursor.close();
             songAdapter = new SongAdapter(this, mediaController, songs);
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean("playing", mediaController.isPlaying());
-        outState.putString("currSongName", ((TextView)findViewById(R.id.songNameBotTextView)).getText().toString());
-        outState.putString("currArtistName", ((TextView)findViewById(R.id.artistNameBotTextView)).getText().toString());
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState.getBoolean("playing")) {
-            findViewById(R.id.pausePlayBtn).setBackgroundResource(R.drawable.baseline_pause_white_18);
-        }
-        ((TextView)findViewById(R.id.songNameBotTextView)).setText(savedInstanceState.getString("currSongName"));
-        ((TextView)findViewById(R.id.artistNameBotTextView)).setText(savedInstanceState.getString("currArtistName"));
-    }
-
-    @Override
-    public void update(Observable observable, Object data) {
-        if (data instanceof SongInfo) {
-            seekBarController.startThread();
-            TextView songName = findViewById(R.id.songNameBotTextView);
-            TextView artistName = findViewById(R.id.artistNameBotTextView);
-
-            songName.setText( ((SongInfo)data).getSongName() );
-            artistName.setText( ((SongInfo)data).getArtistName() );
-        }
-        else if (data instanceof Boolean) {
-            seekBarController.startThread();
-            boolean playing = (Boolean)data;
-            Button pausePlayBtn = findViewById(R.id.pausePlayBtn);
-            if (playing) {
-                pausePlayBtn.setBackgroundResource(R.drawable.baseline_pause_white_18);
-            } else {
-                pausePlayBtn.setBackgroundResource(R.drawable.baseline_play_arrow_white_18);
-            }
-        }
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        seekBarController.killThread();
     }
 
     @Override

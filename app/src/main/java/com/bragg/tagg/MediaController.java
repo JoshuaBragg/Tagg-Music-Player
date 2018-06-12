@@ -63,6 +63,7 @@ public class MediaController extends Observable {
 
     public void setSongs(ArrayList<SongInfo> songs) {
         this.songs = songs;
+        this.prevSongs = new ArrayList<>();
     }
 
     protected void playSong(SongInfo songInfo) {
