@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements Observer {
 
@@ -127,6 +128,11 @@ public class MainActivity extends AppCompatActivity implements Observer {
                     String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
                     String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
                     String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+
+                    if (Pattern.matches(".*\\.mp3", name)) {
+                        name = name.substring(0, name.length() - 4);
+                    }
+
                     SongInfo s = new SongInfo(name, artist, url);
                     songs.add(s);
                 }while (cursor.moveToNext());
