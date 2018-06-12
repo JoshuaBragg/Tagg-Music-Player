@@ -23,6 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Song Name"
+            android:fontFamily="@font/hkgrot_semibold"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
             android:textColor="@color/colorTextPrimary" />
 
@@ -36,6 +37,7 @@
         android:layout_centerInParent="true"
         android:paddingTop="10dp"
         android:text="Artist"
+        android:fontFamily="@font/hkgrot_reg"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         android:textColor="@color/colorTextSecondary" />
 
