@@ -12,7 +12,7 @@ import java.util.Observer;
 
 public class MediaController extends Observable {
 
-    private ArrayList<SongInfo> songs;
+    private ArrayList<SongInfo> songs, prevSongs;
     private MediaPlayer mediaPlayer;
     private SongInfo currSong;
 
@@ -52,6 +52,7 @@ public class MediaController extends Observable {
 
     private MediaController() {
         mediaPlayer = new MediaPlayer();
+        prevSongs = new ArrayList<>();
     }
 
     public static MediaController getSelf() {
@@ -66,21 +67,19 @@ public class MediaController extends Observable {
 
     protected void playSong(SongInfo songInfo) {
         try {
-            if (mediaPlayer.isPlaying()) {
+            try {
                 mediaPlayer.stop();
                 mediaPlayer.reset();
                 mediaPlayer.release();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
             }
             mediaPlayer = new MediaPlayer();
 
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
-                    if (songs.indexOf(currSong) != songs.size() - 1) {
-                        playSong(songs.get(songs.indexOf(currSong) + 1));
-                    } else {
-                        playSong(songs.get(0));
-                    }
+                    nextSong();
                 }
             });
 
@@ -103,6 +102,45 @@ public class MediaController extends Observable {
         }
     }
 
+    protected void playSong() {
+        if (!songLoaded()) { return; }
+
+        mediaPlayer.start();
+        notifyAllObservers(true);
+    }
+
+    protected void pauseSong() {
+        if (!songLoaded()) { return; }
+
+        mediaPlayer.pause();
+        notifyAllObservers(false);
+    }
+
+    protected void nextSong() {
+        if (!songLoaded()) { return; }
+
+        prevSongs.add(currSong);
+
+        if (songs.indexOf(currSong) != songs.size() - 1) {
+            playSong(songs.get(songs.indexOf(currSong) + 1));
+        } else {
+            playSong(songs.get(0));
+        }
+    }
+
+    protected void prevSong() {
+        if (!songLoaded()) { return; }
+
+        if (getCurrentPosition() > 6000 || prevSongs.size() == 0) {
+            seekTo(0);
+        }
+        else {
+            SongInfo prev = prevSongs.get(prevSongs.size() - 1);
+            prevSongs.remove(prevSongs.size() - 1);
+            playSong(prev);
+        }
+    }
+
     public void seekTo(int ms) {
         mediaPlayer.seekTo(ms);
     }
@@ -113,20 +151,6 @@ public class MediaController extends Observable {
 
     public int getDuration() {
         return mediaPlayer.getDuration();
-    }
-
-    protected void playSong() {
-        if (mediaPlayer != null) {
-            mediaPlayer.start();
-            notifyAllObservers(true);
-        }
-    }
-
-    protected void pauseSong() {
-        if (mediaPlayer != null) {
-            mediaPlayer.pause();
-            notifyAllObservers(false);
-        }
     }
 
     public ArrayList<SongInfo> getSongs() {

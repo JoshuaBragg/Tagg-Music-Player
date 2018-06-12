@@ -55,7 +55,11 @@ public class MainActivity extends AppCompatActivity implements Observer {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(songAdapter);
 
-        final Button pausePlayBtn = findViewById(R.id.pausePlayBtn);
+        setClickListeners();
+    }
+
+    private void setClickListeners() {
+        Button pausePlayBtn = findViewById(R.id.pausePlayBtn);
 
         pausePlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         });
 
         View botBar = findViewById(R.id.botBar);
+
         botBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

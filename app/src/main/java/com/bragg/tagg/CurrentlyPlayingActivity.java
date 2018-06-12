@@ -36,15 +36,20 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
         ((TextView)findViewById(R.id.songNameTextView)).setText((String)state.get("songName"));
         ((TextView)findViewById(R.id.artistNameTextView)).setText((String)state.get("artistName"));
 
+        seekBarController = new SeekBarController(this);
+        seekBarController.startThread();
 
-        final Button pausePlayBtn = findViewById(R.id.pausePlayBtn);
+        setClickListeners();
+    }
+
+    public void setClickListeners() {
+        Button pausePlayBtn = findViewById(R.id.pausePlayBtn);
 
         pausePlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!mediaController.songLoaded()) {
-                    return;
-                }
+                if (!mediaController.songLoaded()) { return; }
+
                 if (mediaController.isPlaying()) {
                     mediaController.pauseSong();
                 } else {
@@ -53,8 +58,27 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
             }
         });
 
-        seekBarController = new SeekBarController(this);
-        seekBarController.startThread();
+        Button skipNextBtn = findViewById(R.id.skipNextBtn);
+
+        skipNextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!mediaController.songLoaded()) { return; }
+
+                mediaController.nextSong();
+            }
+        });
+
+        Button skipPrevBtn = findViewById(R.id.skipPrevBtn);
+
+        skipPrevBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!mediaController.songLoaded()) { return; }
+
+                mediaController.prevSong();
+            }
+        });
     }
 
     @Override

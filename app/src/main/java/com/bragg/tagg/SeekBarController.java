@@ -39,8 +39,8 @@ public class SeekBarController {
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    // Only update the mediaPlayer position if the user moved seekBar
-                    if (b) {
+                    // Only update the mediaPlayer position if the user moved seekBar and song is loaded
+                    if (b && mediaController.songLoaded()) {
                         mediaController.seekTo(seekBar.getProgress());
                     }
                 }
