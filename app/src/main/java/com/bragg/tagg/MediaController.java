@@ -37,7 +37,7 @@ public class MediaController extends Observable {
     }
 
     public HashMap getState() {
-        HashMap out = new HashMap();
+        HashMap<String, Object> out = new HashMap<>();
         out.put("playing", isPlaying());
         out.put("songName", currSong != null ? currSong.getSongName() : "");
         out.put("artistName", currSong != null ? currSong.getArtistName() : "");

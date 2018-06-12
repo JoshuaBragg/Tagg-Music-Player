@@ -10,11 +10,14 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -24,9 +27,13 @@ import android.support.v7.widget.Toolbar;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.PriorityQueue;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements Observer {
+
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
 
     private RecyclerView recyclerView;
     private MediaController mediaController;
@@ -38,8 +45,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        mDrawerLayout = findViewById(R.id.drawer);
+        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
+        mDrawerLayout.addDrawerListener(mToggle);
+        mToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerView = findViewById(R.id.recyclerView);
         songs = new ArrayList<>();
@@ -116,7 +127,15 @@ public class MainActivity extends AppCompatActivity implements Observer {
         }
     }
 
-    void loadSongs() {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void loadSongs() {
         String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
         ContentResolver contentResolver = getBaseContext().getContentResolver();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;

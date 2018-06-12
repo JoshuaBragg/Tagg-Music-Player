@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/songMenu" android:title="Songs" android:icon="@drawable/baseline_music_note_white_18"/>
+    <item android:id="@+id/playlistMenu" android:title="Playlists" android:icon="@drawable/baseline_library_music_white_18"/>
+</menu>

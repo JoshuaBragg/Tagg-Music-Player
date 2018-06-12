@@ -22,8 +22,6 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currently_playing_view);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         mediaController = MediaController.getSelf();
         mediaController.attach(this);

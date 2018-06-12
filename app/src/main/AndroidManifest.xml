@@ -12,7 +12,7 @@
         android:label="Tagg"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/ActionBar">
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation"
@@ -26,7 +26,7 @@
         <activity
             android:name=".CurrentlyPlayingActivity"
             android:label="Current Song"
-            android:theme="@style/AppTheme"
+            android:theme="@style/NoActionBar"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
 
