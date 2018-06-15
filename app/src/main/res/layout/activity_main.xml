@@ -8,22 +8,7 @@
     android:id="@+id/drawer"
     tools:context=".MainActivity">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <include layout="@layout/content_main"/>
-
-        <fragment
-            android:id="@+id/nowPlayingBar"
-            class="com.bragg.tagg.NowPlayingBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
-
-        </fragment>
-
-    </RelativeLayout>
+    <include layout="@layout/content_main"/>
 
     <android.support.design.widget.NavigationView
         app:headerLayout="@layout/header"

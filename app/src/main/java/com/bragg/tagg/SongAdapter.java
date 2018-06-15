@@ -46,8 +46,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     @Override
     public void onBindViewHolder(@NonNull SongHolder holder, int i) {
         final SongInfo c = songs.get(i);
-        holder.songName.setText(c.songName);
-        holder.artistName.setText(c.artistName);
+        holder.songName.setText(c.getSongName());
+        holder.artistName.setText(c.getArtistName());
         holder.getView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { mediaController.playSong(c); }

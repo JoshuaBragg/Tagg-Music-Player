@@ -2,7 +2,6 @@ package com.bragg.tagg;
 
 import android.Manifest;
 import android.content.ContentResolver;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,14 +18,9 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -38,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private MediaController mediaController;
     private SongAdapter songAdapter;
     private ArrayList<SongInfo> songs;
+    private SongManager songManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         songs = new ArrayList<>();
         mediaController = MediaController.getSelf();
         mediaController.setSongs(songs);
+
+        songManager = SongManager.getSelf();
 
         CheckPermission();
 
@@ -125,6 +122,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }while (cursor.moveToNext());
             }
             cursor.close();
+
+            songManager.initDB(this);
+            songManager.readSongs();
+            songManager.checkSongs(songs);
+
+            songs = songManager.getSongs();
             songAdapter = new SongAdapter(this, mediaController, songs);
         }
     }

@@ -1,14 +1,33 @@
 package com.bragg.tagg;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class SongInfo implements Serializable {
-    public String songName, artistName, songUrl;
+    private String songName, artistName, songUrl;
+    private ArrayList<String> taggs;
 
     public SongInfo(String songName, String artistName, String songUrl) {
         this.songName = songName;
         this.artistName = artistName;
         this.songUrl = songUrl;
+        this.taggs = new ArrayList<>();
+    }
+
+    public void removeTagg(String tagg) {
+        if (taggs.contains(tagg)) {
+            taggs.remove(tagg);
+        }
+    }
+
+    public void addTagg(String tagg) {
+        if (!taggs.contains(tagg)) {
+            taggs.add(tagg);
+        }
+    }
+
+    public boolean hasTagg(String tagg) {
+        return taggs.contains(tagg);
     }
 
     public String getSongName() {
