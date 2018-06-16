@@ -17,10 +17,12 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -69,10 +71,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (Build.VERSION.SDK_INT >= 23) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
-                return;
+                Log.i("p", "requested");
+            } else {
+                Log.i("p", "previously granted and loading");
+                loadSongs();
             }
+        } else {
+            loadSongs();
         }
-        loadSongs();
     }
 
     @Override
@@ -80,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (requestCode) {
             case 123:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i("p", "granted and loading");
                     loadSongs();
                 } else {
                     Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
@@ -125,10 +132,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             songManager.initDB(this);
             songManager.readSongs();
-            songManager.checkSongs(songs);
+            songManager.checkSongsForChanges(songs);
 
             songs = songManager.getSongs();
+            Collections.sort(songs);
             songAdapter = new SongAdapter(this, mediaController, songs);
+            // TODO: figure out why recycler view isnt updating when permissions are first granted
+            songAdapter.notifyDataSetChanged();
         }
     }
 

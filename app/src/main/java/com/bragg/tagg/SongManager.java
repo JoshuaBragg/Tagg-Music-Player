@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class SongManager {
     private ArrayList<SongInfo> songs;
@@ -33,19 +34,34 @@ public class SongManager {
 
         songs = new ArrayList<>();
 
+        Log.i("d", "\n_______________________________\n");
+
         while (data.moveToNext()) {
-            SongInfo s = new SongInfo(data.getString(0), data.getString(1), data.getString(2));
+            SongInfo s = new SongInfo(data.getString(1), data.getString(2), data.getString(3));
             songs.add(s);
-            Log.i("d", s.toString());
+            Log.i("d", s.toString() + "|||" + data.getString(1) + "|||" + data.getColumnName(1));
         }
     }
 
-    public void checkSongs(ArrayList<SongInfo> songs) {
+    public void checkSongsForChanges(ArrayList<SongInfo> songs) {
+        Collections.sort(songs);
+        Collections.sort(this.songs);
+
+        for (SongInfo s : this.songs) {
+            Log.i("d", s.toString() + " is in database");
+        }
+
+        for (SongInfo s : songs) {
+            Log.i("d", s.toString() + " is on device");
+        }
+
         int i = 0;
+
         while (i < this.songs.size()) {
             if (!songs.contains(this.songs.get(i))) {
-                this.songs.remove(this.songs.get(i));
+                Log.i("d", this.songs.get(i) + " was removed from songlist");
                 removeSong(this.songs.get(i));
+                this.songs.remove(this.songs.get(i));
             } else {
                 i++;
             }
@@ -53,27 +69,19 @@ public class SongManager {
 
         for (SongInfo s : songs) {
             if (!this.songs.contains(s)) {
+                Log.i("d", s + " was added to songlist");
                 this.songs.add(s);
                 addSong(s);
             }
         }
-
-//        for (SongInfo s : this.songs) {
-//            Log.i("d", "" + s + "\n" + this.songs.size() + "\n");
-//        }
     }
 
     public void addSong(SongInfo s) {
-        boolean insertData = databaseHelper.addData(s.getSongName(), s.getArtistName(), s.getSongUrl());
-//        if (insertData) {
-//            Log.i("d", "1");
-//        } else {
-//            Log.i("d", "2");
-//        }
+        Log.i("d", s.getSongName() + " was added " + databaseHelper.addData(s.getSongName(), s.getArtistName(), s.getSongUrl()));
     }
 
     public void removeSong(SongInfo s) {
-        databaseHelper.removeData(s.getSongName(), s.getArtistName(), s.getSongUrl());
+        Log.i("d", s.getSongName() + " was removed " + databaseHelper.removeData(s.getSongName(), s.getArtistName(), s.getSongUrl()));
     }
 
     public ArrayList<SongInfo> getSongs() {

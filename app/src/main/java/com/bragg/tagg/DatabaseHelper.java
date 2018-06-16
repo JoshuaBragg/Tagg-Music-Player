@@ -18,7 +18,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String createTable = "CREATE TABLE " + TABLE_NAMES[0] + " (" + COL_NAMES[0][0] + " TEXT, " + COL_NAMES[0][1] + " TEXT, " + COL_NAMES[0][2] + " TEXT)";
+        String createTable = "CREATE TABLE " + TABLE_NAMES[0] + " (ID INTEGER PRIMARY KEY, " + COL_NAMES[0][0] + " TEXT, " + COL_NAMES[0][1] + " TEXT, " + COL_NAMES[0][2] + " TEXT)";
+        Log.i("d", createTable);
         sqLiteDatabase.execSQL(createTable);
     }
 
@@ -41,16 +42,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public void removeData(String song_name, String artist_name, String url) {
+    public boolean removeData(String song_name, String artist_name, String url) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String q = "DELETE FROM " + TABLE_NAMES[0] + " WHERE " + COL_NAMES[0][0] + " = '" + song_name + "' AND " + COL_NAMES[0][1] + " = '" + artist_name + "' AND " + COL_NAMES[0][2] + " = '" + url + "'";
-        db.execSQL(q);
+        return db.delete(TABLE_NAMES[0], COL_NAMES[0][0] + " = '" + song_name + "' AND " + COL_NAMES[0][1] + " = '" + artist_name + "' AND " + COL_NAMES[0][2] + " = '" + url + "'", null) > 0;
     }
 
     public Cursor getData() {
         SQLiteDatabase db = this.getWritableDatabase();
-        String q = "SELECT * FROM " + TABLE_NAMES[0];
-        Log.i("d", "help: " + q);
+        String q = "SELECT * FROM " + TABLE_NAMES[0] + " ORDER BY " + COL_NAMES[0][0] + " ASC";
         Cursor data = db.rawQuery(q, null);
         return data;
     }

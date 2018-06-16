@@ -1,9 +1,10 @@
 package com.bragg.tagg;
 
-import java.io.Serializable;
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 
-public class SongInfo implements Serializable {
+public class SongInfo implements Comparable<SongInfo> {
     private String songName, artistName, songUrl;
     private ArrayList<String> taggs;
 
@@ -48,5 +49,10 @@ public class SongInfo implements Serializable {
 
     public boolean equals(Object o) {
         return o instanceof SongInfo && ((SongInfo)o).getSongName().equals(songName) && ((SongInfo)o).getArtistName().equals(artistName) && ((SongInfo)o).getSongUrl().equals(songUrl);
+    }
+
+    @Override
+    public int compareTo(@NonNull SongInfo songInfo) {
+        return songName.toUpperCase().compareTo(songInfo.getSongName().toUpperCase());
     }
 }
