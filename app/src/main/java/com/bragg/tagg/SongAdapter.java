@@ -48,6 +48,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         final SongInfo c = songs.get(i);
         holder.songName.setText(c.getSongName());
         holder.artistName.setText(c.getArtistName());
+        ///////////////////////////////////////////////////////////////
+        String TAGG = "";
+        for (String s : c.getTaggs()) {
+            TAGG += s;
+        }
+        holder.TAGG.setText(TAGG);
+        ///////////////////////////////////////////////////////////////
         holder.getView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { mediaController.playSong(c); }
@@ -60,7 +67,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     }
 
     public class SongHolder extends RecyclerView.ViewHolder {
-        TextView songName, artistName;
+        ///////////////////////////////////////////////////////////////
+        TextView songName, artistName, TAGG;
+        ///////////////////////////////////////////////////////////////
         View view;
 
         public SongHolder(View itemView) {
@@ -68,6 +77,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
             view = itemView;
             songName = itemView.findViewById(R.id.songNameTextView);
             artistName = itemView.findViewById(R.id.artistNameTextView);
+            ///////////////////////////////////////////////////////////////
+            TAGG = itemView.findViewById(R.id.TEST_TAGG);
+            ///////////////////////////////////////////////////////////////
         }
 
         public View getView() {

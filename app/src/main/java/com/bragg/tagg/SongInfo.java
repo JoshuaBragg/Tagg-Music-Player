@@ -31,6 +31,10 @@ public class SongInfo implements Comparable<SongInfo> {
         return taggs.contains(tagg);
     }
 
+    public ArrayList<String> getTaggs() {
+        return taggs;
+    }
+
     public String getSongName() {
         return songName;
     }

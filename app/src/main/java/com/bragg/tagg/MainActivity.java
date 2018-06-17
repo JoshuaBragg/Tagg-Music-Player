@@ -88,6 +88,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.i("p", "granted and loading");
                     loadSongs();
+                    Log.i("p", "loaded");
+                    songAdapter.notifyDataSetChanged();
+                    Log.i("p", "notified");
+                    recyclerView.invalidate();
+                    Log.i("p", "invalidated");
                 } else {
                     Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
                     CheckPermission();
@@ -136,9 +141,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             songs = songManager.getSongs();
             Collections.sort(songs);
+
             songAdapter = new SongAdapter(this, mediaController, songs);
             // TODO: figure out why recycler view isnt updating when permissions are first granted
-            songAdapter.notifyDataSetChanged();
         }
     }
 
