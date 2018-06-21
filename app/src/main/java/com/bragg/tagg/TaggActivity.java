@@ -7,6 +7,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
             Toast.makeText(this, "Songs", Toast.LENGTH_LONG).show();
 
             Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }
 
@@ -58,6 +60,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
 //            startActivity(intent);
             //overridePendingTransition(R.anim.slide_in_up, R.anim.empty_transition);
         }
+
+        mDrawerLayout.closeDrawer(Gravity.START);
 
         return false;
     }

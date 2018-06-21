@@ -19,6 +19,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -162,9 +163,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Toast.makeText(this, "Taggs", Toast.LENGTH_LONG).show();
 
             Intent intent = new Intent(this, TaggActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
             //overridePendingTransition(R.anim.slide_in_up, R.anim.empty_transition);
         }
+
+        mDrawerLayout.closeDrawer(Gravity.START);
 
         return false;
     }
