@@ -196,4 +196,51 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return relatedTaggs;
     }
+
+    public ArrayList<String[]> getTaggsRelatedSongs(String tagg) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String q = "SELECT " + COL_NAMES[1][0] + " FROM " + TABLE_NAMES[1] + " WHERE " + COL_NAMES[1][1] + " = '" + tagg + "'";
+        Cursor data = db.rawQuery(q, null);
+
+        int taggID;
+
+        if (data.moveToFirst()) {
+            taggID = data.getInt(0);
+        } else { return new ArrayList<>(); }
+        data.close();
+
+        String q1 = "SELECT " + COL_NAMES[2][0] + " FROM " + TABLE_NAMES[2] + " WHERE " + COL_NAMES[2][1] + " = '" + taggID + "'";
+        Cursor data1 = db.rawQuery(q1, null);
+
+        ArrayList<Integer> songIDs = new ArrayList<>();
+
+        if (!data1.moveToFirst()) {
+            return new ArrayList<>();
+        }
+
+        do {
+            songIDs.add(data1.getInt(0));
+        } while (data1.moveToNext());
+        data1.close();
+
+        String implodedArray = TextUtils.join(",", songIDs);
+        Log.i("d", implodedArray);
+
+        String q2 = "SELECT * FROM " + TABLE_NAMES[0] + " WHERE " + COL_NAMES[0][0] + " IN (" + implodedArray + ")";
+        Cursor data2 = db.rawQuery(q2, null);
+
+        if (!data2.moveToFirst()) {
+            return new ArrayList<>();
+        }
+
+        ArrayList<String[]> relatedSongs = new ArrayList<>();
+
+        do {
+            relatedSongs.add(new String[] {data2.getString(1), data2.getString(2), data2.getString(3)});
+        } while (data2.moveToNext());
+        data2.close();
+
+        return relatedSongs;
+    }
 }
