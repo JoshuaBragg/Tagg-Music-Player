@@ -73,9 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (Build.VERSION.SDK_INT >= 23) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
-                Log.i("p", "requested");
             } else {
-                Log.i("p", "previously granted and loading");
                 loadSongs();
             }
         } else {
@@ -88,13 +86,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (requestCode) {
             case 123:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i("p", "granted and loading");
                     loadSongs();
-                    Log.i("p", "loaded");
                     songAdapter.notifyDataSetChanged();
-                    Log.i("p", "notified");
                     recyclerView.invalidate();
-                    Log.i("p", "invalidated");
                 } else {
                     Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
                     CheckPermission();

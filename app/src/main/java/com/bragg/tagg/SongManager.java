@@ -29,19 +29,19 @@ public class SongManager {
     public void initDB(Context c) {
         databaseHelper = new DatabaseHelper(c);
 
+        allSongs = new ArrayList<>();
+        currSongs = allSongs;
+
+        taggs = new ArrayList<>();
+
         // TODO: remove this manual adding of taggs
-        databaseHelper.addTagg("T1");
-        databaseHelper.addTagg("T2");
-        databaseHelper.addTagg("T3");
+        addTagg("T1");
+        addTagg("T2");
+        addTagg("T3");
     }
 
     public void readSongs() {
         Cursor data = databaseHelper.getSongs();
-
-        allSongs = new ArrayList<>();
-        currSongs = allSongs;
-
-        Log.i("d", "\n_______________________________\n");
 
         while (data.moveToNext()) {
             SongInfo s = new SongInfo(data.getString(1), data.getString(2), data.getString(3));
@@ -50,19 +50,18 @@ public class SongManager {
 
             for (String t : taggs) {
                 s.addTagg(t);
-                Log.i("d", t + " was added to  song " + data.getString(1));
             }
 
             allSongs.add(s);
-            Log.i("d", s.toString() + " | | | " + data.getString(1) + " | | | " + data.getColumnName(1));
         }
         data.close();
 
+        databaseHelper.addSongTaggRelation("juice", "<unknown>", "/storage/emulated/0/Music/juice.mp3", "T1");
+        databaseHelper.addSongTaggRelation("juice", "<unknown>", "/storage/emulated/0/Music/juice.mp3", "T3");
+        databaseHelper.addSongTaggRelation("diplo", "<unknown>", "/storage/emulated/0/Music/diplo.mp3", "T1");
+        databaseHelper.addSongTaggRelation("diplo", "<unknown>", "/storage/emulated/0/Music/diplo.mp3", "T2");
+
         // TODO: remove this manual adding of taggs
-        Log.i("d", "" + databaseHelper.addSongTaggRelation("juice", "<unknown>", "/storage/emulated/0/Music/juice.mp3", "T1"));
-        Log.i("d", "" + databaseHelper.addSongTaggRelation("juice", "<unknown>", "/storage/emulated/0/Music/juice.mp3", "T3"));
-        Log.i("d", "" + databaseHelper.addSongTaggRelation("diplo", "<unknown>", "/storage/emulated/0/Music/diplo.mp3", "T1"));
-        Log.i("d", "" + databaseHelper.addSongTaggRelation("diplo", "<unknown>", "/storage/emulated/0/Music/diplo.mp3", "T2"));
     }
 
     public void checkSongsForChanges(ArrayList<SongInfo> songs) {
@@ -70,18 +69,15 @@ public class SongManager {
         Collections.sort(this.allSongs);
 
         for (SongInfo s : this.allSongs) {
-            Log.i("d", s.toString() + " is in database");
         }
 
         for (SongInfo s : songs) {
-            Log.i("d", s.toString() + " is on device");
         }
 
         int i = 0;
 
         while (i < this.allSongs.size()) {
             if (!songs.contains(this.allSongs.get(i))) {
-                Log.i("d", this.allSongs.get(i) + " was removed from songlist");
                 removeSong(this.allSongs.get(i));
             } else {
                 i++;
@@ -90,7 +86,6 @@ public class SongManager {
 
         for (SongInfo s : songs) {
             if (!this.allSongs.contains(s)) {
-                Log.i("d", s + " was added to songlist");
                 addSong(s);
             }
         }
@@ -105,12 +100,12 @@ public class SongManager {
     }
 
     private void addSong(SongInfo s) {
-        Log.i("d", s.getSongName() + " was added " + databaseHelper.addSong(s.getSongName(), s.getArtistName(), s.getSongUrl()));
+        databaseHelper.addSong(s.getSongName(), s.getArtistName(), s.getSongUrl());
         this.allSongs.add(s);
     }
 
     private void removeSong(SongInfo s) {
-        Log.i("d", s.getSongName() + " was removed " + databaseHelper.removeSong(s.getSongName(), s.getArtistName(), s.getSongUrl()));
+        databaseHelper.removeSong(s.getSongName(), s.getArtistName(), s.getSongUrl());
         this.allSongs.remove(s);
     }
 

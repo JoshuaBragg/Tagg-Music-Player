@@ -26,16 +26,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String createSongTable = "CREATE TABLE " + TABLE_NAMES[0] + " (ID INTEGER PRIMARY KEY, " + COL_NAMES[0][1] + " TEXT, " + COL_NAMES[0][2] + " TEXT, " + COL_NAMES[0][3] + " TEXT)";
-        Log.i("d", createSongTable);
+        String createSongTable = "CREATE TABLE " + TABLE_NAMES[0] + " (" + COL_NAMES[0][0] + " INTEGER PRIMARY KEY, " + COL_NAMES[0][1] + " TEXT, " + COL_NAMES[0][2] + " TEXT, " + COL_NAMES[0][3] + " TEXT, UNIQUE (" + COL_NAMES[0][1] + ", " + COL_NAMES[0][2] + ", " + COL_NAMES[0][3] + ") ON CONFLICT IGNORE)";
         sqLiteDatabase.execSQL(createSongTable);
 
-        String createTaggTable = "CREATE TABLE " + TABLE_NAMES[1] + " (ID INTEGER PRIMARY KEY, " + COL_NAMES[1][1] + " TEXT)";
-        Log.i("d", createTaggTable);
+        String createTaggTable = "CREATE TABLE " + TABLE_NAMES[1] + " (" + COL_NAMES[1][0] + " INTEGER PRIMARY KEY, " + COL_NAMES[1][1] + " TEXT, UNIQUE (" + COL_NAMES[1][1] + ") ON CONFLICT IGNORE)";
         sqLiteDatabase.execSQL(createTaggTable);
 
-        String createMapTable = "CREATE TABLE " + TABLE_NAMES[2] + " (" + COL_NAMES[2][0] + " INTEGER, " + COL_NAMES[2][1] + " INTEGER)";
-        Log.i("d", createMapTable);
+        String createMapTable = "CREATE TABLE " + TABLE_NAMES[2] + " (" + COL_NAMES[2][0] + " INTEGER, " + COL_NAMES[2][1] + " INTEGER, UNIQUE (" + COL_NAMES[2][0] + ", " + COL_NAMES[2][1] + ") ON CONFLICT IGNORE)";
         sqLiteDatabase.execSQL(createMapTable);
     }
 
@@ -178,7 +175,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         data1.close();
 
         String implodedArray = TextUtils.join(",", taggIDs);
-        Log.i("d", implodedArray);
 
         String q2 = "SELECT " + COL_NAMES[1][1] + " FROM " + TABLE_NAMES[1] + " WHERE " + COL_NAMES[1][0] + " IN (" + implodedArray + ")";
         Cursor data2 = db.rawQuery(q2, null);
@@ -225,7 +221,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         data1.close();
 
         String implodedArray = TextUtils.join(",", songIDs);
-        Log.i("d", implodedArray);
 
         String q2 = "SELECT * FROM " + TABLE_NAMES[0] + " WHERE " + COL_NAMES[0][0] + " IN (" + implodedArray + ")";
         Cursor data2 = db.rawQuery(q2, null);
