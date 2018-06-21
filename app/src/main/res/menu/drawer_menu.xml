@@ -11,8 +11,8 @@
             android:background="?attr/selectableItemBackground" />
 
         <item
-            android:id="@+id/playlistMenu"
-            android:title="Playlists"
+            android:id="@+id/taggMenu"
+            android:title="Taggs"
             android:icon="@drawable/baseline_library_music_white_18"
             android:background="?attr/selectableItemBackground"/>
 

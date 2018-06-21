@@ -2,6 +2,7 @@ package com.bragg.tagg;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             songManager.readSongs();
             songManager.checkSongsForChanges(songs);
 
-            songs = songManager.getSongs();
+            songs = songManager.getCurrSongs();
             Collections.sort(songs);
 
             songAdapter = new SongAdapter(this, mediaController, songs);
@@ -156,9 +157,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Toast.makeText(this, "Songs", Toast.LENGTH_LONG).show();
         }
 
-        else if (id == R.id.playlistMenu) {
+        else if (id == R.id.taggMenu) {
             item.setChecked(true);
-            Toast.makeText(this, "Playlist", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Taggs", Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(this, TaggActivity.class);
+            startActivity(intent);
+            //overridePendingTransition(R.anim.slide_in_up, R.anim.empty_transition);
         }
 
         return false;

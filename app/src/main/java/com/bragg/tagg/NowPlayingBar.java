@@ -42,10 +42,22 @@ public class NowPlayingBar extends Fragment implements Observer {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setOnClickListeners();
+
+        if (mediaController.getCurrSong() == null) { return; }
+
+        TextView songName = getView().findViewById(R.id.songNameBarTextView);
+        TextView artistName = getView().findViewById(R.id.artistNameBarTextView);
+
+        songName.setText( mediaController.getCurrSong().getSongName() );
+        artistName.setText( mediaController.getCurrSong().getArtistName() );
+
+        update(new Observable(), mediaController.isPlaying());
     }
 
     @Override
     public void update(Observable observable, Object o) {
+        if (getView() == null) { return; }
+
         if (o instanceof SongInfo) {
             TextView songName = getView().findViewById(R.id.songNameBarTextView);
             TextView artistName = getView().findViewById(R.id.artistNameBarTextView);

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class SongManager {
-    private ArrayList<SongInfo> songs;
+    private ArrayList<SongInfo> allSongs, currSongs;
     private ArrayList<String> taggs;
 
     private DatabaseHelper databaseHelper;
@@ -38,7 +38,8 @@ public class SongManager {
     public void readSongs() {
         Cursor data = databaseHelper.getSongs();
 
-        songs = new ArrayList<>();
+        allSongs = new ArrayList<>();
+        currSongs = allSongs;
 
         Log.i("d", "\n_______________________________\n");
 
@@ -52,7 +53,7 @@ public class SongManager {
                 Log.i("d", t + " was added to  song " + data.getString(1));
             }
 
-            songs.add(s);
+            allSongs.add(s);
             Log.i("d", s.toString() + " | | | " + data.getString(1) + " | | | " + data.getColumnName(1));
         }
         data.close();
@@ -66,9 +67,9 @@ public class SongManager {
 
     public void checkSongsForChanges(ArrayList<SongInfo> songs) {
         Collections.sort(songs);
-        Collections.sort(this.songs);
+        Collections.sort(this.allSongs);
 
-        for (SongInfo s : this.songs) {
+        for (SongInfo s : this.allSongs) {
             Log.i("d", s.toString() + " is in database");
         }
 
@@ -78,31 +79,39 @@ public class SongManager {
 
         int i = 0;
 
-        while (i < this.songs.size()) {
-            if (!songs.contains(this.songs.get(i))) {
-                Log.i("d", this.songs.get(i) + " was removed from songlist");
-                removeSong(this.songs.get(i));
+        while (i < this.allSongs.size()) {
+            if (!songs.contains(this.allSongs.get(i))) {
+                Log.i("d", this.allSongs.get(i) + " was removed from songlist");
+                removeSong(this.allSongs.get(i));
             } else {
                 i++;
             }
         }
 
         for (SongInfo s : songs) {
-            if (!this.songs.contains(s)) {
+            if (!this.allSongs.contains(s)) {
                 Log.i("d", s + " was added to songlist");
                 addSong(s);
             }
         }
     }
 
+    private void setCurrSongs(ArrayList<SongInfo> currSongs) {
+        this.currSongs = currSongs;
+    }
+
+    public ArrayList<SongInfo> getCurrSongs() {
+        return currSongs;
+    }
+
     private void addSong(SongInfo s) {
         Log.i("d", s.getSongName() + " was added " + databaseHelper.addSong(s.getSongName(), s.getArtistName(), s.getSongUrl()));
-        this.songs.add(s);
+        this.allSongs.add(s);
     }
 
     private void removeSong(SongInfo s) {
         Log.i("d", s.getSongName() + " was removed " + databaseHelper.removeSong(s.getSongName(), s.getArtistName(), s.getSongUrl()));
-        this.songs.remove(s);
+        this.allSongs.remove(s);
     }
 
     public void addTagg(String tagg) {
@@ -127,7 +136,7 @@ public class SongManager {
         databaseHelper.removeSongTaggRelation(song_name, artist_name, url, tagg);
     }
 
-    public ArrayList<SongInfo> getSongs() {
-        return songs;
+    public ArrayList<SongInfo> getAllSongs() {
+        return allSongs;
     }
 }
