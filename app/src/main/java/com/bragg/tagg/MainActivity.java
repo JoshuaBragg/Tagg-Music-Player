@@ -166,4 +166,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         return false;
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((NavigationView)findViewById(R.id.navView)).getMenu().getItem(0).setChecked(true);
+    }
 }

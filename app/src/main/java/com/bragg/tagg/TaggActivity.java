@@ -65,4 +65,10 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
 
         return false;
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((NavigationView)findViewById(R.id.navView)).getMenu().getItem(1).setChecked(true);
+    }
 }
