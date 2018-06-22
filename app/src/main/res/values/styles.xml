@@ -15,9 +15,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="Toolbar">
-        <item name="android:fontFamily">@font/hkgrot_bold</item>
-        <item name="android:textColor">@color/colorTextPrimary</item>
+    <style name="Popup">
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

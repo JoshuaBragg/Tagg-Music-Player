@@ -22,6 +22,21 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true">
-
     </fragment>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/taggFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/nowPlayingBar"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/colorAccent"
+        android:tint="@color/colorPrimary"
+        app:borderWidth="0dp"
+        android:elevation="6dp"
+        app:fabSize="normal"
+        app:rippleColor="@color/colorAccent"
+        android:src="@drawable/tagg_icon_small" />
 </RelativeLayout>

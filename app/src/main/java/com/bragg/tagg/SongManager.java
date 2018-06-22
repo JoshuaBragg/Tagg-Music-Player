@@ -9,7 +9,7 @@ import java.util.Collections;
 
 public class SongManager {
     private ArrayList<SongInfo> allSongs, currSongs;
-    private ArrayList<String> taggs;
+    private ArrayList<String> taggs, activeTaggs;
 
     private DatabaseHelper databaseHelper;
 
@@ -33,6 +33,7 @@ public class SongManager {
         currSongs = allSongs;
 
         taggs = new ArrayList<>();
+        activeTaggs = new ArrayList<>();
 
         // TODO: remove this manual adding of taggs
         addTagg("T1");
@@ -62,6 +63,16 @@ public class SongManager {
         databaseHelper.addSongTaggRelation("diplo", "<unknown>", "/storage/emulated/0/Music/diplo.mp3", "T2");
 
         // TODO: remove this manual adding of taggs
+    }
+
+    public void readTaggs() {
+        Cursor data = databaseHelper.getTaggs();
+
+        while (data.moveToNext()) {
+            taggs.add(data.getString(1));
+        }
+
+        data.close();
     }
 
     public void checkSongsForChanges(ArrayList<SongInfo> songs) {
@@ -99,6 +110,10 @@ public class SongManager {
         return currSongs;
     }
 
+    public ArrayList<String> getTaggs() {
+        return taggs;
+    }
+
     private void addSong(SongInfo s) {
         databaseHelper.addSong(s.getSongName(), s.getArtistName(), s.getSongUrl());
         this.allSongs.add(s);
@@ -133,5 +148,21 @@ public class SongManager {
 
     public ArrayList<SongInfo> getAllSongs() {
         return allSongs;
+    }
+
+    public void activateTagg(String tagg) {
+        if (!activeTaggs.contains(tagg)) {
+            activeTaggs.add(tagg);
+        }
+    }
+
+    public void deactivateTagg(String tagg) {
+        if (activeTaggs.contains(tagg)) {
+            activeTaggs.remove(tagg);
+        }
+    }
+
+    public ArrayList<String> getActiveTaggs() {
+        return activeTaggs;
     }
 }

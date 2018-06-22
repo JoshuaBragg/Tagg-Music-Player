@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             songManager.initDB(this);
             songManager.readSongs();
             songManager.checkSongsForChanges(songs);
+            songManager.readTaggs();
 
             songs = songManager.getCurrSongs();
             Collections.sort(songs);
