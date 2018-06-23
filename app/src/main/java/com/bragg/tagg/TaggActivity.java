@@ -154,10 +154,6 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         else if (id == R.id.taggMenu) {
             item.setChecked(true);
             Toast.makeText(this, "Taggs", Toast.LENGTH_LONG).show();
-
-//            Intent intent = new Intent(this, TaggActivity.class);
-//            startActivity(intent);
-            //overridePendingTransition(R.anim.slide_in_up, R.anim.empty_transition);
         }
 
         mDrawerLayout.closeDrawer(Gravity.START);

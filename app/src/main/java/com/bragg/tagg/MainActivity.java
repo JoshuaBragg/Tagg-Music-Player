@@ -159,7 +159,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, TaggActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
-            //overridePendingTransition(R.anim.slide_in_up, R.anim.empty_transition);
         }
 
         mDrawerLayout.closeDrawer(Gravity.START);
