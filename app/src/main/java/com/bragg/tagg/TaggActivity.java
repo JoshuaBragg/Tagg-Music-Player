@@ -10,6 +10,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -32,11 +35,16 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
     private PopupWindow popupWindow;
+    private RecyclerView recyclerView;
+    private SongAdapter songAdapter;
+    private SongManager songManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tagg);
+        
+        songManager = SongManager.getSelf();
 
         mDrawerLayout = findViewById(R.id.drawer);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
@@ -47,6 +55,13 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.navView);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(1).setChecked(true);
+
+        recyclerView = findViewById(R.id.recyclerView);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         FloatingActionButton fab = findViewById(R.id.taggFab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -65,11 +80,10 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
 
                 popupWindow.showAtLocation(findViewById(R.id.drawer), Gravity.CENTER, 0, 0);
 
-                container.setOnTouchListener(new View.OnTouchListener() {
+                popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        popupWindow.dismiss();
-                        return true;
+                    public void onDismiss() {
+                        updateSongRepeater();
                     }
                 });
             }
@@ -79,8 +93,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
     private void fillRadioGroup(View view) {
         LinearLayout linearLayout = view.findViewById(R.id.taggSelectRGroup);
 
-        ArrayList<String> taggs = SongManager.getSelf().getTaggs();
-        ArrayList<String> activeTaggs = SongManager.getSelf().getActiveTaggs();
+        ArrayList<String> taggs = songManager.getTaggs();
+        ArrayList<String> activeTaggs = songManager.getActiveTaggs();
 
         for (String s : taggs) {
             CheckBox checkBox = new CheckBox(this);
@@ -95,15 +109,25 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (b) {
-                        SongManager.getSelf().activateTagg(compoundButton.getText().toString());
+                        songManager.activateTagg(compoundButton.getText().toString());
                     } else {
-                        SongManager.getSelf().deactivateTagg(compoundButton.getText().toString());
+                        songManager.deactivateTagg(compoundButton.getText().toString());
                     }
                 }
             });
 
             linearLayout.addView(checkBox);
         }
+    }
+
+    private void updateSongRepeater() {
+        // TODO: make repeater a fragment to be resused, all you would need to pass in is the array of songs to create adapter
+        
+        songManager.updateCurrSongs();
+
+        songAdapter = new SongAdapter(this, songManager.getCurrSongs());
+
+        recyclerView.setAdapter(songAdapter);
     }
 
     @Override

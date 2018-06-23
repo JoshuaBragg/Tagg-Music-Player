@@ -22,9 +22,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
 
     private OnItemClickListener onItemClickListener;
 
-    SongAdapter(Context context, MediaController mediaController, ArrayList<SongInfo> songs) {
+    SongAdapter(Context context, ArrayList<SongInfo> songs) {
         this.context = context;
-        this.mediaController = mediaController;
+        this.mediaController = MediaController.getSelf();
         this.songs = songs;
     }
 
@@ -57,7 +57,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         ///////////////////////////////////////////////////////////////
         holder.getView().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { mediaController.playSong(c); }
+            public void onClick(View v) { mediaController.playSongFromUser(c); }
         });
     }
 

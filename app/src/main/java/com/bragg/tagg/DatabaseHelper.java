@@ -17,7 +17,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     static {
         TABLE_NAMES = new String[]{"songs", "taggs", "tagg_map"};
-        COL_NAMES = new String[][]{{"ID", "song_name", "artist_name", "url"}, {"ID", "tagg_name"}, {"song_id", "tagg_id"}};
+        COL_NAMES = new String[][]{{"ID", "song_name", "artist_name", "url", "date_added"}, {"ID", "tagg_name"}, {"song_id", "tagg_id"}};
     }
 
     public DatabaseHelper(Context context) {
@@ -26,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String createSongTable = "CREATE TABLE " + TABLE_NAMES[0] + " (" + COL_NAMES[0][0] + " INTEGER PRIMARY KEY, " + COL_NAMES[0][1] + " TEXT, " + COL_NAMES[0][2] + " TEXT, " + COL_NAMES[0][3] + " TEXT, UNIQUE (" + COL_NAMES[0][1] + ", " + COL_NAMES[0][2] + ", " + COL_NAMES[0][3] + ") ON CONFLICT IGNORE)";
+        String createSongTable = "CREATE TABLE " + TABLE_NAMES[0] + " (" + COL_NAMES[0][0] + " INTEGER PRIMARY KEY, " + COL_NAMES[0][1] + " TEXT, " + COL_NAMES[0][2] + " TEXT, " + COL_NAMES[0][3] + " TEXT, " + COL_NAMES[0][4] + " TEXT, UNIQUE (" + COL_NAMES[0][1] + ", " + COL_NAMES[0][2] + ", " + COL_NAMES[0][3] + ", " + COL_NAMES[0][4] + ") ON CONFLICT IGNORE)";
         sqLiteDatabase.execSQL(createSongTable);
 
         String createTaggTable = "CREATE TABLE " + TABLE_NAMES[1] + " (" + COL_NAMES[1][0] + " INTEGER PRIMARY KEY, " + COL_NAMES[1][1] + " TEXT, UNIQUE (" + COL_NAMES[1][1] + ") ON CONFLICT IGNORE)";
@@ -42,19 +42,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public boolean addSong(String song_name, String artist_name, String url) {
+    public boolean addSong(String song_name, String artist_name, String url, String dateAdded) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_NAMES[0][1], song_name);
         contentValues.put(COL_NAMES[0][2], artist_name);
         contentValues.put(COL_NAMES[0][3], url);
+        contentValues.put(COL_NAMES[0][4], dateAdded);
 
         return db.insert(TABLE_NAMES[0], null, contentValues) > 0;
     }
 
-    public boolean removeSong(String song_name, String artist_name, String url) {
+    public boolean removeSong(String song_name, String artist_name, String url, String dateAdded) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAMES[0], COL_NAMES[0][1] + " = '" + song_name + "' AND " + COL_NAMES[0][2] + " = '" + artist_name + "' AND " + COL_NAMES[0][3] + " = '" + url + "'", null) > 0;
+        return db.delete(TABLE_NAMES[0], COL_NAMES[0][1] + " = '" + song_name + "' AND " + COL_NAMES[0][2] + " = '" + artist_name + "' AND " + COL_NAMES[0][3] + " = '" + url + "' AND " + COL_NAMES[0][4] + " = '" + dateAdded + "'", null) > 0;
     }
 
     public boolean addTagg(String tagg) {
@@ -70,10 +71,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.delete(TABLE_NAMES[1], COL_NAMES[1][1] + " = '" + tagg + "'", null) > 0;
     }
 
-    public boolean addSongTaggRelation(String song_name, String artist_name, String url, String tagg) {
+    public boolean addSongTaggRelation(String song_name, String artist_name, String url, String dateAdded, String tagg) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String q = "SELECT " + COL_NAMES[0][0] + " FROM " + TABLE_NAMES[0] + " WHERE " + COL_NAMES[0][1] + " = '" + song_name + "' AND " + COL_NAMES[0][2] + " = '" + artist_name + "' AND " + COL_NAMES[0][3] + " = '" + url + "'";
+        String q = "SELECT " + COL_NAMES[0][0] + " FROM " + TABLE_NAMES[0] + " WHERE " + COL_NAMES[0][1] + " = '" + song_name + "' AND " + COL_NAMES[0][2] + " = '" + artist_name + "' AND " + COL_NAMES[0][3] + " = '" + url + "' AND " + COL_NAMES[0][4] + " = '" + dateAdded + "'";
         Cursor data = db.rawQuery(q, null);
 
         int songID;
@@ -100,10 +101,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.insert(TABLE_NAMES[2], null, contentValues) > 0;
     }
 
-    public boolean removeSongTaggRelation(String song_name, String artist_name, String url, String tagg) {
+    public boolean removeSongTaggRelation(String song_name, String artist_name, String url, String dateAdded, String tagg) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String q = "SELECT " + COL_NAMES[0][0] + " FROM " + TABLE_NAMES[0] + " WHERE " + COL_NAMES[0][1] + " = '" + song_name + "' AND " + COL_NAMES[0][2] + " = '" + artist_name + "' AND " + COL_NAMES[0][3] + " = '" + url + "'";
+        String q = "SELECT " + COL_NAMES[0][0] + " FROM " + TABLE_NAMES[0] + " WHERE " + COL_NAMES[0][1] + " = '" + song_name + "' AND " + COL_NAMES[0][2] + " = '" + artist_name + "' AND " + COL_NAMES[0][3] + " = '" + url + "' AND " + COL_NAMES[0][4] + " = '" + dateAdded + "'";
         Cursor data = db.rawQuery(q, null);
 
         int songID;
@@ -147,10 +148,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
-    public ArrayList<String> getSongsRelatedTaggs(String song_name, String artist_name, String url) {
+    public ArrayList<String> getSongsRelatedTaggs(String song_name, String artist_name, String url,  String dateAdded) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String q = "SELECT " + COL_NAMES[0][0] + " FROM " + TABLE_NAMES[0] + " WHERE " + COL_NAMES[0][1] + " = '" + song_name + "' AND " + COL_NAMES[0][2] + " = '" + artist_name + "' AND " + COL_NAMES[0][3] + " = '" + url + "'";
+        String q = "SELECT " + COL_NAMES[0][0] + " FROM " + TABLE_NAMES[0] + " WHERE " + COL_NAMES[0][1] + " = '" + song_name + "' AND " + COL_NAMES[0][2] + " = '" + artist_name + "' AND " + COL_NAMES[0][3] + " = '" + url + "' AND " + COL_NAMES[0][4] + " = '" + dateAdded + "'";
         Cursor data = db.rawQuery(q, null);
 
         int songID;
@@ -232,7 +233,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<String[]> relatedSongs = new ArrayList<>();
 
         do {
-            relatedSongs.add(new String[] {data2.getString(1), data2.getString(2), data2.getString(3)});
+            relatedSongs.add(new String[] {data2.getString(1), data2.getString(2), data2.getString(3), data2.getString(4)});
         } while (data2.moveToNext());
         data2.close();
 

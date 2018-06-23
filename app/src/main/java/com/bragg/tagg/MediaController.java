@@ -66,6 +66,11 @@ public class MediaController extends Observable {
         this.prevSongs = new ArrayList<>();
     }
 
+    protected void playSongFromUser(SongInfo songInfo) {
+        setSongs(SongManager.getSelf().getCurrSongs());
+        playSong(songInfo);
+    }
+
     protected void playSong(SongInfo songInfo) {
         try {
             try {

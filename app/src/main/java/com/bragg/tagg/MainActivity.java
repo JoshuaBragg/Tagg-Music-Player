@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(songAdapter);
     }
 
     private void CheckPermission() {
@@ -87,8 +86,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case 123:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     loadSongs();
-                    songAdapter.notifyDataSetChanged();
-                    recyclerView.invalidate();
                 } else {
                     Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
                     CheckPermission();
@@ -117,15 +114,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(cursor != null){
             if(cursor.moveToFirst()){
                 do{
-                    String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
-                    String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                    String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+                    // TODO: make permanent solution to quote and SQL injection
+                    String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)).replaceAll("'", "''");
+                    String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)).replaceAll("'", "''");
+                    String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA)).replaceAll("'", "''");
+                    String dateAdded = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED));
 
                     if (Pattern.matches(".*\\.mp3", name)) {
                         name = name.substring(0, name.length() - 4);
                     }
 
-                    SongInfo s = new SongInfo(name, artist, url);
+                    SongInfo s = new SongInfo(name, artist, url, dateAdded);
                     songs.add(s);
                 }while (cursor.moveToNext());
             }
@@ -139,8 +138,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             songs = songManager.getCurrSongs();
             Collections.sort(songs);
 
-            songAdapter = new SongAdapter(this, mediaController, songs);
-            // TODO: figure out why recycler view isnt updating when permissions are first granted
+            songAdapter = new SongAdapter(this, songs);
+            recyclerView.setAdapter(songAdapter);
         }
     }
 

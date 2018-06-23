@@ -5,13 +5,14 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 
 public class SongInfo implements Comparable<SongInfo> {
-    private String songName, artistName, songUrl;
+    private String songName, artistName, songUrl, dateAdded;
     private ArrayList<String> taggs;
 
-    public SongInfo(String songName, String artistName, String songUrl) {
+    public SongInfo(String songName, String artistName, String songUrl, String dateAdded) {
         this.songName = songName;
         this.artistName = artistName;
         this.songUrl = songUrl;
+        this.dateAdded = dateAdded;
         this.taggs = new ArrayList<>();
     }
 
@@ -45,6 +46,10 @@ public class SongInfo implements Comparable<SongInfo> {
 
     public String getSongUrl() {
         return songUrl;
+    }
+
+    public String getDateAdded() {
+        return dateAdded;
     }
 
     public String toString() {
