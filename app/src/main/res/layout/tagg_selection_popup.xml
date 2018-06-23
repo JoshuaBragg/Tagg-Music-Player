@@ -13,12 +13,23 @@
         android:layout_height="wrap_content"
         android:text="Taggs"
         android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
         android:fontFamily="@font/hkgrot_semibold"
         android:textColor="@color/colorTextPrimary"
         android:textSize="20sp"
         android:paddingTop="10dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:tint="@color/colorAccent"
+        android:src="@drawable/baseline_add_white_18"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/taggSelectTitle"
+        android:padding="5dp"/>
 
     <LinearLayout
         android:id="@+id/taggSelectRGroup"

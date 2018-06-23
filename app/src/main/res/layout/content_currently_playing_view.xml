@@ -55,7 +55,8 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="60dp"
-            android:background="@drawable/baseline_play_arrow_white_18" />
+            android:background="@drawable/baseline_play_arrow_white_18"
+            android:backgroundTint="@color/colorAccent"/>
 
         <Button
             android:id="@+id/skipNextBtn"
@@ -67,7 +68,8 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="60dp"
-            android:background="@drawable/baseline_skip_next_white_18" />
+            android:background="@drawable/baseline_skip_next_white_18"
+            android:backgroundTint="@color/colorAccent"/>
 
         <Button
             android:id="@+id/skipPrevBtn"
@@ -79,7 +81,8 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="60dp"
-            android:background="@drawable/baseline_skip_previous_white_18" />
+            android:background="@drawable/baseline_skip_previous_white_18"
+            android:backgroundTint="@color/colorAccent"/>
 
         <SeekBar
             android:id="@+id/seekBar"
