@@ -13,33 +13,40 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/ActionBar">
+
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".CurrentlyPlayingActivity"
+            android:configChanges="orientation"
+            android:label="Current Song"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask">
+            android:theme="@style/NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".TaggActivity"
+            android:configChanges="orientation"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".CurrentlyPlayingActivity"
-            android:configChanges="orientation"
-            android:label="Current Song"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar"
-            android:launchMode="singleTask">
 
-        </activity>
-
-        <activity android:name=".TaggActivity"
-            android:launchMode="singleTask"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait">
-
-        </activity>
     </application>
 
 </manifest>
