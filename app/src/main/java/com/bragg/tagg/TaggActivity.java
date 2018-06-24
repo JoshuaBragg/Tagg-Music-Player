@@ -1,5 +1,6 @@
 package com.bragg.tagg;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,11 +9,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -21,8 +25,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
@@ -30,6 +37,8 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.regex.Pattern;
 
 public class TaggActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout mDrawerLayout;
@@ -84,6 +93,50 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onDismiss() {
                         updateSongRepeater();
+                    }
+                });
+
+                ImageButton addTaggBtn = container.findViewById(R.id.addTaggBtn);
+
+                addTaggBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final EditText newTaggEditText = new EditText(view.getContext());
+                        newTaggEditText.setTextColor(getResources().getColor(R.color.colorTextSecondary));
+
+                        final AlertDialog alert = new AlertDialog.Builder(view.getContext(), R.style.Dialog)
+                                .setView(newTaggEditText)
+                                .setTitle("New Tagg:")
+                                .setPositiveButton("Add", null)
+                                .setNegativeButton("Cancel", null)
+                                .create();
+
+                        alert.setOnShowListener(new DialogInterface.OnShowListener() {
+                            @Override
+                            public void onShow(DialogInterface dialogInterface) {
+                                Button addBtn = alert.getButton(AlertDialog.BUTTON_POSITIVE);
+                                addBtn.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        String newTagg = newTaggEditText.getText().toString();
+
+                                        if (!Pattern.matches("^[\\w\\s]*$", newTagg)) {
+                                            newTaggEditText.setError("Invalid tagg! Only letters and numbers accepted");
+                                            return;
+                                        } else {
+                                            newTaggEditText.setError(null);
+                                        }
+
+                                        songManager.addTagg(newTagg);
+                                        Collections.sort(songManager.getTaggs());
+
+                                        alert.cancel();
+                                    }
+                                });
+                            }
+                        });
+
+                        alert.show();
                     }
                 });
             }
@@ -144,7 +197,7 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.songMenu) {
             item.setChecked(true);
-            Toast.makeText(this, "Songs", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Songs", Toast.LENGTH_LONG).show();
 
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -153,7 +206,7 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
 
         else if (id == R.id.taggMenu) {
             item.setChecked(true);
-            Toast.makeText(this, "Taggs", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Taggs", Toast.LENGTH_LONG).show();
         }
 
         mDrawerLayout.closeDrawer(Gravity.START);

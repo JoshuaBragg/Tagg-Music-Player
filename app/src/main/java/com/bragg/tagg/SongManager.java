@@ -72,6 +72,8 @@ public class SongManager {
             taggs.add(data.getString(1));
         }
 
+        Collections.sort(taggs);
+
         data.close();
     }
 
