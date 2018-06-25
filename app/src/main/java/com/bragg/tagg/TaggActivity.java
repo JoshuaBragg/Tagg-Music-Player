@@ -76,9 +76,11 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ViewGroup container = (ViewGroup) getLayoutInflater().inflate(R.layout.tagg_selection_popup, null);
+                final ViewGroup container = (ViewGroup) getLayoutInflater().inflate(R.layout.tagg_selection_popup, null);
 
                 fillRadioGroup(container);
+
+                // TODO: https://stackoverflow.com/questions/3221488/blur-or-dim-background-when-android-popupwindow-active
 
                 popupWindow = new PopupWindow(container, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                 popupWindow.setTouchable(true);
@@ -130,6 +132,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
                                         songManager.addTagg(newTagg);
                                         Collections.sort(songManager.getTaggs());
 
+                                        fillRadioGroup(container);
+
                                         alert.cancel();
                                     }
                                 });
@@ -145,6 +149,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
 
     private void fillRadioGroup(View view) {
         LinearLayout linearLayout = view.findViewById(R.id.taggSelectRGroup);
+
+        linearLayout.removeAllViews();
 
         ArrayList<String> taggs = songManager.getTaggs();
         ArrayList<String> activeTaggs = songManager.getActiveTaggs();
