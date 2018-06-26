@@ -66,12 +66,12 @@ public class MediaController extends Observable {
         this.prevSongs = new ArrayList<>();
     }
 
-    protected void playSongFromUser(SongInfo songInfo) {
+    public void playSongFromUser(SongInfo songInfo) {
         setSongs(SongManager.getSelf().getCurrSongs());
         playSong(songInfo);
     }
 
-    protected void playSong(SongInfo songInfo) {
+    public void playSong(SongInfo songInfo) {
         try {
             try {
                 mediaPlayer.stop();
@@ -108,21 +108,21 @@ public class MediaController extends Observable {
         }
     }
 
-    protected void playSong() {
+    public void playSong() {
         if (!songLoaded()) { return; }
 
         mediaPlayer.start();
         notifyAllObservers(true);
     }
 
-    protected void pauseSong() {
+    public void pauseSong() {
         if (!songLoaded()) { return; }
 
         mediaPlayer.pause();
         notifyAllObservers(false);
     }
 
-    protected void nextSong() {
+    public void nextSong() {
         if (!songLoaded()) { return; }
 
         prevSongs.add(currSong);
@@ -134,7 +134,7 @@ public class MediaController extends Observable {
         }
     }
 
-    protected void prevSong() {
+    public void prevSong() {
         if (!songLoaded()) { return; }
 
         if (getCurrentPosition() > 6000 || prevSongs.size() == 0) {

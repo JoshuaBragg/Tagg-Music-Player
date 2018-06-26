@@ -22,7 +22,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
 
     private OnItemClickListener onItemClickListener;
 
-    SongAdapter(Context context, ArrayList<SongInfo> songs) {
+    public SongAdapter(Context context, ArrayList<SongInfo> songs) {
         this.context = context;
         this.mediaController = MediaController.getSelf();
         this.songs = songs;

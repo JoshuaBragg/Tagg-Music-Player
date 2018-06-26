@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity"
+    tools:context=".Activities.MainActivity"
     tools:showIn="@layout/activity_main">
 
     <android.support.v7.widget.RecyclerView
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/nowPlayingBar"
-        class="com.bragg.tagg.NowPlayingBar"
+        class="com.bragg.tagg.Fragments.NowPlayingBarFragment"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true">

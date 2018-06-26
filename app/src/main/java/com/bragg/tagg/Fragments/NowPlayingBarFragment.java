@@ -1,28 +1,29 @@
-package com.bragg.tagg;
+package com.bragg.tagg.Fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bragg.tagg.Activities.CurrentlyPlayingActivity;
+import com.bragg.tagg.MediaController;
+import com.bragg.tagg.R;
+import com.bragg.tagg.SongInfo;
+
 import java.util.Observable;
 import java.util.Observer;
 
-public class NowPlayingBar extends Fragment implements Observer {
+public class NowPlayingBarFragment extends Fragment implements Observer {
     private MediaController mediaController;
 
-    public NowPlayingBar() {
+    public NowPlayingBarFragment() {
         // Required empty public constructor
     }
 

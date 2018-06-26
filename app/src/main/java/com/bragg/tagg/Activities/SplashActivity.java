@@ -1,4 +1,4 @@
-package com.bragg.tagg;
+package com.bragg.tagg.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

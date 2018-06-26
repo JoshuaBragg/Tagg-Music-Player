@@ -15,14 +15,14 @@
         android:theme="@style/ActionBar">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:configChanges="orientation"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".CurrentlyPlayingActivity"
+            android:name=".Activities.CurrentlyPlayingActivity"
             android:configChanges="orientation"
             android:label="Current Song"
             android:launchMode="singleTask"
@@ -31,14 +31,14 @@
         </activity>
 
         <activity
-            android:name=".TaggActivity"
+            android:name=".Activities.TaggActivity"
             android:configChanges="orientation"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".Activities.SplashActivity"
             android:theme="@style/SplashTheme"
             android:configChanges="orientation"
             android:screenOrientation="portrait">

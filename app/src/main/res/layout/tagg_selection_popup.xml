@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@color/colorSecondary"
-    tools:context=".TaggActivity">
+    tools:context=".Activities.TaggActivity">
 
     <TextView
         android:id="@+id/taggSelectTitle"

@@ -1,4 +1,4 @@
-package com.bragg.tagg;
+package com.bragg.tagg.Activities;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -18,10 +18,15 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.bragg.tagg.MediaController;
+import com.bragg.tagg.R;
+import com.bragg.tagg.SongAdapter;
+import com.bragg.tagg.SongInfo;
+import com.bragg.tagg.SongManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
