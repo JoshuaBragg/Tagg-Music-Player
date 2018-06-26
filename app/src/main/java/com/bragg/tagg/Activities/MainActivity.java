@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        setTitle("Songs");
+
         NavigationView navigationView = findViewById(R.id.navView);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);

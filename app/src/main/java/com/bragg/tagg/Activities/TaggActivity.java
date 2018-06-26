@@ -56,6 +56,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         mToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        setTitle("Taggs");
+
         NavigationView navigationView = findViewById(R.id.navView);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(1).setChecked(true);
@@ -176,6 +178,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
 
     private void updateSongRepeater() {
         // TODO: make repeater a fragment to be resused, all you would need to pass in is the array of songs to create adapter
+
+        setTitle(songManager.getActiveTaggs().size() == 0 ? "Taggs" : "Taggs (" + songManager.getActiveTaggs().size() + ")");
         
         songManager.updateCurrSongs();
 

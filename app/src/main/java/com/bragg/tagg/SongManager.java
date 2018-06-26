@@ -35,11 +35,6 @@ public class SongManager {
 
         taggs = new ArrayList<>();
         activeTaggs = new ArrayList<>();
-
-        // TODO: remove this manual adding of taggs
-        addTagg("T1");
-        addTagg("T2");
-        addTagg("T3");
     }
 
     public void readSongs() {
