@@ -26,6 +26,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import ca.bragg.tagg.R;
 import ca.bragg.tagg.SongAdapter;
@@ -151,6 +154,14 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
 
         ArrayList<String> taggs = songManager.getTaggs();
         ArrayList<String> activeTaggs = songManager.getActiveTaggs();
+
+        if (taggs.size() == 0) {
+            TextView noTaggs = new TextView(this);
+            noTaggs.setText("No Taggs exist");
+            noTaggs.setTextColor(getResources().getColor(R.color.colorTextSecondary));
+            linearLayout.addView(noTaggs);
+            return;
+        }
 
         for (String s : taggs) {
             CheckBox checkBox = new CheckBox(this);
