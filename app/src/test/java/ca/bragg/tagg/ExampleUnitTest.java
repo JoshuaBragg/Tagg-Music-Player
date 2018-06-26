@@ -1,4 +1,4 @@
-package com.bragg.tagg;
+package ca.bragg.tagg;
 
 import org.junit.Test;
 

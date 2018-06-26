@@ -1,4 +1,4 @@
-package com.bragg.tagg.Activities;
+package ca.bragg.tagg.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,9 +27,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
-import com.bragg.tagg.R;
-import com.bragg.tagg.SongAdapter;
-import com.bragg.tagg.SongManager;
+import ca.bragg.tagg.R;
+import ca.bragg.tagg.SongAdapter;
+import ca.bragg.tagg.SongManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -204,7 +204,7 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
             item.setChecked(true);
             //Toast.makeText(this, "Songs", Toast.LENGTH_LONG).show();
 
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, ca.bragg.tagg.Activities.MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }

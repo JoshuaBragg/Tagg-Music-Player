@@ -1,4 +1,4 @@
-package com.bragg.tagg.Activities;
+package ca.bragg.tagg.Activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -6,10 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.bragg.tagg.MediaController;
-import com.bragg.tagg.R;
-import com.bragg.tagg.SeekBarController;
-import com.bragg.tagg.SongInfo;
+import ca.bragg.tagg.MediaController;
+import ca.bragg.tagg.R;
+import ca.bragg.tagg.SeekBarController;
+import ca.bragg.tagg.SongInfo;
 
 import java.util.HashMap;
 import java.util.Observable;

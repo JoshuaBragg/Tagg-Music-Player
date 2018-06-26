@@ -1,4 +1,4 @@
-package com.bragg.tagg;
+package ca.bragg.tagg;
 
 import android.content.Context;
 import android.database.Cursor;

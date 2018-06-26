@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/nowPlayingBar"
-        class="com.bragg.tagg.Fragments.NowPlayingBarFragment"
+        class="ca.bragg.tagg.Fragments.NowPlayingBarFragment"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true">

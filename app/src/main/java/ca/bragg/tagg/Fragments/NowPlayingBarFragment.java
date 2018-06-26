@@ -1,4 +1,4 @@
-package com.bragg.tagg.Fragments;
+package ca.bragg.tagg.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,10 +12,10 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bragg.tagg.Activities.CurrentlyPlayingActivity;
-import com.bragg.tagg.MediaController;
-import com.bragg.tagg.R;
-import com.bragg.tagg.SongInfo;
+import ca.bragg.tagg.Activities.CurrentlyPlayingActivity;
+import ca.bragg.tagg.MediaController;
+import ca.bragg.tagg.R;
+import ca.bragg.tagg.SongInfo;
 
 import java.util.Observable;
 import java.util.Observer;

@@ -1,4 +1,4 @@
-package com.bragg.tagg;
+package ca.bragg.tagg;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.bragg.tagg", appContext.getPackageName());
+        assertEquals("ca.bragg.tagg", appContext.getPackageName());
     }
 }

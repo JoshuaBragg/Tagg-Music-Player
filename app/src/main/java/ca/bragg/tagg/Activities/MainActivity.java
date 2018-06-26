@@ -1,4 +1,4 @@
-package com.bragg.tagg.Activities;
+package ca.bragg.tagg.Activities;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -22,15 +22,17 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.bragg.tagg.MediaController;
-import com.bragg.tagg.R;
-import com.bragg.tagg.SongAdapter;
-import com.bragg.tagg.SongInfo;
-import com.bragg.tagg.SongManager;
+import ca.bragg.tagg.MediaController;
+import ca.bragg.tagg.R;
+import ca.bragg.tagg.SongAdapter;
+import ca.bragg.tagg.SongInfo;
+import ca.bragg.tagg.SongManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.regex.Pattern;
+
+import ca.bragg.tagg.Activities.TaggActivity;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -144,6 +146,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             songs = songManager.getCurrSongs();
             Collections.sort(songs);
+
+            setTitle(songs.size() == 0 ? "Songs" : "Songs (" + songs.size() + ")");
 
             songAdapter = new SongAdapter(this, songs);
             recyclerView.setAdapter(songAdapter);
