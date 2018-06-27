@@ -23,4 +23,9 @@ public class TaggSelector implements Comparable<TaggSelector> {
     public int compareTo(@NonNull TaggSelector taggSelector) {
         return taggName.compareTo(taggSelector.getTaggName());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof TaggSelector && taggName.equals(((TaggSelector) obj).getTaggName());
+    }
 }

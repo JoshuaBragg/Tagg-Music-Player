@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import ca.bragg.tagg.MaxDimensionRecycler;
 import ca.bragg.tagg.R;
 import ca.bragg.tagg.SongAdapter;
 import ca.bragg.tagg.SongManager;
@@ -142,6 +143,24 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
                         });
 
                         alert.show();
+                    }
+                });
+
+                ImageButton editTaggBtn = container.findViewById(R.id.editTaggBtn);
+
+                editTaggBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        RecyclerView taggRV = container.findViewById(R.id.taggSelectRGroup);
+                        for (int i = 0; i < taggRV.getChildCount(); i++) {
+                            TaggAdapter.TaggHolder holder = (TaggAdapter.TaggHolder) taggRV.findViewHolderForAdapterPosition(i);
+                            ImageButton removeBtn = holder.getDeleteBtn();
+                            if (removeBtn.getVisibility() == View.INVISIBLE) {
+                                removeBtn.setVisibility(View.VISIBLE);
+                            } else {
+                                removeBtn.setVisibility(View.INVISIBLE);
+                            }
+                        }
                     }
                 });
             }

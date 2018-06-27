@@ -138,8 +138,12 @@ public class SongManager {
     }
 
     public void removeTagg(String tagg) {
+        // TODO: also remove all occurrences of this tagg in map
         if (taggs.contains(tagg)) {
             taggs.remove(tagg);
+        }
+        if (activeTaggs.contains(tagg)) {
+            activeTaggs.remove(tagg);
         }
         databaseHelper.removeTagg(tagg);
     }

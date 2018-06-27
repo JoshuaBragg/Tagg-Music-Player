@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -31,8 +32,10 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TaggHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final TaggHolder holder, int position) {
         final TaggSelector tagg = taggs.get(position);
+
+        final TaggAdapter inst = this;
 
         holder.taggName.setText(tagg.getTaggName());
         holder.checkBox.setChecked(tagg.isChecked());
@@ -47,6 +50,22 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
                 }
             }
         });
+
+        holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SongManager.getSelf().removeTagg(holder.taggName.getText().toString());
+                taggs.remove(new TaggSelector(holder.taggName.getText().toString(), false));
+                // TODO: fuck idk how to do
+            }
+        });
+
+        holder.getView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.checkBox.setChecked(!holder.checkBox.isChecked());
+            }
+        });
     }
 
     @Override
@@ -57,6 +76,7 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
     public class TaggHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
         TextView taggName;
+        ImageButton deleteBtn;
         View view;
 
         public TaggHolder(View itemView) {
@@ -64,6 +84,11 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
             view = itemView;
             taggName = itemView.findViewById(R.id.taggNameTextView);
             checkBox = itemView.findViewById(R.id.taggCheckbox);
+            deleteBtn = itemView.findViewById(R.id.removeTaggBtn);
+        }
+
+        public ImageButton getDeleteBtn() {
+            return deleteBtn;
         }
 
         public View getView() {
