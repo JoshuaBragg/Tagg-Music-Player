@@ -23,11 +23,12 @@
 
     <ImageButton
         android:id="@+id/addTaggBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:scaleType="fitXY"
         android:background="@null"
         android:tint="@color/colorAccent"
-        android:src="@drawable/baseline_add_white_18"
+        android:src="@drawable/ic_add_white_24dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:padding="5dp"/>

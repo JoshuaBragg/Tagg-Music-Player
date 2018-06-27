@@ -10,10 +10,11 @@
 
     <ImageButton
         android:id="@+id/pausePlayBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:scaleType="fitXY"
         android:background="@null"
-        android:src="@drawable/baseline_play_arrow_white_18"
+        android:src="@drawable/ic_play_arrow_white_24dp"
         android:tint="@color/colorAccent"/>
 
         <RelativeLayout

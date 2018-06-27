@@ -70,9 +70,9 @@ public class NowPlayingBarFragment extends Fragment implements Observer {
             boolean playing = (Boolean)o;
             ImageButton pausePlayBtn = getView().findViewById(R.id.pausePlayBtn);
             if (playing) {
-                pausePlayBtn.setImageResource(R.drawable.baseline_pause_white_18);
+                pausePlayBtn.setImageResource(R.drawable.ic_pause_white_24dp);
             } else {
-                pausePlayBtn.setImageResource(R.drawable.baseline_play_arrow_white_18);
+                pausePlayBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp);
             }
         }
     }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import ca.bragg.tagg.MediaController;
@@ -31,7 +32,7 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
         HashMap state = mediaController.getState();
 
         if ((boolean)state.get("playing")) {
-            findViewById(R.id.pausePlayBtn).setBackgroundResource(R.drawable.baseline_pause_white_18);
+            ((ImageButton)findViewById(R.id.pausePlayBtn)).setImageResource(R.drawable.ic_pause_white_24dp);
         }
         ((TextView)findViewById(R.id.songNameTextView)).setText((String)state.get("songName"));
         ((TextView)findViewById(R.id.artistNameTextView)).setText((String)state.get("artistName"));
@@ -43,7 +44,7 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
     }
 
     public void setClickListeners() {
-        Button pausePlayBtn = findViewById(R.id.pausePlayBtn);
+        ImageButton pausePlayBtn = findViewById(R.id.pausePlayBtn);
 
         pausePlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +59,7 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
             }
         });
 
-        Button skipNextBtn = findViewById(R.id.skipNextBtn);
+        ImageButton skipNextBtn = findViewById(R.id.skipNextBtn);
 
         skipNextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +70,7 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
             }
         });
 
-        Button skipPrevBtn = findViewById(R.id.skipPrevBtn);
+        ImageButton skipPrevBtn = findViewById(R.id.skipPrevBtn);
 
         skipPrevBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,11 +101,11 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
         }
         else if (data instanceof Boolean) {
             boolean playing = (Boolean)data;
-            Button pausePlayBtn = findViewById(R.id.pausePlayBtn);
+            ImageButton pausePlayBtn = findViewById(R.id.pausePlayBtn);
             if (playing) {
-                pausePlayBtn.setBackgroundResource(R.drawable.baseline_pause_white_18);
+                pausePlayBtn.setImageResource(R.drawable.ic_pause_white_24dp);
             } else {
-                pausePlayBtn.setBackgroundResource(R.drawable.baseline_play_arrow_white_18);
+                pausePlayBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp);
             }
         }
     }

@@ -7,13 +7,13 @@
         <item
             android:id="@+id/songMenu"
             android:title="Songs"
-            android:icon="@drawable/baseline_music_note_white_18"
+            android:icon="@drawable/ic_music_note_white_24dp"
             android:background="?attr/selectableItemBackground" />
 
         <item
             android:id="@+id/taggMenu"
             android:title="Taggs"
-            android:icon="@drawable/baseline_library_music_white_18"
+            android:icon="@drawable/ic_library_music_white_24dp"
             android:background="?attr/selectableItemBackground"/>
 
     </group>
