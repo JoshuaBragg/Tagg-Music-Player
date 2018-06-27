@@ -2,6 +2,7 @@ package ca.bragg.tagg.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
@@ -28,11 +29,11 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import ca.bragg.tagg.R;
 import ca.bragg.tagg.SongAdapter;
 import ca.bragg.tagg.SongManager;
+import ca.bragg.tagg.TaggAdapter;
+import ca.bragg.tagg.TaggSelector;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,11 +79,11 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View view) {
                 final ViewGroup container = (ViewGroup) getLayoutInflater().inflate(R.layout.tagg_selection_popup, null);
 
-                fillRadioGroup(container);
+                createCheckboxes(container);
 
                 // TODO: https://stackoverflow.com/questions/3221488/blur-or-dim-background-when-android-popupwindow-active
 
-                popupWindow = new PopupWindow(container, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                popupWindow = new PopupWindow(container, (int) Math.round(Resources.getSystem().getDisplayMetrics().widthPixels * (2.0 / 3.0)), ViewGroup.LayoutParams.WRAP_CONTENT, true);
                 popupWindow.setTouchable(true);
                 popupWindow.setFocusable(true);
 
@@ -132,7 +133,7 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
                                         songManager.addTagg(newTagg);
                                         Collections.sort(songManager.getTaggs());
 
-                                        fillRadioGroup(container);
+                                        createCheckboxes(container);
 
                                         alert.cancel();
                                     }
@@ -147,10 +148,10 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void fillRadioGroup(View view) {
-        LinearLayout linearLayout = view.findViewById(R.id.taggSelectRGroup);
-
-        linearLayout.removeAllViews();
+    private void createCheckboxes(View view) {
+        RecyclerView recyclerView = view.findViewById(R.id.taggSelectRGroup);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         ArrayList<String> taggs = songManager.getTaggs();
         ArrayList<String> activeTaggs = songManager.getActiveTaggs();
@@ -159,32 +160,22 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
             TextView noTaggs = new TextView(this);
             noTaggs.setText("No Taggs exist");
             noTaggs.setTextColor(getResources().getColor(R.color.colorTextSecondary));
-            linearLayout.addView(noTaggs);
+            noTaggs.setPadding(0, 50, 0, 20);
+            ((LinearLayout)view.findViewById(R.id.noTaggMessageSpace)).addView(noTaggs);
             return;
+        } else {
+            ((LinearLayout)view.findViewById(R.id.noTaggMessageSpace)).removeAllViews();
         }
 
-        for (String s : taggs) {
-            CheckBox checkBox = new CheckBox(this);
-            checkBox.setText(s);
-            checkBox.setTextColor(getResources().getColor(R.color.colorTextSecondary));
+        ArrayList<TaggSelector> selectors = new ArrayList<>();
 
-            if (activeTaggs.contains(s)) {
-                checkBox.setChecked(true);
-            }
-
-            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (b) {
-                        songManager.activateTagg(compoundButton.getText().toString());
-                    } else {
-                        songManager.deactivateTagg(compoundButton.getText().toString());
-                    }
-                }
-            });
-
-            linearLayout.addView(checkBox);
+        for (String t : taggs) {
+            selectors.add(new TaggSelector(t, activeTaggs.contains(t)));
         }
+
+        TaggAdapter taggAdapter = new TaggAdapter(view.getContext(), selectors);
+
+        recyclerView.setAdapter(taggAdapter);
     }
 
     private void updateSongRepeater() {

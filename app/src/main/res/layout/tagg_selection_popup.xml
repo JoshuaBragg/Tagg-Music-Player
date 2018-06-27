@@ -29,16 +29,27 @@
         android:tint="@color/colorAccent"
         android:src="@drawable/baseline_add_white_18"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/taggSelectTitle"
+        android:layout_alignParentEnd="true"
         android:padding="5dp"/>
 
     <LinearLayout
-        android:id="@+id/taggSelectRGroup"
+        android:id="@+id/noTaggMessageSpace"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/taggSelectTitle"
-        android:padding="20dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/taggSelectTitle">
     </LinearLayout>
+
+    <ca.bragg.tagg.MaxDimensionRecycler
+        android:id="@+id/taggSelectRGroup"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/noTaggMessageSpace">
+    </ca.bragg.tagg.MaxDimensionRecycler>
 
 </RelativeLayout>
