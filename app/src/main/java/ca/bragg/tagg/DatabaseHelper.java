@@ -15,6 +15,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String[] TABLE_NAMES;
     private static final String[][] COL_NAMES;
 
+    // TODO: use selection/where args
+
     static {
         TABLE_NAMES = new String[]{"songs", "taggs", "tagg_map"};
         COL_NAMES = new String[][]{{"ID", "song_name", "artist_name", "url", "date_added"}, {"ID", "tagg_name"}, {"song_id", "tagg_id"}};
@@ -68,7 +70,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean removeTagg(String tagg) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAMES[1], COL_NAMES[1][1] + " = '" + tagg + "'", null) > 0;
+        return db.delete(TABLE_NAMES[1], COL_NAMES[1][1] + " = '" + tagg + "'", null) > 0 && removeTaggFromMap(tagg);
+    }
+
+    private boolean removeTaggFromMap(String tagg) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_NAMES[2], COL_NAMES[2][1] + " = '" + tagg + "'", null) > 0;
     }
 
     public boolean addSongTaggRelation(String song_name, String artist_name, String url, String dateAdded, String tagg) {

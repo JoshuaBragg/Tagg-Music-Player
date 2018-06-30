@@ -55,8 +55,9 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
             @Override
             public void onClick(View view) {
                 SongManager.getSelf().removeTagg(holder.taggName.getText().toString());
+                int pos = taggs.indexOf(new TaggSelector(holder.taggName.getText().toString(), false));
                 taggs.remove(new TaggSelector(holder.taggName.getText().toString(), false));
-                // TODO: fuck idk how to do
+                notifyItemRemoved(pos);
             }
         });
 
