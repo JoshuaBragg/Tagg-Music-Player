@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ArrayList<SongInfo> songs;
     private SongManager songManager;
 
+    // TODO: add scroll bar to recycler view
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
