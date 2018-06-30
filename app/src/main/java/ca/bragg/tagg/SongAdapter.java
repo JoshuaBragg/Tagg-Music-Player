@@ -6,13 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.turingtechnologies.materialscrollbar.INameableAdapter;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -21,8 +17,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
     private ArrayList<SongInfo> songs;
     private Context context;
     private MediaController mediaController;
-
-    private OnItemClickListener onItemClickListener;
 
     @Override
     public Character getCharacterForElement(int element) {
@@ -33,14 +27,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         this.context = context;
         this.mediaController = MediaController.getSelf();
         this.songs = songs;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(Button b, View v, SongInfo si, int position);
-    }
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
