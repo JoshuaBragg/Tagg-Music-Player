@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         recyclerView = findViewById(R.id.recyclerView);
         MaterialScrollBar scrollBar = findViewById(R.id.touchScrollBar);
-        scrollBar.setIndicator(new AlphabetIndicator(this), false);
+        scrollBar.setIndicator(new AlphabetIndicator(this), true);
         songs = new ArrayList<>();
         mediaController = MediaController.getSelf();
         mediaController.setSongs(songs);

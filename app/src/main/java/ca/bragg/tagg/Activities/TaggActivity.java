@@ -72,7 +72,7 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
 
         recyclerView = findViewById(R.id.recyclerView);
         MaterialScrollBar scrollBar = findViewById(R.id.touchScrollBar);
-        scrollBar.setIndicator(new AlphabetIndicator(this), false);
+        scrollBar.setIndicator(new AlphabetIndicator(this), true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());

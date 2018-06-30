@@ -1,41 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <android.support.v7.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_weight="1"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="10dp"
+        android:background="@color/colorSecondary"
+        android:foreground="@drawable/custom_ripple_effect"
+        android:orientation="vertical"
+        android:layout_alignParentStart="true">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/songNameTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:background="@color/colorSecondary"
-            android:foreground="@drawable/custom_ripple_effect"
-            android:orientation="vertical">
+            android:text="Song Name"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@color/colorTextPrimary"
+            android:fontFamily="@font/hkgrot_semibold"
+            android:textSize="20sp"
+            android:layout_marginEnd="40dp"/>
 
-            <TextView
-                android:id="@+id/songNameTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Song Name"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textColor="@color/colorTextPrimary"
-                android:fontFamily="@font/hkgrot_semibold"
-                android:textSize="20sp" />
+        <TextView
+            android:id="@+id/artistNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Artist Name"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/hkgrot_reg"
+            android:textColor="@color/colorTextSecondary"
+            android:layout_marginEnd="40dp"/>
 
-            <TextView
-                android:id="@+id/artistNameTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Artist Name"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:fontFamily="@font/hkgrot_reg"
-                android:textColor="@color/colorTextSecondary"/>
+    </LinearLayout>
 
-        </LinearLayout>
+    <TextView
+        android:id="@+id/textViewOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&#8942;"
+        android:paddingEnd="25dp"
+        android:paddingStart="15dp"
+        android:textColor="@color/colorTextSecondary"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:textAppearance="?android:textAppearanceLarge" />
 
-</android.support.v7.widget.CardView>
+</RelativeLayout>
