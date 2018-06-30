@@ -22,6 +22,9 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
+import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
+
 import ca.bragg.tagg.MediaController;
 import ca.bragg.tagg.R;
 import ca.bragg.tagg.SongAdapter;
@@ -65,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.getMenu().getItem(0).setChecked(true);
 
         recyclerView = findViewById(R.id.recyclerView);
+        MaterialScrollBar scrollBar = findViewById(R.id.touchScrollBar);
+        scrollBar.setIndicator(new AlphabetIndicator(this), false);
         songs = new ArrayList<>();
         mediaController = MediaController.getSelf();
         mediaController.setSongs(songs);

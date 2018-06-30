@@ -17,6 +17,15 @@
         android:paddingBottom="?attr/actionBarSize">
     </android.support.v7.widget.RecyclerView>
 
+    <com.turingtechnologies.materialscrollbar.TouchScrollBar
+        android:id="@+id/touchScrollBar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:msb_recyclerView="@id/recyclerView"
+        app:msb_lightOnTouch="true"
+        android:layout_alignParentEnd="true"
+        app:msb_textColor="@color/colorPrimary"/>
+
     <fragment
         android:id="@+id/nowPlayingBar"
         class="ca.bragg.tagg.Fragments.NowPlayingBarFragment"

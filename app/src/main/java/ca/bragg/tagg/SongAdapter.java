@@ -10,17 +10,24 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.turingtechnologies.materialscrollbar.INameableAdapter;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
+public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> implements INameableAdapter {
 
     private ArrayList<SongInfo> songs;
     private Context context;
     private MediaController mediaController;
 
     private OnItemClickListener onItemClickListener;
+
+    @Override
+    public Character getCharacterForElement(int element) {
+        return songs.get(element).getSongName().charAt(0);
+    }
 
     public SongAdapter(Context context, ArrayList<SongInfo> songs) {
         this.context = context;

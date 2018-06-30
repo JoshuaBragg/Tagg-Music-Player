@@ -29,6 +29,9 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
+import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
+
 import ca.bragg.tagg.MaxDimensionRecycler;
 import ca.bragg.tagg.R;
 import ca.bragg.tagg.SongAdapter;
@@ -68,6 +71,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         navigationView.getMenu().getItem(1).setChecked(true);
 
         recyclerView = findViewById(R.id.recyclerView);
+        MaterialScrollBar scrollBar = findViewById(R.id.touchScrollBar);
+        scrollBar.setIndicator(new AlphabetIndicator(this), false);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
