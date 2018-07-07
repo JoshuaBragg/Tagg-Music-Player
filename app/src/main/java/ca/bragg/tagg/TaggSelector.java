@@ -19,6 +19,10 @@ public class TaggSelector implements Comparable<TaggSelector> {
         return checked;
     }
 
+    public void toggleChecked() {
+        checked = !checked;
+    }
+
     @Override
     public int compareTo(@NonNull TaggSelector taggSelector) {
         return taggName.compareTo(taggSelector.getTaggName());

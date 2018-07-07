@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/colorSecondary"
+    tools:context=".Activities.TaggActivity">
+
+    <TextView
+        android:id="@+id/taggSelectTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Taggs"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:fontFamily="@font/hkgrot_semibold"
+        android:textColor="@color/colorTextPrimary"
+        android:textSize="20sp"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/noTaggMessageSpace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/taggSelectTitle">
+    </LinearLayout>
+
+    <ca.bragg.tagg.MaxDimensionRecycler
+        android:id="@+id/taggSelectRGroup"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/noTaggMessageSpace">
+    </ca.bragg.tagg.MaxDimensionRecycler>
+
+    <Button
+        android:id="@+id/updateTaggBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update"
+        android:textColor="@color/colorTextPrimary"
+        android:fontFamily="@font/hkgrot_semibold"
+        android:background="@null"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="5dp"/>
+
+</RelativeLayout>

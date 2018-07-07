@@ -197,7 +197,7 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
             selectors.add(new TaggSelector(t, activeTaggs.contains(t)));
         }
 
-        TaggAdapter taggAdapter = new TaggAdapter(view.getContext(), selectors);
+        TaggAdapter taggAdapter = new TaggAdapter(view.getContext(), selectors, TaggAdapter.ACTIVATE_TYPE);
 
         recyclerView.setAdapter(taggAdapter);
     }

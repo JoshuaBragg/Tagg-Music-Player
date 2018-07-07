@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:theme="@style/NoActionBar"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
+    android:layout_height="?android:attr/actionBarSize"
     android:orientation="horizontal"
     android:background="@color/colorPrimary"
     tools:context="ca.bragg.tagg.Fragments.NowPlayingBarFragment">
 
     <ImageButton
         android:id="@+id/pausePlayBtn"
-        android:layout_width="?attr/actionBarSize"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_width="?android:attr/actionBarSize"
+        android:layout_height="?android:attr/actionBarSize"
         android:scaleType="fitXY"
         android:background="@null"
         android:src="@drawable/ic_play_arrow_white_24dp"

@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group
         android:checkableBehavior="single"
-        android:background="?attr/selectableItemBackground">
+        android:background="?android:attr/selectableItemBackground">
 
         <item
             android:id="@+id/songMenu"
             android:title="Songs"
             android:icon="@drawable/ic_music_note_white_24dp"
-            android:background="?attr/selectableItemBackground" />
+            android:background="?android:attr/selectableItemBackground" />
 
         <item
             android:id="@+id/taggMenu"
             android:title="Taggs"
             android:icon="@drawable/ic_library_music_white_24dp"
-            android:background="?attr/selectableItemBackground"/>
+            android:background="?android:attr/selectableItemBackground"/>
 
     </group>
 </menu>

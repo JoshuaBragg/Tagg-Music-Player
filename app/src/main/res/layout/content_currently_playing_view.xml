@@ -49,8 +49,8 @@
 
         <ImageButton
             android:id="@+id/pausePlayBtn"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_width="?android:attr/actionBarSize"
+            android:layout_height="?android:attr/actionBarSize"
             android:scaleType="fitXY"
             android:layout_above="@+id/seekBar"
             android:layout_alignParentBottom="true"
@@ -62,8 +62,8 @@
 
         <ImageButton
             android:id="@+id/skipNextBtn"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_width="?android:attr/actionBarSize"
+            android:layout_height="?android:attr/actionBarSize"
             android:scaleType="fitXY"
             android:layout_above="@+id/seekBar"
             android:layout_toEndOf="@+id/pausePlayBtn"
@@ -76,8 +76,8 @@
 
         <ImageButton
             android:id="@+id/skipPrevBtn"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_width="?android:attr/actionBarSize"
+            android:layout_height="?android:attr/actionBarSize"
             android:scaleType="fitXY"
             android:layout_above="@+id/seekBar"
             android:layout_toStartOf="@+id/pausePlayBtn"

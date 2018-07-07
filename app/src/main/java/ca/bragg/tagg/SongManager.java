@@ -7,6 +7,7 @@ import android.util.Log;
 import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 
 public class SongManager {
     private ArrayList<SongInfo> allSongs, currSongs;
@@ -54,10 +55,10 @@ public class SongManager {
         data.close();
 
         // TODO: remove this manual adding of taggs
-        addSongTaggRelation("juice", "<unknown>", "/storage/emulated/0/Music/juice.mp3", "1527637530", "T1");
-        addSongTaggRelation("juice", "<unknown>", "/storage/emulated/0/Music/juice.mp3", "1527637530", "T3");
-        addSongTaggRelation("diplo", "<unknown>", "/storage/emulated/0/Music/diplo.mp3", "1527637530", "T1");
-        addSongTaggRelation("diplo", "<unknown>", "/storage/emulated/0/Music/diplo.mp3", "1527637530", "T2");
+//        addSongTaggRelation("juice", "<unknown>", "/storage/emulated/0/Music/juice.mp3", "1527637530", "T1");
+//        addSongTaggRelation("juice", "<unknown>", "/storage/emulated/0/Music/juice.mp3", "1527637530", "T3");
+//        addSongTaggRelation("diplo", "<unknown>", "/storage/emulated/0/Music/diplo.mp3", "1527637530", "T1");
+//        addSongTaggRelation("diplo", "<unknown>", "/storage/emulated/0/Music/diplo.mp3", "1527637530", "T2");
     }
 
     public void readTaggs() {
@@ -148,12 +149,31 @@ public class SongManager {
         databaseHelper.removeTagg(tagg);
     }
 
-    public boolean addSongTaggRelation(String song_name, String artist_name, String url, String dateAdded, String tagg) {
-        return databaseHelper.addSongTaggRelation(song_name, artist_name, url, dateAdded, tagg);
+    public void updateSongTaggRelations(SongInfo songInfo, ArrayList<String> updateTaggs) {
+        HashSet<String> updateSet = new HashSet<>(updateTaggs);
+        HashSet<String> currSet = new HashSet<>(getSongsRelatedTaggs(songInfo));
+
+        updateSet.retainAll(currSet);
+
+        for (String t : updateTaggs) {
+            if (!updateSet.contains(t)) {
+                addSongTaggRelation(songInfo, t);
+            }
+        }
+
+        for (String t : currSet) {
+            if (!updateSet.contains(t)) {
+                removeSongTaggRelation(songInfo, t);
+            }
+        }
     }
 
-    public boolean removeSongTaggRelation(String song_name, String artist_name, String url, String dateAdded, String tagg) {
-        return databaseHelper.removeSongTaggRelation(song_name, artist_name, url, dateAdded, tagg);
+    public boolean addSongTaggRelation(SongInfo songInfo, String tagg) {
+        return databaseHelper.addSongTaggRelation(songInfo.getSongName(), songInfo.getArtistName(), songInfo.getSongUrl(), songInfo.getDateAdded(), tagg);
+    }
+
+    public boolean removeSongTaggRelation(SongInfo songInfo, String tagg) {
+        return databaseHelper.removeSongTaggRelation(songInfo.getSongName(), songInfo.getArtistName(), songInfo.getSongUrl(), songInfo.getDateAdded(), tagg);
     }
 
     private ArrayList<SongInfo> getTaggsRelatedSongs(String tagg) {
@@ -165,6 +185,10 @@ public class SongManager {
         }
 
         return out;
+    }
+
+    public ArrayList<String> getSongsRelatedTaggs(SongInfo songInfo) {
+        return databaseHelper.getSongsRelatedTaggs(songInfo.getSongName(), songInfo.getArtistName(), songInfo.getSongUrl(), songInfo.getDateAdded());
     }
 
     public ArrayList<SongInfo> getAllSongs() {

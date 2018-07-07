@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorSecondary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:fontFamily">@font/hkgrot_semibold</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
     </style>
 
     <style name="NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
@@ -17,6 +18,11 @@
 
     <style name="Popup">
         <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="PopupMenu" parent="android:style/Widget.PopupMenu">
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:popupBackground">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

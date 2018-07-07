@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorTertiary"
-        android:paddingBottom="?attr/actionBarSize">
+        android:paddingBottom="?android:attr/actionBarSize">
     </android.support.v7.widget.RecyclerView>
 
     <com.turingtechnologies.materialscrollbar.TouchScrollBar
@@ -30,7 +30,7 @@
         android:id="@+id/nowPlayingBar"
         class="ca.bragg.tagg.Fragments.NowPlayingBarFragment"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="?android:attr/actionBarSize"
         android:layout_alignParentBottom="true">
     </fragment>
 
