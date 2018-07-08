@@ -30,7 +30,7 @@
         android:layout_below="@+id/taggSelectTitle">
     </LinearLayout>
 
-    <ca.bragg.tagg.MaxDimensionRecycler
+    <gg.joshbra.tagg.MaxDimensionRecycler
         android:id="@+id/taggSelectRGroup"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/noTaggMessageSpace">
-    </ca.bragg.tagg.MaxDimensionRecycler>
+    </gg.joshbra.tagg.MaxDimensionRecycler>
 
     <Button
         android:id="@+id/updateTaggBtn"

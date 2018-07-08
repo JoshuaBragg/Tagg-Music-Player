@@ -1,4 +1,4 @@
-package ca.bragg.tagg.Activities;
+package gg.joshbra.tagg.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

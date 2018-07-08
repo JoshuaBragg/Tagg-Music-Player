@@ -1,4 +1,4 @@
-package ca.bragg.tagg.Activities;
+package gg.joshbra.tagg.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,12 +32,12 @@ import android.widget.TextView;
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
 import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
 
-import ca.bragg.tagg.MaxDimensionRecycler;
-import ca.bragg.tagg.R;
-import ca.bragg.tagg.SongAdapter;
-import ca.bragg.tagg.SongManager;
-import ca.bragg.tagg.TaggAdapter;
-import ca.bragg.tagg.TaggSelector;
+import gg.joshbra.tagg.MaxDimensionRecycler;
+import gg.joshbra.tagg.R;
+import gg.joshbra.tagg.SongAdapter;
+import gg.joshbra.tagg.SongManager;
+import gg.joshbra.tagg.TaggAdapter;
+import gg.joshbra.tagg.TaggSelector;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -232,7 +232,7 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
             item.setChecked(true);
             //Toast.makeText(this, "Songs", Toast.LENGTH_LONG).show();
 
-            Intent intent = new Intent(this, ca.bragg.tagg.Activities.MainActivity.class);
+            Intent intent = new Intent(this, gg.joshbra.tagg.Activities.MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }

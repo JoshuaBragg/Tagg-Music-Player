@@ -6,7 +6,7 @@
     android:layout_height="?android:attr/actionBarSize"
     android:orientation="horizontal"
     android:background="@color/colorPrimary"
-    tools:context="ca.bragg.tagg.Fragments.NowPlayingBarFragment">
+    tools:context="gg.joshbra.tagg.Fragments.NowPlayingBarFragment">
 
     <ImageButton
         android:id="@+id/pausePlayBtn"

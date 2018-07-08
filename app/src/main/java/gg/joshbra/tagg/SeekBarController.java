@@ -1,4 +1,4 @@
-package ca.bragg.tagg;
+package gg.joshbra.tagg;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;

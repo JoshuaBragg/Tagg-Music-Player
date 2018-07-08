@@ -1,4 +1,4 @@
-package ca.bragg.tagg.Activities;
+package gg.joshbra.tagg.Activities;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -25,17 +25,17 @@ import android.widget.Toast;
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
 import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
 
-import ca.bragg.tagg.MediaController;
-import ca.bragg.tagg.R;
-import ca.bragg.tagg.SongAdapter;
-import ca.bragg.tagg.SongInfo;
-import ca.bragg.tagg.SongManager;
+import gg.joshbra.tagg.MediaController;
+import gg.joshbra.tagg.R;
+import gg.joshbra.tagg.SongAdapter;
+import gg.joshbra.tagg.SongInfo;
+import gg.joshbra.tagg.SongManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.regex.Pattern;
 
-import ca.bragg.tagg.Activities.TaggActivity;
+import gg.joshbra.tagg.Activities.TaggActivity;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

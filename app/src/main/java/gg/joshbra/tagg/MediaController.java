@@ -1,4 +1,4 @@
-package ca.bragg.tagg;
+package gg.joshbra.tagg;
 
 import android.media.MediaPlayer;
 import android.util.Log;

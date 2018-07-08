@@ -28,7 +28,7 @@
 
     <fragment
         android:id="@+id/nowPlayingBar"
-        class="ca.bragg.tagg.Fragments.NowPlayingBarFragment"
+        class="gg.joshbra.tagg.Fragments.NowPlayingBarFragment"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_alignParentBottom="true">
