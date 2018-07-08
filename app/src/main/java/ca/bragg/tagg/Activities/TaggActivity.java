@@ -79,6 +79,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        updateSongRepeater();
+
         FloatingActionButton fab = findViewById(R.id.taggFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

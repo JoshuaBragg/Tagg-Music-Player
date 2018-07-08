@@ -91,6 +91,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                                 updateBtn.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
+                                        Toast.makeText(context, "Taggs Updated", Toast.LENGTH_SHORT).show();
                                         RecyclerView recyclerView = container.findViewById(R.id.taggSelectRGroup);
                                         TaggAdapter adapter = (TaggAdapter) recyclerView.getAdapter();
                                         if (adapter == null) { popupWindow.dismiss(); return; }

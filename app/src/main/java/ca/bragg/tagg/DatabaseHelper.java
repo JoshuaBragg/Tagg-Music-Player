@@ -121,7 +121,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else { return false; }
         data.close();
 
-        String qT = "SELECT " + COL_NAMES[1][0] + " FROM " + TABLE_NAMES[0] + " WHERE " + COL_NAMES[1][1] + " = '" + tagg + "'";
+        String qT = "SELECT " + COL_NAMES[1][0] + " FROM " + TABLE_NAMES[1] + " WHERE " + COL_NAMES[1][1] + " = '" + tagg + "'";
         Cursor dataT = db.rawQuery(qT, null);
 
         int taggID;
