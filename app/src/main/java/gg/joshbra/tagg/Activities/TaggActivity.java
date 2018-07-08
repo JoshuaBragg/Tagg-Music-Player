@@ -1,6 +1,5 @@
 package gg.joshbra.tagg.Activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,8 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -35,7 +32,6 @@ import android.widget.TextView;
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
 import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
 
-import gg.joshbra.tagg.MaxDimensionRecycler;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongAdapter;
 import gg.joshbra.tagg.SongManager;
@@ -216,8 +212,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         // TODO: make repeater a fragment to be resused, all you would need to pass in is the array of songs to create adapter
 
         setTitle(songManager.getActiveTaggs().size() == 0 ? "Taggs" : "Taggs (" + songManager.getActiveTaggs().size() + ")");
-        
-        songManager.updateCurrSongs();
+
+        songManager.updateCurrSongsFromTaggs();
 
         songAdapter = new SongAdapter(this, songManager.getCurrSongs());
 

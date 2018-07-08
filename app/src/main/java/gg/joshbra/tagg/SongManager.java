@@ -94,7 +94,7 @@ public class SongManager {
         }
     }
 
-    public void updateCurrSongs() {
+    public void updateCurrSongsFromTaggs() {
         ArrayList<SongInfo> newCurrSongs = new ArrayList<>();
 
         // TODO: instead of iterating through list and calling several times just make databaseHelper method take array of taggs and implode
@@ -109,8 +109,8 @@ public class SongManager {
         currSongs = newCurrSongs;
     }
 
-    private void setCurrSongs(ArrayList<SongInfo> currSongs) {
-        this.currSongs = currSongs;
+    public void resetCurrSongs() {
+        currSongs = new ArrayList<>(allSongs);
     }
 
     public ArrayList<SongInfo> getCurrSongs() {

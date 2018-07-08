@@ -25,6 +25,9 @@ import com.turingtechnologies.materialscrollbar.INameableAdapter;
 
 import java.util.ArrayList;
 
+import gg.joshbra.tagg.Activities.MainActivity;
+import gg.joshbra.tagg.Activities.TaggActivity;
+
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> implements INameableAdapter {
 
     private ArrayList<SongInfo> songs;
@@ -56,7 +59,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         holder.artistName.setText(c.getArtistName());
         holder.getView().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { mediaController.playSongFromUser(c); }
+            public void onClick(View v) {
+                if (context instanceof MainActivity) {
+                    SongManager.getSelf().resetCurrSongs();
+                } else if (context instanceof TaggActivity) {
+                    SongManager.getSelf().updateCurrSongsFromTaggs();
+                }
+                mediaController.playSongFromUser(c);
+            }
         });
 
         holder.dropDownMenu.setOnClickListener(new View.OnClickListener() {
