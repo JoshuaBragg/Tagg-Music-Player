@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,25 +16,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import gg.joshbra.tagg.Activities.CurrentlyPlayingActivity;
-import gg.joshbra.tagg.MusicController;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongInfo;
 
-import java.util.Observable;
-import java.util.Observer;
-
-public class NowPlayingBarFragment extends Fragment implements Observer {
-    private MusicController musicController;
+public class NowPlayingBarFragment extends Fragment {
+    private MediaControllerCompat mediaController;
 
     public NowPlayingBarFragment() {
         // Required empty public constructor
     }
 
+    public static NowPlayingBarFragment newInstance() {
+        return new NowPlayingBarFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        musicController = MusicController.getSelf();
-//        musicController.attach(this);
     }
 
     @Override
@@ -42,39 +43,37 @@ public class NowPlayingBarFragment extends Fragment implements Observer {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setOnClickListeners();
-
-//        if (musicController.getCurrSong() == null) { return; }
-//
-//        TextView songName = getView().findViewById(R.id.songNameBarTextView);
-//        TextView artistName = getView().findViewById(R.id.artistNameBarTextView);
-//
-//        songName.setText( musicController.getCurrSong().getSongName() );
-//        artistName.setText( musicController.getCurrSong().getArtistName() );
-//
-//        update(new Observable(), musicController.isPlaying());
     }
 
-    @Override
-    public void update(Observable observable, Object o) {
-        if (getView() == null) { return; }
-
-        if (o instanceof SongInfo) {
-            TextView songName = getView().findViewById(R.id.songNameBarTextView);
-            TextView artistName = getView().findViewById(R.id.artistNameBarTextView);
-
-            songName.setText( ((SongInfo)o).getSongName() );
-            artistName.setText( ((SongInfo)o).getArtistName() );
-        }
-        else if (o instanceof Boolean) {
-            boolean playing = (Boolean)o;
+    public void updatePlaybackState(PlaybackStateCompat state) {
+        if (state == null || state.getState() == PlaybackStateCompat.STATE_PAUSED || state.getState() == PlaybackStateCompat.STATE_STOPPED) {
             ImageButton pausePlayBtn = getView().findViewById(R.id.pausePlayBtn);
-            if (playing) {
-                pausePlayBtn.setImageResource(R.drawable.ic_pause_white_24dp);
-            } else {
-                pausePlayBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp);
-            }
+            pausePlayBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+        } else {
+            ImageButton pausePlayBtn = getView().findViewById(R.id.pausePlayBtn);
+            pausePlayBtn.setImageResource(R.drawable.ic_pause_white_24dp);
         }
+        getView().findViewById(R.id.nowPlayingBarFrag).setVisibility(state == null ? View.GONE : View.VISIBLE);
+    }
+
+    public void updateMetadata(MediaMetadataCompat metadata) {
+        TextView songName = getView().findViewById(R.id.songNameBarTextView);
+        TextView artistName = getView().findViewById(R.id.artistNameBarTextView);
+
+        if (metadata == null) {
+            songName.setText("");
+            artistName.setText("");
+            return;
+        }
+
+        songName.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
+        artistName.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
+    }
+
+    public void initNowPlayingBar() {
+        mediaController = MediaControllerCompat.getMediaController(getActivity());
+
+        setOnClickListeners();
     }
 
     private void setOnClickListeners() {
@@ -83,13 +82,10 @@ public class NowPlayingBarFragment extends Fragment implements Observer {
         pausePlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (musicController == null) {
-                    return;
-                }
-                if (musicController.isPlaying()) {
-                    musicController.pauseSong();
+                if (mediaController.getPlaybackState().getState() == PlaybackStateCompat.ACTION_PLAY) {
+                    mediaController.getTransportControls().pause();
                 } else {
-                    musicController.playSong();
+                    mediaController.getTransportControls().play();
                 }
             }
         });
@@ -99,10 +95,9 @@ public class NowPlayingBarFragment extends Fragment implements Observer {
         botBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if (!musicController.songLoaded()) { return; }
-//                Intent intent = new Intent(getContext(), CurrentlyPlayingActivity.class);
-//                startActivity(intent);
-//                getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.empty_transition);
+                Intent intent = new Intent(getContext(), CurrentlyPlayingActivity.class);
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.empty_transition);
             }
         });
     }

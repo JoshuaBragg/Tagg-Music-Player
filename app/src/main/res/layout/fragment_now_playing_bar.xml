@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nowPlayingBarFrag"
     xmlns:tools="http://schemas.android.com/tools"
     android:theme="@style/NoActionBar"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/actionBarSize"
     android:orientation="horizontal"
     android:background="@color/colorPrimary"
-    tools:context="gg.joshbra.tagg.Fragments.NowPlayingBarFragment">
+    tools:context="gg.joshbra.tagg.Fragments.NowPlayingBarFragment"
+    android:visibility="gone">
 
     <ImageButton
         android:id="@+id/pausePlayBtn"

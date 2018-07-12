@@ -168,13 +168,9 @@ public class MediaNotificationManager extends BroadcastReceiver {
         MediaDescriptionCompat description = metadata.getDescription();
 
         notificationBuilder
-                .setStyle(
-                        new MediaStyle()
-                                .setMediaSession(token)
-                                .setShowActionsInCompactView(0, 1, 2))
-                .setColor(
-                        musicService.getApplication().getResources().getColor(R.color.colorAccent))
-                .setSmallIcon(R.mipmap.ic_launcher_foreground)
+                .setStyle(new MediaStyle().setMediaSession(token).setShowActionsInCompactView(0, 1, 2))
+                .setColor(musicService.getApplication().getResources().getColor(R.color.colorOffWhite))
+                .setSmallIcon(R.drawable.tagg_icon_very_small)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
                 .setContentIntent(createContentIntent())
                 .setContentTitle(description.getTitle())

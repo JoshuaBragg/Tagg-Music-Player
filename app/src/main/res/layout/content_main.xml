@@ -9,29 +9,19 @@
     tools:context=".Activities.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <fragment
+        android:name="gg.joshbra.tagg.Fragments.SongListFragment"
+        android:id="@+id/songList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorTertiary"
-        android:paddingBottom="?android:attr/actionBarSize">
-    </android.support.v7.widget.RecyclerView>
-
-    <com.turingtechnologies.materialscrollbar.TouchScrollBar
-        android:id="@+id/touchScrollBar"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:msb_recyclerView="@id/recyclerView"
-        app:msb_lightOnTouch="true"
-        android:layout_alignParentEnd="true"
-        app:msb_textColor="@color/colorPrimary"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+    </fragment>
 
     <fragment
+        android:name="gg.joshbra.tagg.Fragments.NowPlayingBarFragment"
         android:id="@+id/nowPlayingBar"
-        class="gg.joshbra.tagg.Fragments.NowPlayingBarFragment"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_alignParentBottom="true">
-
     </fragment>
 </RelativeLayout>

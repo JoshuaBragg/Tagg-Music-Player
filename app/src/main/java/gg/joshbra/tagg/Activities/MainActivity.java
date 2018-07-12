@@ -13,25 +13,24 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
-import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
-
+import gg.joshbra.tagg.Fragments.NowPlayingBarFragment;
+import gg.joshbra.tagg.Fragments.SongListFragment;
 import gg.joshbra.tagg.MusicService;
 import gg.joshbra.tagg.R;
-import gg.joshbra.tagg.SongAdapter;
 import gg.joshbra.tagg.SongInfo;
 import gg.joshbra.tagg.SongManager;
 
@@ -44,26 +43,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
 
-    private RecyclerView recyclerView;
-    private SongAdapter songAdapter;
-    private ArrayList<SongInfo> songs;
+    private ArrayList<SongInfo> loadedSongs;
     private SongManager songManager;
+    private Fragment songListFragment, nowPlayingBarFragment;
 
     private MediaBrowserCompat mediaBrowser;
 
-    private final MediaBrowserCompat.ConnectionCallback connectionCallback =
-            new MediaBrowserCompat.ConnectionCallback() {
-                @Override
-                public void onConnected() {
-                    try {
-                        MediaControllerCompat mediaController = new MediaControllerCompat(MainActivity.this, mediaBrowser.getSessionToken());
-                        MediaControllerCompat.setMediaController(MainActivity.this, mediaController);
-                        initAdapter();
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
+    private final MediaBrowserCompat.ConnectionCallback connectionCallback = new MediaBrowserCompat.ConnectionCallback() {
+            @Override
+            public void onConnected() {
+                try {
+                    MediaControllerCompat mediaController = new MediaControllerCompat(MainActivity.this, mediaBrowser.getSessionToken());
+                    MediaControllerCompat.setMediaController(MainActivity.this, mediaController);
+                    ((SongListFragment) songListFragment).initRecycler(loadedSongs);
+                    ((NowPlayingBarFragment) nowPlayingBarFragment).initNowPlayingBar();
+                    ((NowPlayingBarFragment) nowPlayingBarFragment).updateMetadata(mediaController.getMetadata());
+                    ((NowPlayingBarFragment) nowPlayingBarFragment).updatePlaybackState(mediaController.getPlaybackState());
+                    mediaController.registerCallback(controllerCallback);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
                 }
-            };
+            }
+        };
+
+    private final MediaControllerCompat.Callback controllerCallback = new MediaControllerCompat.Callback() {
+        @Override
+        public void onSessionDestroyed() {
+            super.onSessionDestroyed();
+            ((NowPlayingBarFragment) nowPlayingBarFragment).updatePlaybackState(null);
+        }
+
+        @Override
+        public void onPlaybackStateChanged(PlaybackStateCompat state) {
+            super.onPlaybackStateChanged(state);
+            ((NowPlayingBarFragment) nowPlayingBarFragment).updatePlaybackState(state);
+        }
+
+        @Override
+        public void onMetadataChanged(MediaMetadataCompat metadata) {
+            super.onMetadataChanged(metadata);
+            ((NowPlayingBarFragment) nowPlayingBarFragment).updateMetadata(metadata);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,19 +103,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
-        recyclerView = findViewById(R.id.recyclerView);
-        MaterialScrollBar scrollBar = findViewById(R.id.touchScrollBar);
-        scrollBar.setIndicator(new AlphabetIndicator(this), true);
-        songs = new ArrayList<>();
-
+        loadedSongs = new ArrayList<>();
         songManager = SongManager.getSelf();
 
         CheckPermission();
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        songListFragment = SongListFragment.newInstance();
+        ft.replace(R.id.songList, songListFragment);
+        ft.commit();
+
+        ft = getSupportFragmentManager().beginTransaction();
+        nowPlayingBarFragment = NowPlayingBarFragment.newInstance();
+        ft.replace(R.id.nowPlayingBar, nowPlayingBarFragment);
+        ft.commit();
     }
 
     @Override
@@ -165,29 +187,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
 
                     SongInfo s = new SongInfo(url, name, artist, url, album, Long.parseLong(duration), albumArt, dateAdded);
-                    songs.add(s);
+                    loadedSongs.add(s);
                 }while (cursor.moveToNext());
             }
             cursor.close();
 
             songManager.initDB(this);
             songManager.readSongs();
-            songManager.checkSongsForChanges(songs);
+            songManager.checkSongsForChanges(loadedSongs);
             songManager.readTaggs();
 
-            songs = songManager.getAllSongs();
-            Collections.sort(songs);
+            loadedSongs = songManager.getAllSongs();
+            Collections.sort(loadedSongs);
 
-            setTitle(songs.size() == 0 ? "Songs" : "Songs (" + songs.size() + ")");
-
-            songAdapter = new SongAdapter(this, MediaControllerCompat.getMediaController(this), songs);
-            recyclerView.setAdapter(songAdapter);
+            setTitle(loadedSongs.size() == 0 ? "Songs" : "Songs (" + loadedSongs.size() + ")");
         }
-    }
-
-    private void initAdapter() {
-        songAdapter = new SongAdapter(this, MediaControllerCompat.getMediaController(this), songs);
-        recyclerView.setAdapter(songAdapter);
     }
 
     @Override
