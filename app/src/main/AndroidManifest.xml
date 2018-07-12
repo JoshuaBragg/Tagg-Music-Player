@@ -13,14 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/ActionBar">
-
         <activity
             android:name=".Activities.MainActivity"
             android:configChanges="orientation"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
-        </activity>
 
+        </activity>
         <activity
             android:name=".Activities.CurrentlyPlayingActivity"
             android:configChanges="orientation"
@@ -28,20 +27,20 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar">
-        </activity>
 
+        </activity>
         <activity
             android:name=".Activities.TaggActivity"
             android:configChanges="orientation"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
-        </activity>
 
+        </activity>
         <activity
             android:name=".Activities.SplashActivity"
-            android:theme="@style/SplashTheme"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -49,6 +48,14 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".MusicService"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

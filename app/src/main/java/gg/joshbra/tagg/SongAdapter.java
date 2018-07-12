@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -32,16 +33,16 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
 
     private ArrayList<SongInfo> songs;
     private Context context;
-    private MediaController mediaController;
+    private MediaControllerCompat mediaController;
 
     @Override
     public Character getCharacterForElement(int element) {
         return songs.get(element).getSongName().charAt(0);
     }
 
-    public SongAdapter(Context context, ArrayList<SongInfo> songs) {
+    public SongAdapter(Context context, MediaControllerCompat mediaController, ArrayList<SongInfo> songs) {
         this.context = context;
-        this.mediaController = MediaController.getSelf();
+        this.mediaController = mediaController;
         this.songs = songs;
     }
 
@@ -65,7 +66,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                 } else if (context instanceof TaggActivity) {
                     SongManager.getSelf().updateCurrSongsFromTaggs();
                 }
-                mediaController.playSongFromUser(c);
+                Log.i("d", "juice " + mediaController);
+                mediaController.getTransportControls().playFromMediaId(c.getMediaID(), null);
             }
         });
 

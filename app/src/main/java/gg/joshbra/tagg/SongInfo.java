@@ -1,18 +1,26 @@
 package gg.joshbra.tagg;
 
 import android.support.annotation.NonNull;
+import android.support.v4.media.MediaMetadataCompat;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 public class SongInfo implements Comparable<SongInfo> {
-    private String songName, artistName, songUrl, dateAdded;
+    private MediaMetadataCompat mediaMetadataCompat;
     private ArrayList<String> taggs;
 
-    public SongInfo(String songName, String artistName, String songUrl, String dateAdded) {
-        this.songName = songName;
-        this.artistName = artistName;
-        this.songUrl = songUrl;
-        this.dateAdded = dateAdded;
+    public SongInfo(String mediaID, String songName, String artistName, String songUrl, String albumName, Long duration, String albumArt, String dateAdded) {
+        mediaMetadataCompat = new MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaID)
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, songName)
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artistName)
+                .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, songUrl)
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, albumName)
+                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration * 1000)
+                .putString( MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI,  albumArt)
+                .putString(MediaMetadataCompat.METADATA_KEY_DATE, dateAdded)
+                .build();
         this.taggs = new ArrayList<>();
     }
 
@@ -36,32 +44,52 @@ public class SongInfo implements Comparable<SongInfo> {
         return taggs;
     }
 
+    public String getMediaID() {
+        return mediaMetadataCompat.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID);
+    }
+
     public String getSongName() {
-        return songName;
+        return mediaMetadataCompat.getString(MediaMetadataCompat.METADATA_KEY_TITLE);
     }
 
     public String getArtistName() {
-        return artistName;
+        return mediaMetadataCompat.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
     }
 
     public String getSongUrl() {
-        return songUrl;
+        return mediaMetadataCompat.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI);
+    }
+
+    public String getAlbumName() {
+        return mediaMetadataCompat.getString(MediaMetadataCompat.METADATA_KEY_ALBUM);
+    }
+
+    public Long getDuration() {
+        return mediaMetadataCompat.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
+    }
+
+    public String getAlbumArt() {
+        return mediaMetadataCompat.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI);
     }
 
     public String getDateAdded() {
-        return dateAdded;
+        return mediaMetadataCompat.getString(MediaMetadataCompat.METADATA_KEY_DATE);
+    }
+
+    public MediaMetadataCompat getMediaMetadataCompat() {
+        return mediaMetadataCompat;
     }
 
     public String toString() {
-        return songName + " - " + artistName + " - " + songUrl;
+        return getSongName() + " - " + getArtistName() + " - " + getSongUrl();
     }
 
     public boolean equals(Object o) {
-        return o instanceof SongInfo && ((SongInfo)o).getSongName().equals(songName) && ((SongInfo)o).getArtistName().equals(artistName) && ((SongInfo)o).getSongUrl().equals(songUrl);
+        return o instanceof SongInfo && ((SongInfo)o).getSongName().equals(getSongName()) && ((SongInfo)o).getArtistName().equals(getArtistName()) && ((SongInfo)o).getSongUrl().equals(getSongUrl());
     }
 
     @Override
     public int compareTo(@NonNull SongInfo songInfo) {
-        return songName.toUpperCase().compareTo(songInfo.getSongName().toUpperCase());
+        return getMediaID().toUpperCase().compareTo(songInfo.getMediaID().toUpperCase());
     }
 }

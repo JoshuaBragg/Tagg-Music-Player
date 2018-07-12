@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import gg.joshbra.tagg.Activities.CurrentlyPlayingActivity;
-import gg.joshbra.tagg.MediaController;
+import gg.joshbra.tagg.MusicController;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongInfo;
 
@@ -21,7 +21,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class NowPlayingBarFragment extends Fragment implements Observer {
-    private MediaController mediaController;
+    private MusicController musicController;
 
     public NowPlayingBarFragment() {
         // Required empty public constructor
@@ -30,8 +30,8 @@ public class NowPlayingBarFragment extends Fragment implements Observer {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mediaController = MediaController.getSelf();
-        mediaController.attach(this);
+//        musicController = MusicController.getSelf();
+//        musicController.attach(this);
     }
 
     @Override
@@ -44,15 +44,15 @@ public class NowPlayingBarFragment extends Fragment implements Observer {
         super.onViewCreated(view, savedInstanceState);
         setOnClickListeners();
 
-        if (mediaController.getCurrSong() == null) { return; }
-
-        TextView songName = getView().findViewById(R.id.songNameBarTextView);
-        TextView artistName = getView().findViewById(R.id.artistNameBarTextView);
-
-        songName.setText( mediaController.getCurrSong().getSongName() );
-        artistName.setText( mediaController.getCurrSong().getArtistName() );
-
-        update(new Observable(), mediaController.isPlaying());
+//        if (musicController.getCurrSong() == null) { return; }
+//
+//        TextView songName = getView().findViewById(R.id.songNameBarTextView);
+//        TextView artistName = getView().findViewById(R.id.artistNameBarTextView);
+//
+//        songName.setText( musicController.getCurrSong().getSongName() );
+//        artistName.setText( musicController.getCurrSong().getArtistName() );
+//
+//        update(new Observable(), musicController.isPlaying());
     }
 
     @Override
@@ -83,13 +83,13 @@ public class NowPlayingBarFragment extends Fragment implements Observer {
         pausePlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mediaController == null) {
+                if (musicController == null) {
                     return;
                 }
-                if (mediaController.isPlaying()) {
-                    mediaController.pauseSong();
+                if (musicController.isPlaying()) {
+                    musicController.pauseSong();
                 } else {
-                    mediaController.playSong();
+                    musicController.playSong();
                 }
             }
         });
@@ -99,10 +99,10 @@ public class NowPlayingBarFragment extends Fragment implements Observer {
         botBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!mediaController.songLoaded()) { return; }
-                Intent intent = new Intent(getContext(), CurrentlyPlayingActivity.class);
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.empty_transition);
+//                if (!musicController.songLoaded()) { return; }
+//                Intent intent = new Intent(getContext(), CurrentlyPlayingActivity.class);
+//                startActivity(intent);
+//                getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.empty_transition);
             }
         });
     }

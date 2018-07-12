@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -32,6 +33,7 @@ import android.widget.TextView;
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
 import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
 
+import gg.joshbra.tagg.PlayQueue;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongAdapter;
 import gg.joshbra.tagg.SongManager;
@@ -215,7 +217,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
 
         songManager.updateCurrSongsFromTaggs();
 
-        songAdapter = new SongAdapter(this, songManager.getCurrSongs());
+        // TODO: This will brick cuz mediacontrol is null for this activity
+        songAdapter = new SongAdapter(this, MediaControllerCompat.getMediaController(this), PlayQueue.getSelf().getCurrQueue());
 
         recyclerView.setAdapter(songAdapter);
     }

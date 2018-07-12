@@ -1,16 +1,20 @@
 package gg.joshbra.tagg.Activities;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +29,7 @@ import android.widget.Toast;
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
 import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
 
-import gg.joshbra.tagg.MediaController;
+import gg.joshbra.tagg.MusicService;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongAdapter;
 import gg.joshbra.tagg.SongInfo;
@@ -35,20 +39,31 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.regex.Pattern;
 
-import gg.joshbra.tagg.Activities.TaggActivity;
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
 
     private RecyclerView recyclerView;
-    private MediaController mediaController;
     private SongAdapter songAdapter;
     private ArrayList<SongInfo> songs;
     private SongManager songManager;
 
-    // TODO: add scroll bar to recycler view
+    private MediaBrowserCompat mediaBrowser;
+
+    private final MediaBrowserCompat.ConnectionCallback connectionCallback =
+            new MediaBrowserCompat.ConnectionCallback() {
+                @Override
+                public void onConnected() {
+                    try {
+                        MediaControllerCompat mediaController = new MediaControllerCompat(MainActivity.this, mediaBrowser.getSessionToken());
+                        MediaControllerCompat.setMediaController(MainActivity.this, mediaController);
+                        initAdapter();
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +86,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         MaterialScrollBar scrollBar = findViewById(R.id.touchScrollBar);
         scrollBar.setIndicator(new AlphabetIndicator(this), true);
         songs = new ArrayList<>();
-        mediaController = MediaController.getSelf();
-        mediaController.setSongs(songs);
 
         songManager = SongManager.getSelf();
 
@@ -82,6 +95,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(linearLayoutManager);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mediaBrowser = new MediaBrowserCompat(this, new ComponentName(this, MusicService.class), connectionCallback,null);
+        mediaBrowser.connect();
     }
 
     private void CheckPermission() {
@@ -134,13 +154,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)).replaceAll("'", "''");
                     String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)).replaceAll("'", "''");
                     String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA)).replaceAll("'", "''");
-                    String dateAdded = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED));
+                    String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)).replaceAll("'", "''");
+                    String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)).replaceAll("'", "''");
+                    // TODO: figure out album art
+                    String albumArt =  ""; //cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.)).replaceAll("'", "''");
+                    String dateAdded = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED)).replaceAll("'", "''");
 
                     if (Pattern.matches(".*\\.mp3", name)) {
                         name = name.substring(0, name.length() - 4);
                     }
 
-                    SongInfo s = new SongInfo(name, artist, url, dateAdded);
+                    SongInfo s = new SongInfo(url, name, artist, url, album, Long.parseLong(duration), albumArt, dateAdded);
                     songs.add(s);
                 }while (cursor.moveToNext());
             }
@@ -151,14 +175,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             songManager.checkSongsForChanges(songs);
             songManager.readTaggs();
 
-            songs = songManager.getCurrSongs();
+            songs = songManager.getAllSongs();
             Collections.sort(songs);
 
             setTitle(songs.size() == 0 ? "Songs" : "Songs (" + songs.size() + ")");
 
-            songAdapter = new SongAdapter(this, songs);
+            songAdapter = new SongAdapter(this, MediaControllerCompat.getMediaController(this), songs);
             recyclerView.setAdapter(songAdapter);
         }
+    }
+
+    private void initAdapter() {
+        songAdapter = new SongAdapter(this, MediaControllerCompat.getMediaController(this), songs);
+        recyclerView.setAdapter(songAdapter);
     }
 
     @Override
@@ -188,5 +217,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
         ((NavigationView)findViewById(R.id.navView)).getMenu().getItem(0).setChecked(true);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 }

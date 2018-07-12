@@ -10,8 +10,10 @@ import java.util.Collections;
 import java.util.HashSet;
 
 public class SongManager {
-    private ArrayList<SongInfo> allSongs, currSongs;
+    private ArrayList<SongInfo> allSongs;
     private ArrayList<String> taggs, activeTaggs;
+
+    private PlayQueue playQueue;
 
     private DatabaseHelper databaseHelper;
 
@@ -20,6 +22,7 @@ public class SongManager {
     private static final SongManager self = new SongManager();
 
     private SongManager() {
+        playQueue = PlayQueue.getSelf();
     }
 
     public static SongManager getSelf() {
@@ -32,7 +35,8 @@ public class SongManager {
         databaseHelper = new DatabaseHelper(c);
 
         allSongs = new ArrayList<>();
-        currSongs = allSongs;
+        playQueue.setAllSongs(allSongs);
+        playQueue.setCurrQueue(allSongs);
 
         taggs = new ArrayList<>();
         activeTaggs = new ArrayList<>();
@@ -42,9 +46,9 @@ public class SongManager {
         Cursor data = databaseHelper.getSongs();
 
         while (data.moveToNext()) {
-            SongInfo s = new SongInfo(data.getString(1), data.getString(2), data.getString(3), data.getString(4));
+            SongInfo s = new SongInfo(data.getString(1), data.getString(2), data.getString(3), data.getString(4), data.getString(5), Long.parseLong(data.getString(6)), data.getString(7), data.getString(8));
 
-            ArrayList<String> taggs = databaseHelper.getSongsRelatedTaggs(data.getString(1), data.getString(2), data.getString(3), data.getString(4));
+            ArrayList<String> taggs = databaseHelper.getSongsRelatedTaggs(data.getString(1), data.getString(2), data.getString(3), data.getString(4), data.getString(5), Long.parseLong(data.getString(6)), data.getString(7), data.getString(8));
 
             for (String t : taggs) {
                 s.addTagg(t);
@@ -53,12 +57,6 @@ public class SongManager {
             allSongs.add(s);
         }
         data.close();
-
-        // TODO: remove this manual adding of taggs
-//        addSongTaggRelation("juice", "<unknown>", "/storage/emulated/0/Music/juice.mp3", "1527637530", "T1");
-//        addSongTaggRelation("juice", "<unknown>", "/storage/emulated/0/Music/juice.mp3", "1527637530", "T3");
-//        addSongTaggRelation("diplo", "<unknown>", "/storage/emulated/0/Music/diplo.mp3", "1527637530", "T1");
-//        addSongTaggRelation("diplo", "<unknown>", "/storage/emulated/0/Music/diplo.mp3", "1527637530", "T2");
     }
 
     public void readTaggs() {
@@ -94,41 +92,37 @@ public class SongManager {
         }
     }
 
+    public void resetCurrSongs() {
+        playQueue.setCurrQueue(allSongs);
+    }
+
     public void updateCurrSongsFromTaggs() {
-        ArrayList<SongInfo> newCurrSongs = new ArrayList<>();
+        ArrayList<SongInfo> newSongQueue = new ArrayList<>();
 
         // TODO: instead of iterating through list and calling several times just make databaseHelper method take array of taggs and implode
         for (String tagg : activeTaggs) {
             for (SongInfo s : getTaggsRelatedSongs(tagg)) {
-                if (!newCurrSongs.contains(s)) {
-                    newCurrSongs.add(s);
+                if (!newSongQueue.contains(s)) {
+                    newSongQueue.add(s);
                 }
             }
         }
 
-        currSongs = newCurrSongs;
-    }
-
-    public void resetCurrSongs() {
-        currSongs = new ArrayList<>(allSongs);
-    }
-
-    public ArrayList<SongInfo> getCurrSongs() {
-        return currSongs;
+        playQueue.setCurrQueue(newSongQueue);
     }
 
     public ArrayList<String> getTaggs() {
         return taggs;
     }
 
-    private void addSong(SongInfo s) {
-        databaseHelper.addSong(s.getSongName(), s.getArtistName(), s.getSongUrl(), s.getDateAdded());
-        this.allSongs.add(s);
+    private void addSong(SongInfo songInfo) {
+        databaseHelper.addSong(songInfo.getMediaID(), songInfo.getSongName(), songInfo.getArtistName(), songInfo.getSongUrl(), songInfo.getAlbumName(), songInfo.getDuration(), songInfo.getAlbumArt(), songInfo.getDateAdded());
+        this.allSongs.add(songInfo);
     }
 
-    private void removeSong(SongInfo s) {
-        databaseHelper.removeSong(s.getSongName(), s.getArtistName(), s.getSongUrl(), s.getDateAdded());
-        this.allSongs.remove(s);
+    private void removeSong(SongInfo songInfo) {
+        databaseHelper.removeSong(songInfo.getMediaID(), songInfo.getSongName(), songInfo.getArtistName(), songInfo.getSongUrl(), songInfo.getAlbumName(), songInfo.getDuration(), songInfo.getAlbumArt(), songInfo.getDateAdded());
+        this.allSongs.remove(songInfo);
     }
 
     public void addTagg(String tagg) {
@@ -169,11 +163,11 @@ public class SongManager {
     }
 
     public boolean addSongTaggRelation(SongInfo songInfo, String tagg) {
-        return databaseHelper.addSongTaggRelation(songInfo.getSongName(), songInfo.getArtistName(), songInfo.getSongUrl(), songInfo.getDateAdded(), tagg);
+        return databaseHelper.addSongTaggRelation(songInfo.getMediaID(), songInfo.getSongName(), songInfo.getArtistName(), songInfo.getSongUrl(), songInfo.getAlbumName(), songInfo.getDuration(), songInfo.getAlbumArt(), songInfo.getDateAdded(), tagg);
     }
 
     public boolean removeSongTaggRelation(SongInfo songInfo, String tagg) {
-        return databaseHelper.removeSongTaggRelation(songInfo.getSongName(), songInfo.getArtistName(), songInfo.getSongUrl(), songInfo.getDateAdded(), tagg);
+        return databaseHelper.removeSongTaggRelation(songInfo.getMediaID(), songInfo.getSongName(), songInfo.getArtistName(), songInfo.getSongUrl(), songInfo.getAlbumName(), songInfo.getDuration(), songInfo.getAlbumArt(), songInfo.getDateAdded(), tagg);
     }
 
     private ArrayList<SongInfo> getTaggsRelatedSongs(String tagg) {
@@ -181,14 +175,14 @@ public class SongManager {
         ArrayList<SongInfo> out = new ArrayList<>();
 
         for (String[] ar : s) {
-            out.add(new SongInfo(ar[0], ar[1], ar[2], ar[3]));
+            out.add(new SongInfo(ar[0], ar[1], ar[2], ar[3], ar[4], Long.parseLong(ar[5]), ar[6], ar[7]));
         }
 
         return out;
     }
 
     public ArrayList<String> getSongsRelatedTaggs(SongInfo songInfo) {
-        return databaseHelper.getSongsRelatedTaggs(songInfo.getSongName(), songInfo.getArtistName(), songInfo.getSongUrl(), songInfo.getDateAdded());
+        return databaseHelper.getSongsRelatedTaggs(songInfo.getMediaID(), songInfo.getSongName(), songInfo.getArtistName(), songInfo.getSongUrl(), songInfo.getAlbumName(), songInfo.getDuration(), songInfo.getAlbumArt(), songInfo.getDateAdded());
     }
 
     public ArrayList<SongInfo> getAllSongs() {

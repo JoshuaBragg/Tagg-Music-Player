@@ -2,23 +2,20 @@ package gg.joshbra.tagg.Activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import gg.joshbra.tagg.MediaController;
+import gg.joshbra.tagg.MusicController;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SeekBarController;
 import gg.joshbra.tagg.SongInfo;
 
-import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
 public class CurrentlyPlayingActivity extends AppCompatActivity implements Observer {
 
-    private MediaController mediaController;
+    private MusicController musicController;
     private SeekBarController seekBarController;
 
     @Override
@@ -26,19 +23,19 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currently_playing_view);
 
-        mediaController = MediaController.getSelf();
-        mediaController.attach(this);
+//        musicController = MusicController.getSelf();
+//        musicController.attach(this);
+//
+//        HashMap state = musicController.getState();
 
-        HashMap state = mediaController.getState();
+//        if ((boolean)state.get("playing")) {
+//            ((ImageButton)findViewById(R.id.pausePlayBtn)).setImageResource(R.drawable.ic_pause_white_24dp);
+//        }
+//        ((TextView)findViewById(R.id.songNameTextView)).setText((String)state.get("songName"));
+//        ((TextView)findViewById(R.id.artistNameTextView)).setText((String)state.get("artistName"));
 
-        if ((boolean)state.get("playing")) {
-            ((ImageButton)findViewById(R.id.pausePlayBtn)).setImageResource(R.drawable.ic_pause_white_24dp);
-        }
-        ((TextView)findViewById(R.id.songNameTextView)).setText((String)state.get("songName"));
-        ((TextView)findViewById(R.id.artistNameTextView)).setText((String)state.get("artistName"));
-
-        seekBarController = new SeekBarController(this);
-        seekBarController.startThread();
+//        seekBarController = new SeekBarController(this);
+//        seekBarController.startThread();
 
         setClickListeners();
     }
@@ -46,46 +43,46 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
     public void setClickListeners() {
         ImageButton pausePlayBtn = findViewById(R.id.pausePlayBtn);
 
-        pausePlayBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!mediaController.songLoaded()) { return; }
-
-                if (mediaController.isPlaying()) {
-                    mediaController.pauseSong();
-                } else {
-                    mediaController.playSong();
-                }
-            }
-        });
-
-        ImageButton skipNextBtn = findViewById(R.id.skipNextBtn);
-
-        skipNextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!mediaController.songLoaded()) { return; }
-
-                mediaController.nextSong();
-            }
-        });
-
-        ImageButton skipPrevBtn = findViewById(R.id.skipPrevBtn);
-
-        skipPrevBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!mediaController.songLoaded()) { return; }
-
-                mediaController.prevSong();
-            }
-        });
+//        pausePlayBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (!musicController.songLoaded()) { return; }
+//
+//                if (musicController.isPlaying()) {
+//                    musicController.pauseSong();
+//                } else {
+//                    musicController.playSong();
+//                }
+//            }
+//        });
+//
+//        ImageButton skipNextBtn = findViewById(R.id.skipNextBtn);
+//
+//        skipNextBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (!musicController.songLoaded()) { return; }
+//
+//                musicController.nextSong();
+//            }
+//        });
+//
+//        ImageButton skipPrevBtn = findViewById(R.id.skipPrevBtn);
+//
+//        skipPrevBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (!musicController.songLoaded()) { return; }
+//
+//                musicController.prevSong();
+//            }
+//        });
     }
 
     @Override
     public void finish() {
         super.finish();
-        mediaController.detach(this);
+        musicController.detach(this);
         seekBarController.killThread();
         overridePendingTransition(R.anim.empty_transition, R.anim.slide_out_down);
     }
