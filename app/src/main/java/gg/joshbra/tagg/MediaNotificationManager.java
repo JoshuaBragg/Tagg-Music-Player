@@ -11,7 +11,7 @@ import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import gg.joshbra.tagg.Activities.MainActivity;
@@ -149,7 +149,7 @@ public class MediaNotificationManager extends BroadcastReceiver {
 
         notificationBuilder
                 .setStyle(
-                        new NotificationCompat.MediaStyle()
+                        new android.support.v4.media.app.NotificationCompat.MediaStyle()
                                 .setMediaSession(token)
                                 .setShowActionsInCompactView(0, 1, 2))
                 .setColor(
