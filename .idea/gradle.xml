@@ -9,7 +9,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/appcompat-v7-25.4.0-sources" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

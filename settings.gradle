@@ -1,1 +1,1 @@
-include ':app', ':appcompat-v7-25.4.0-sources'
+include ':app'
