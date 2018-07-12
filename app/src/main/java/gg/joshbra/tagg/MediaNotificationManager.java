@@ -1,17 +1,22 @@
 package gg.joshbra.tagg;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.util.Log;
 
 import gg.joshbra.tagg.Activities.MainActivity;
@@ -23,6 +28,7 @@ import gg.joshbra.tagg.Activities.MainActivity;
 public class MediaNotificationManager extends BroadcastReceiver {
     private static final int NOTIFICATION_ID = 412;
     private static final int REQUEST_CODE = 100;
+    private static final String CHANNEL_ID = "media_playback_channel";
 
     private static final String ACTION_PAUSE = "com.example.android.musicplayercodelab.pause";
     private static final String ACTION_PLAY = "com.example.android.musicplayercodelab.play";
@@ -125,8 +131,22 @@ public class MediaNotificationManager extends BroadcastReceiver {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private void createChannel() {
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Media playback", NotificationManager.IMPORTANCE_LOW);
+        // Configure the notification channel.
+        channel.setDescription("Media playback controls");
+        channel.setShowBadge(false);
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        notificationManager.createNotificationChannel(channel);
+    }
+
     public void update(MediaMetadataCompat metadata, PlaybackStateCompat state, MediaSessionCompat.Token token) {
         Log.i("d", "updating not");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createChannel();
+        }
 
         if (state == null || state.getState() == PlaybackStateCompat.STATE_STOPPED || state.getState() == PlaybackStateCompat.STATE_NONE) {
             musicService.stopForeground(true);
@@ -144,12 +164,12 @@ public class MediaNotificationManager extends BroadcastReceiver {
 
         boolean isPlaying = state.getState() == PlaybackStateCompat.STATE_PLAYING;
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(musicService);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(musicService, CHANNEL_ID);
         MediaDescriptionCompat description = metadata.getDescription();
 
         notificationBuilder
                 .setStyle(
-                        new android.support.v4.media.app.NotificationCompat.MediaStyle()
+                        new MediaStyle()
                                 .setMediaSession(token)
                                 .setShowActionsInCompactView(0, 1, 2))
                 .setColor(
@@ -180,10 +200,12 @@ public class MediaNotificationManager extends BroadcastReceiver {
         Notification notification = notificationBuilder.build();
 
         if (isPlaying && !started) {
-            musicService.startService(new Intent(musicService.getApplicationContext(), MusicService.class));
-            Log.i("d", "woopty wop");
+            if (Build.VERSION.SDK_INT >= 26) {
+                musicService.startForegroundService(new Intent(musicService.getApplicationContext(), MusicService.class));
+            } else {
+                musicService.startService(new Intent(musicService.getApplicationContext(), MusicService.class));
+            }
             musicService.startForeground(NOTIFICATION_ID, notification);
-            Log.i("d", "may i have some looops borhter");
             started = true;
         } else {
             if (!isPlaying) {
