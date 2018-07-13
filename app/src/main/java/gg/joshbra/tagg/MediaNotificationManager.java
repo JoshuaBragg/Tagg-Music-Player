@@ -142,7 +142,6 @@ public class MediaNotificationManager extends BroadcastReceiver {
     }
 
     public void update(MediaMetadataCompat metadata, PlaybackStateCompat state, MediaSessionCompat.Token token) {
-        Log.i("d", "updating not");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel();

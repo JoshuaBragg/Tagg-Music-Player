@@ -45,7 +45,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ArrayList<SongInfo> loadedSongs;
     private SongManager songManager;
-    private Fragment songListFragment, nowPlayingBarFragment;
+    private SongListFragment songListFragment;
+    private NowPlayingBarFragment nowPlayingBarFragment;
 
     private MediaBrowserCompat mediaBrowser;
 
@@ -55,10 +56,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 try {
                     MediaControllerCompat mediaController = new MediaControllerCompat(MainActivity.this, mediaBrowser.getSessionToken());
                     MediaControllerCompat.setMediaController(MainActivity.this, mediaController);
-                    ((SongListFragment) songListFragment).initRecycler(loadedSongs);
-                    ((NowPlayingBarFragment) nowPlayingBarFragment).initNowPlayingBar();
-                    ((NowPlayingBarFragment) nowPlayingBarFragment).updateMetadata(mediaController.getMetadata());
-                    ((NowPlayingBarFragment) nowPlayingBarFragment).updatePlaybackState(mediaController.getPlaybackState());
+                    songListFragment.initRecycler(loadedSongs);
+                    nowPlayingBarFragment.initNowPlayingBar();
+                    nowPlayingBarFragment.updateMetadata(mediaController.getMetadata());
+                    nowPlayingBarFragment.updatePlaybackState(mediaController.getPlaybackState());
                     mediaController.registerCallback(controllerCallback);
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
@@ -70,19 +71,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public void onSessionDestroyed() {
             super.onSessionDestroyed();
-            ((NowPlayingBarFragment) nowPlayingBarFragment).updatePlaybackState(null);
+            nowPlayingBarFragment.updatePlaybackState(null);
         }
 
         @Override
         public void onPlaybackStateChanged(PlaybackStateCompat state) {
             super.onPlaybackStateChanged(state);
-            ((NowPlayingBarFragment) nowPlayingBarFragment).updatePlaybackState(state);
+            nowPlayingBarFragment.updatePlaybackState(state);
         }
 
         @Override
         public void onMetadataChanged(MediaMetadataCompat metadata) {
             super.onMetadataChanged(metadata);
-            ((NowPlayingBarFragment) nowPlayingBarFragment).updateMetadata(metadata);
+            nowPlayingBarFragment.updateMetadata(metadata);
         }
     };
 
@@ -108,15 +109,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         CheckPermission();
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        songListFragment = SongListFragment.newInstance();
-        ft.replace(R.id.songList, songListFragment);
-        ft.commit();
-
-        ft = getSupportFragmentManager().beginTransaction();
-        nowPlayingBarFragment = NowPlayingBarFragment.newInstance();
-        ft.replace(R.id.nowPlayingBar, nowPlayingBarFragment);
-        ft.commit();
+        songListFragment = (SongListFragment) getSupportFragmentManager().findFragmentById(R.id.songList);
+        nowPlayingBarFragment = (NowPlayingBarFragment) getSupportFragmentManager().findFragmentById(R.id.nowPlayingBar);
     }
 
     @Override

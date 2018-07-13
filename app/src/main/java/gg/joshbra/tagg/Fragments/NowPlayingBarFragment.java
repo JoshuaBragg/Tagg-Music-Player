@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import gg.joshbra.tagg.SongInfo;
 
 public class NowPlayingBarFragment extends Fragment {
     private MediaControllerCompat mediaController;
+    private PlaybackStateCompat state;
 
     public NowPlayingBarFragment() {
         // Required empty public constructor
@@ -46,14 +48,14 @@ public class NowPlayingBarFragment extends Fragment {
     }
 
     public void updatePlaybackState(PlaybackStateCompat state) {
-        if (state == null || state.getState() == PlaybackStateCompat.STATE_PAUSED || state.getState() == PlaybackStateCompat.STATE_STOPPED) {
+        this.state = state;
+        if (state == null || state.getState() == PlaybackStateCompat.STATE_PAUSED || state.getState() == PlaybackStateCompat.STATE_STOPPED || state.getState() == PlaybackStateCompat.STATE_NONE) {
             ImageButton pausePlayBtn = getView().findViewById(R.id.pausePlayBtn);
             pausePlayBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp);
         } else {
             ImageButton pausePlayBtn = getView().findViewById(R.id.pausePlayBtn);
             pausePlayBtn.setImageResource(R.drawable.ic_pause_white_24dp);
         }
-        getView().findViewById(R.id.nowPlayingBarFrag).setVisibility(state == null ? View.GONE : View.VISIBLE);
     }
 
     public void updateMetadata(MediaMetadataCompat metadata) {
@@ -82,7 +84,8 @@ public class NowPlayingBarFragment extends Fragment {
         pausePlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mediaController.getPlaybackState().getState() == PlaybackStateCompat.ACTION_PLAY) {
+                if (state == null || state.getState() == PlaybackStateCompat.STATE_NONE) { return; }
+                if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
                     mediaController.getTransportControls().pause();
                 } else {
                     mediaController.getTransportControls().play();

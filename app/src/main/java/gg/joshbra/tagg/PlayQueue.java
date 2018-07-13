@@ -67,7 +67,6 @@ public class PlayQueue {
                 return s;
             }
         }
-        Log.i("d", "oh no that one didnt exist woops " + id);
         return null;
     }
 

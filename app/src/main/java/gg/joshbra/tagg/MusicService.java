@@ -32,7 +32,8 @@ public class MusicService extends MediaBrowserServiceCompat {
                 @Override
                 public void onPlay() {
                     if (playQueue.getCurrentMediaId() != null) {
-                        onPlayFromMediaId(playQueue.getCurrentMediaId(), null);
+                        //onPlayFromMediaId(playQueue.getCurrentMediaId(), null);
+                        musicController.playSong();
                     }
                 }
 

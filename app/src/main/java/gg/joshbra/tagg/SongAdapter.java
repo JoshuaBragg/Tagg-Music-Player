@@ -66,7 +66,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                 } else if (context instanceof TaggActivity) {
                     SongManager.getSelf().updateCurrSongsFromTaggs();
                 }
-                Log.i("d", "juice " + mediaController);
                 mediaController.getTransportControls().playFromMediaId(c.getMediaID(), null);
             }
         });

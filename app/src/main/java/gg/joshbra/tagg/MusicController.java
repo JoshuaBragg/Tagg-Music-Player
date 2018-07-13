@@ -190,6 +190,7 @@ public class MusicController extends Observable implements AudioManager.OnAudioF
         if (callback == null) {
             return;
         }
+
         PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder().setActions(getAvailableActions());
 
         stateBuilder.setState(state, getCurrentStreamPosition(), 1.0f, SystemClock.elapsedRealtime());
