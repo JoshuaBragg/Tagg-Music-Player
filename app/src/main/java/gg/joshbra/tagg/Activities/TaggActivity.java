@@ -218,7 +218,7 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         songManager.updateCurrSongsFromTaggs();
 
         // TODO: This will brick cuz mediacontrol is null for this activity
-        songAdapter = new SongAdapter(this, MediaControllerCompat.getMediaController(this), PlayQueue.getSelf().getCurrQueue());
+        songAdapter = new SongAdapter(this, PlayQueue.getSelf().getCurrQueue());
 
         recyclerView.setAdapter(songAdapter);
     }

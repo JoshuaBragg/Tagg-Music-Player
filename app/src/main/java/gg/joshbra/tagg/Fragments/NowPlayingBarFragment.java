@@ -16,20 +16,22 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import gg.joshbra.tagg.Activities.CurrentlyPlayingActivity;
+import gg.joshbra.tagg.Activities.MainActivity;
+import gg.joshbra.tagg.CurrentPlaybackNotifier;
+import gg.joshbra.tagg.MediaControllerHolder;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongInfo;
 
-public class NowPlayingBarFragment extends Fragment {
+public class NowPlayingBarFragment extends Fragment implements Observer {
     private MediaControllerCompat mediaController;
     private PlaybackStateCompat state;
 
     public NowPlayingBarFragment() {
         // Required empty public constructor
-    }
-
-    public static NowPlayingBarFragment newInstance() {
-        return new NowPlayingBarFragment();
     }
 
     @Override
@@ -45,35 +47,37 @@ public class NowPlayingBarFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mediaController = MediaControllerHolder.getMediaController();
+        CurrentPlaybackNotifier.getSelf().attach(this);
     }
 
-    public void updatePlaybackState(PlaybackStateCompat state) {
-        this.state = state;
-        if (state == null || state.getState() == PlaybackStateCompat.STATE_PAUSED || state.getState() == PlaybackStateCompat.STATE_STOPPED || state.getState() == PlaybackStateCompat.STATE_NONE) {
+    @Override
+    public void update(Observable observable, Object o) {
+        if (o instanceof PlaybackStateCompat) {
+            PlaybackStateCompat state = (PlaybackStateCompat)o;
+
+            this.state = state;
+
             ImageButton pausePlayBtn = getView().findViewById(R.id.pausePlayBtn);
-            pausePlayBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp);
-        } else {
-            ImageButton pausePlayBtn = getView().findViewById(R.id.pausePlayBtn);
-            pausePlayBtn.setImageResource(R.drawable.ic_pause_white_24dp);
+
+            if (state.getState() == PlaybackStateCompat.STATE_PAUSED || state.getState() == PlaybackStateCompat.STATE_STOPPED || state.getState() == PlaybackStateCompat.STATE_NONE) {
+                pausePlayBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+            } else {
+                pausePlayBtn.setImageResource(R.drawable.ic_pause_white_24dp);
+            }
+        } else if (o instanceof MediaMetadataCompat) {
+            MediaMetadataCompat metadata = (MediaMetadataCompat)o;
+
+            TextView songName = getView().findViewById(R.id.songNameBarTextView);
+            TextView artistName = getView().findViewById(R.id.artistNameBarTextView);
+
+            songName.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
+            artistName.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
         }
-    }
-
-    public void updateMetadata(MediaMetadataCompat metadata) {
-        TextView songName = getView().findViewById(R.id.songNameBarTextView);
-        TextView artistName = getView().findViewById(R.id.artistNameBarTextView);
-
-        if (metadata == null) {
-            songName.setText("");
-            artistName.setText("");
-            return;
-        }
-
-        songName.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
-        artistName.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
     }
 
     public void initNowPlayingBar() {
-        mediaController = MediaControllerCompat.getMediaController(getActivity());
+        mediaController = MediaControllerHolder.getMediaController();
 
         setOnClickListeners();
     }
@@ -98,10 +102,18 @@ public class NowPlayingBarFragment extends Fragment {
         botBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (state == null || state.getState() == PlaybackStateCompat.STATE_NONE) { return; }
+
                 Intent intent = new Intent(getContext(), CurrentlyPlayingActivity.class);
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.empty_transition);
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        CurrentPlaybackNotifier.getSelf().detach(this);
     }
 }

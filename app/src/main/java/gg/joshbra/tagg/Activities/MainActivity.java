@@ -23,12 +23,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import gg.joshbra.tagg.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.Fragments.NowPlayingBarFragment;
 import gg.joshbra.tagg.Fragments.SongListFragment;
+import gg.joshbra.tagg.MediaControllerHolder;
 import gg.joshbra.tagg.MusicService;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongInfo;
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SongManager songManager;
     private SongListFragment songListFragment;
     private NowPlayingBarFragment nowPlayingBarFragment;
+    private CurrentPlaybackNotifier currentPlaybackNotifier;
 
     private MediaBrowserCompat mediaBrowser;
 
@@ -56,10 +60,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 try {
                     MediaControllerCompat mediaController = new MediaControllerCompat(MainActivity.this, mediaBrowser.getSessionToken());
                     MediaControllerCompat.setMediaController(MainActivity.this, mediaController);
+                    MediaControllerHolder.setMediaController(mediaController);
+
                     songListFragment.initRecycler(loadedSongs);
+
                     nowPlayingBarFragment.initNowPlayingBar();
-                    nowPlayingBarFragment.updateMetadata(mediaController.getMetadata());
-                    nowPlayingBarFragment.updatePlaybackState(mediaController.getPlaybackState());
+
+                    currentPlaybackNotifier.notifyPlaybackStateChanged(mediaController.getPlaybackState());
+                    currentPlaybackNotifier.notifyMetadataChanged(mediaController.getMetadata());
+                    // nowPlayingBarFragment.updateMetadata(mediaController.getMetadata());
+                    // nowPlayingBarFragment.updatePlaybackState(mediaController.getPlaybackState());
+
                     mediaController.registerCallback(controllerCallback);
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
@@ -71,19 +82,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public void onSessionDestroyed() {
             super.onSessionDestroyed();
-            nowPlayingBarFragment.updatePlaybackState(null);
+            currentPlaybackNotifier.notifyPlaybackStateChanged(null);
+            //nowPlayingBarFragment.updatePlaybackState(null);
         }
 
         @Override
         public void onPlaybackStateChanged(PlaybackStateCompat state) {
             super.onPlaybackStateChanged(state);
-            nowPlayingBarFragment.updatePlaybackState(state);
+            currentPlaybackNotifier.notifyPlaybackStateChanged(state);
+            //nowPlayingBarFragment.updatePlaybackState(state);
         }
 
         @Override
         public void onMetadataChanged(MediaMetadataCompat metadata) {
             super.onMetadataChanged(metadata);
-            nowPlayingBarFragment.updateMetadata(metadata);
+            currentPlaybackNotifier.notifyMetadataChanged(metadata);
+            //nowPlayingBarFragment.updateMetadata(metadata);
         }
     };
 
@@ -106,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         loadedSongs = new ArrayList<>();
         songManager = SongManager.getSelf();
+        currentPlaybackNotifier = CurrentPlaybackNotifier.getSelf();
 
         CheckPermission();
 
@@ -167,6 +182,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(cursor.moveToFirst()){
                 do{
                     // TODO: make permanent solution to quote and SQL injection
+//                    String id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID)).replaceAll("'","''");
+//                    Log.i("d", id);
                     String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)).replaceAll("'", "''");
                     String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)).replaceAll("'", "''");
                     String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA)).replaceAll("'", "''");
@@ -225,10 +242,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
         ((NavigationView)findViewById(R.id.navView)).getMenu().getItem(0).setChecked(true);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 }

@@ -56,6 +56,14 @@ public class MusicService extends MediaBrowserServiceCompat {
                 public void onSkipToPrevious() {
                     onPlayFromMediaId(playQueue.getPrevSong().getMediaID(), null);
                 }
+
+                @Override
+                public void onSeekTo(long pos) {
+                    super.onSeekTo(pos);
+                    musicController.seekTo((int)pos);
+                }
+
+
             };
 
     @Override

@@ -40,9 +40,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         return songs.get(element).getSongName().charAt(0);
     }
 
-    public SongAdapter(Context context, MediaControllerCompat mediaController, ArrayList<SongInfo> songs) {
+    public SongAdapter(Context context,ArrayList<SongInfo> songs) {
         this.context = context;
-        this.mediaController = mediaController;
+        this.mediaController = MediaControllerHolder.getMediaController();
         this.songs = songs;
     }
 

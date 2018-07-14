@@ -1,10 +1,15 @@
 package gg.joshbra.tagg;
+
+import android.os.Build;
+import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.SeekBar;
 
 public class SeekBarController {
     private SeekBar seekBar;
-    private MusicController musicController;
+    private MediaControllerCompat mediaController;
     private SeekBarThread seekBarThread;
     private boolean running;
 
@@ -12,11 +17,10 @@ public class SeekBarController {
         seekBarThread = new SeekBarThread();
         seekBar = m.findViewById(R.id.seekBar);
         running = false;
-//        musicController = MusicController.getSelf();
-//        if (musicController.songLoaded()) {
-//            seekBar.setMax(musicController.getDuration());
-//            seekBar.setProgress(musicController.getCurrentPosition());
-//        }
+        mediaController = MediaControllerHolder.getMediaController();
+        Log.i("d", PlayQueue.getSelf().getCurrSong().getDuration() + "");
+        seekBar.setMax(Math.round(PlayQueue.getSelf().getCurrSong().getDuration()));
+        seekBar.setProgress(Math.round(mediaController.getPlaybackState().getPosition()));
     }
 
     public void startThread() {
@@ -36,9 +40,9 @@ public class SeekBarController {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                     // Only update the mediaPlayer position if the user moved seekBar and song is loaded
-//                    if (b && musicController.songLoaded()) {
-//                        musicController.seekTo(seekBar.getProgress());
-//                    }
+                    if (b && mediaController.getPlaybackState() != null && mediaController.getPlaybackState().getState() != PlaybackStateCompat.STATE_NONE) {
+                        mediaController.getTransportControls().seekTo((long)i);
+                    }
                 }
 
                 @Override
@@ -55,14 +59,14 @@ public class SeekBarController {
             while (running) {
                 try {
                     Thread.sleep(1000);
-//                    if (musicController.songLoaded()) {
-//                        seekBar.setMax(musicController.getDuration());
-//                        if (Build.VERSION.SDK_INT >= 24) {
-//                            seekBar.setProgress(musicController.getCurrentPosition(), true);
-//                        } else {
-//                            seekBar.setProgress(musicController.getCurrentPosition());
-//                        }
-//                    }
+                    if (mediaController.getPlaybackState() != null && mediaController.getPlaybackState().getState() != PlaybackStateCompat.STATE_NONE) {
+                        seekBar.setMax(Math.round(PlayQueue.getSelf().getCurrSong().getDuration()));
+                        if (Build.VERSION.SDK_INT >= 24) {
+                            seekBar.setProgress(Math.round(mediaController.getPlaybackState().getPosition()), true);
+                        } else {
+                            seekBar.setProgress(Math.round(mediaController.getPlaybackState().getPosition()));
+                        }
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (IllegalStateException e) {

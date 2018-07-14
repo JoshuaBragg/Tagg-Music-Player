@@ -62,7 +62,7 @@ public class SongListFragment extends Fragment {
     }
 
     public void initRecycler(ArrayList<SongInfo> songs) {
-        songAdapter = new SongAdapter(getContext(), MediaControllerCompat.getMediaController(getActivity()), songs);
+        songAdapter = new SongAdapter(getContext(), songs);
         recyclerView.setAdapter(songAdapter);
     }
 }
