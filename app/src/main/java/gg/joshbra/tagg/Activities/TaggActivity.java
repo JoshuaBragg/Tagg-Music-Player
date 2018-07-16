@@ -35,6 +35,7 @@ import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
 
 import gg.joshbra.tagg.Fragments.NowPlayingBarFragment;
 import gg.joshbra.tagg.Fragments.SongListFragment;
+import gg.joshbra.tagg.MediaControllerHolder;
 import gg.joshbra.tagg.PlayQueue;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongAdapter;
@@ -44,6 +45,7 @@ import gg.joshbra.tagg.TaggSelector;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Observable;
 import java.util.regex.Pattern;
 
 public class TaggActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -80,6 +82,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         nowPlayingBarFragment = (NowPlayingBarFragment) getSupportFragmentManager().findFragmentById(R.id.nowPlayingBar);
 
         nowPlayingBarFragment.initNowPlayingBar();
+        nowPlayingBarFragment.update(new Observable(), MediaControllerHolder.getMediaController().getPlaybackState());
+        nowPlayingBarFragment.update(new Observable(), MediaControllerHolder.getMediaController().getMetadata());
 
         FloatingActionButton fab = findViewById(R.id.taggFab);
         fab.setOnClickListener(new View.OnClickListener() {
