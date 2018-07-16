@@ -35,7 +35,6 @@ public class SongManager {
         databaseHelper = new DatabaseHelper(c);
 
         allSongs = new ArrayList<>();
-        playQueue.setAllSongs(allSongs);
         playQueue.setCurrQueue(allSongs);
 
         taggs = new ArrayList<>();
@@ -94,6 +93,21 @@ public class SongManager {
 
     public void resetCurrSongs() {
         playQueue.setCurrQueue(allSongs);
+    }
+
+    public ArrayList<SongInfo> getCurrSongsFromTaggs() {
+        ArrayList<SongInfo> newSongQueue = new ArrayList<>();
+
+        // TODO: instead of iterating through list and calling several times just make databaseHelper method take array of taggs and implode
+        for (String tagg : activeTaggs) {
+            for (SongInfo s : getTaggsRelatedSongs(tagg)) {
+                if (!newSongQueue.contains(s)) {
+                    newSongQueue.add(s);
+                }
+            }
+        }
+
+        return newSongQueue;
     }
 
     public void updateCurrSongsFromTaggs() {

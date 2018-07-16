@@ -63,6 +63,12 @@ public class MusicService extends MediaBrowserServiceCompat {
                     musicController.seekTo((int)pos);
                     musicController.updatePlaybackState();
                 }
+
+                @Override
+                public void onSetShuffleMode(int shuffleMode) {
+                    super.onSetShuffleMode(shuffleMode);
+                    PlayQueue.setShuffleMode(shuffleMode);
+                }
             };
 
     @Override

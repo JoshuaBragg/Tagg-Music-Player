@@ -33,6 +33,8 @@ import android.widget.TextView;
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
 import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
 
+import gg.joshbra.tagg.Fragments.NowPlayingBarFragment;
+import gg.joshbra.tagg.Fragments.SongListFragment;
 import gg.joshbra.tagg.PlayQueue;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongAdapter;
@@ -47,10 +49,13 @@ import java.util.regex.Pattern;
 public class TaggActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
+
     private PopupWindow popupWindow;
-    private RecyclerView recyclerView;
     private SongAdapter songAdapter;
     private SongManager songManager;
+
+    private SongListFragment songListFragment;
+    private NowPlayingBarFragment nowPlayingBarFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,16 +76,10 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(1).setChecked(true);
 
-        recyclerView = findViewById(R.id.recyclerView);
-        MaterialScrollBar scrollBar = findViewById(R.id.touchScrollBar);
-        scrollBar.setIndicator(new AlphabetIndicator(this), true);
+        songListFragment = (SongListFragment) getSupportFragmentManager().findFragmentById(R.id.songList);
+        nowPlayingBarFragment = (NowPlayingBarFragment) getSupportFragmentManager().findFragmentById(R.id.nowPlayingBar);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
-        recyclerView.setLayoutManager(linearLayoutManager);
-
-        updateSongRepeater();
+        nowPlayingBarFragment.initNowPlayingBar();
 
         FloatingActionButton fab = findViewById(R.id.taggFab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -211,16 +210,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void updateSongRepeater() {
-        // TODO: make repeater a fragment to be resused, all you would need to pass in is the array of songs to create adapter
-
         setTitle(songManager.getActiveTaggs().size() == 0 ? "Taggs" : "Taggs (" + songManager.getActiveTaggs().size() + ")");
-
-        songManager.updateCurrSongsFromTaggs();
-
-        // TODO: This will brick cuz mediacontrol is null for this activity
-        songAdapter = new SongAdapter(this, PlayQueue.getSelf().getCurrQueue());
-
-        recyclerView.setAdapter(songAdapter);
+        songListFragment.initRecycler(songManager.getCurrSongsFromTaggs());
     }
 
     @Override

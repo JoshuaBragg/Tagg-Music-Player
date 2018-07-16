@@ -69,7 +69,9 @@ public class MusicController extends Observable implements AudioManager.OnAudioF
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
-                    playSong(playQueue.getNextSong());
+                    MediaControllerHolder.getMediaController().getTransportControls().skipToNext();
+//                    playSong(playQueue.getNextSong());
+//                    CurrentPlaybackNotifier.getSelf().notifyMetadataChanged(playQueue.getCurrSong().getMediaMetadataCompat());
                 }
             });
 

@@ -68,8 +68,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     currentPlaybackNotifier.notifyPlaybackStateChanged(mediaController.getPlaybackState());
                     currentPlaybackNotifier.notifyMetadataChanged(mediaController.getMetadata());
-                    // nowPlayingBarFragment.updateMetadata(mediaController.getMetadata());
-                    // nowPlayingBarFragment.updatePlaybackState(mediaController.getPlaybackState());
 
                     mediaController.registerCallback(controllerCallback);
                 } catch (RemoteException e) {
@@ -189,7 +187,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA)).replaceAll("'", "''");
                     String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)).replaceAll("'", "''");
                     String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)).replaceAll("'", "''");
-                    Log.i("d", duration);
                     // TODO: figure out album art
                     String albumArt =  ""; //cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.)).replaceAll("'", "''");
                     String dateAdded = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED)).replaceAll("'", "''");
