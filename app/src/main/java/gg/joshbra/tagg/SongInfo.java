@@ -17,7 +17,7 @@ public class SongInfo implements Comparable<SongInfo> {
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artistName)
                 .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, songUrl)
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, albumName)
-                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration * 1000)
+                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration / 1000)
                 .putString( MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI,  albumArt)
                 .putString(MediaMetadataCompat.METADATA_KEY_DATE, dateAdded)
                 .build();

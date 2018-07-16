@@ -186,7 +186,7 @@ public class MusicController extends Observable implements AudioManager.OnAudioF
         return mediaPlayer != null ? mediaPlayer.getCurrentPosition() : 0;
     }
 
-    private void updatePlaybackState() {
+    public void updatePlaybackState() {
         if (callback == null) {
             return;
         }

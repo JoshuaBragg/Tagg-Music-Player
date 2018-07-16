@@ -18,9 +18,8 @@ public class SeekBarController {
         seekBar = m.findViewById(R.id.seekBar);
         running = false;
         mediaController = MediaControllerHolder.getMediaController();
-        Log.i("d", PlayQueue.getSelf().getCurrSong().getDuration() + "");
-        seekBar.setMax(Math.round(PlayQueue.getSelf().getCurrSong().getDuration()));
-        seekBar.setProgress(Math.round(mediaController.getPlaybackState().getPosition()));
+        // seekBar.setMax(Math.round(PlayQueue.getSelf().getCurrSong().getDuration()));
+        // seekBar.setProgress(Math.round(mediaController.getPlaybackState().getPosition()));
     }
 
     public void startThread() {
@@ -61,6 +60,7 @@ public class SeekBarController {
                     Thread.sleep(1000);
                     if (mediaController.getPlaybackState() != null && mediaController.getPlaybackState().getState() != PlaybackStateCompat.STATE_NONE) {
                         seekBar.setMax(Math.round(PlayQueue.getSelf().getCurrSong().getDuration()));
+                        Log.i("d", seekBar.getMax() + " " + seekBar.getProgress() + " " + mediaController.getPlaybackState().getPosition());
                         if (Build.VERSION.SDK_INT >= 24) {
                             seekBar.setProgress(Math.round(mediaController.getPlaybackState().getPosition()), true);
                         } else {

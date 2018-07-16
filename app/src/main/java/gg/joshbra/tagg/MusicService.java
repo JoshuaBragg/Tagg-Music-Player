@@ -61,9 +61,8 @@ public class MusicService extends MediaBrowserServiceCompat {
                 public void onSeekTo(long pos) {
                     super.onSeekTo(pos);
                     musicController.seekTo((int)pos);
+                    musicController.updatePlaybackState();
                 }
-
-
             };
 
     @Override
