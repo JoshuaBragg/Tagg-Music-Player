@@ -7,4 +7,5 @@
     <color name="colorTextPrimary">#e5e2ea</color>
     <color name="colorTextSecondary">#c3c1c9</color>
     <color name="colorOffWhite">#F9F9F9</color>
+    <color name="colorActivated">#2BD2FF</color>
 </resources>

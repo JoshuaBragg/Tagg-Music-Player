@@ -1,14 +1,10 @@
 package gg.joshbra.tagg;
 
-import android.content.Intent;
-import android.os.Binder;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserServiceCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import java.util.List;
 

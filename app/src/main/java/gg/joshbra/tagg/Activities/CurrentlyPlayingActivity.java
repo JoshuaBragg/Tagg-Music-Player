@@ -1,5 +1,6 @@
 package gg.joshbra.tagg.Activities;
 
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -9,16 +10,14 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import gg.joshbra.tagg.CurrentPlaybackNotifier;
-import gg.joshbra.tagg.MediaControllerHolder;
-import gg.joshbra.tagg.MusicController;
-import gg.joshbra.tagg.R;
-import gg.joshbra.tagg.SeekBarController;
-import gg.joshbra.tagg.SongInfo;
-
-import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
+
+import gg.joshbra.tagg.CurrentPlaybackNotifier;
+import gg.joshbra.tagg.MediaControllerHolder;
+import gg.joshbra.tagg.PlayQueue;
+import gg.joshbra.tagg.R;
+import gg.joshbra.tagg.SeekBarController;
 
 public class CurrentlyPlayingActivity extends AppCompatActivity implements Observer {
 
@@ -38,15 +37,20 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
         ((TextView)findViewById(R.id.songNameTextView)).setText(mediaController.getMetadata().getString(MediaMetadataCompat.METADATA_KEY_TITLE));
         ((TextView)findViewById(R.id.artistNameTextView)).setText(mediaController.getMetadata().getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
 
+        if (PlayQueue.getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
+            ImageButton shuffleBtn = findViewById(R.id.shuffleBtn);
+            shuffleBtn.setColorFilter(getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+        }
+
         seekBarController = new SeekBarController(this);
         seekBarController.startThread();
 
         CurrentPlaybackNotifier.getSelf().attach(this);
 
-        setClickListeners();
+        setOnClickListeners();
     }
 
-    public void setClickListeners() {
+    public void setOnClickListeners() {
         ImageButton pausePlayBtn = findViewById(R.id.pausePlayBtn);
 
         pausePlayBtn.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +85,22 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
                 if (mediaController.getPlaybackState() == null || mediaController.getPlaybackState().getState() == PlaybackStateCompat.STATE_NONE) { return; }
 
                 mediaController.getTransportControls().skipToPrevious();
+            }
+        });
+
+        final ImageButton shuffleBtn = findViewById(R.id.shuffleBtn);
+
+        shuffleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (PlayQueue.getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
+                    PlayQueue.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE);
+                    shuffleBtn.setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    PlayQueue.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
+                    shuffleBtn.setColorFilter(getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+                    PlayQueue.shuffle();
+                }
             }
         });
     }

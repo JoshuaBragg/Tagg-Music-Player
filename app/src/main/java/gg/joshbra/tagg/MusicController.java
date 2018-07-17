@@ -5,11 +5,9 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.SystemClock;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;

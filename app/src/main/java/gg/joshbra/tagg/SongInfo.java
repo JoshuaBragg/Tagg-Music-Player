@@ -3,7 +3,6 @@ package gg.joshbra.tagg;
 import android.support.annotation.NonNull;
 import android.support.v4.media.MediaMetadataCompat;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
 
 public class SongInfo implements Comparable<SongInfo> {

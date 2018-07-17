@@ -1,9 +1,7 @@
 package gg.joshbra.tagg;
 
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +34,7 @@ public class PlayQueue {
 
     public void setCurrQueue(ArrayList<SongInfo> currQueue) {
         PlayQueue.currQueue = currQueue;
-        PlayQueue.currQueueShuffled = shuffle(currQueue);
+        shuffle();
     }
 
     public SongInfo getCurrSong() {
@@ -80,11 +78,9 @@ public class PlayQueue {
         return shuffleMode;
     }
 
-    private ArrayList<SongInfo> shuffle(ArrayList<SongInfo> queue) {
-        // TODO: make shuffling better
-        ArrayList<SongInfo> temp = new ArrayList<>(queue);
-        Collections.shuffle(temp);
-        return temp;
+    public static void shuffle() {
+        currQueueShuffled = new ArrayList<>(currQueue);
+        Collections.shuffle(currQueueShuffled);
     }
 
     public static String getRoot() { return "root"; }

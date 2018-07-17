@@ -8,13 +8,12 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -22,11 +21,13 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.regex.Pattern;
 
 import gg.joshbra.tagg.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.Fragments.NowPlayingBarFragment;
@@ -36,10 +37,6 @@ import gg.joshbra.tagg.MusicService;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongInfo;
 import gg.joshbra.tagg.SongManager;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -180,8 +177,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(cursor.moveToFirst()){
                 do{
                     // TODO: make permanent solution to quote and SQL injection
-//                    String id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID)).replaceAll("'","''");
-//                    Log.i("d", id);
                     String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)).replaceAll("'", "''");
                     String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)).replaceAll("'", "''");
                     String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA)).replaceAll("'", "''");

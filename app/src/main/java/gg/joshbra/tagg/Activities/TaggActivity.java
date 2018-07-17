@@ -6,16 +6,14 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -30,23 +28,19 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
-import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Observable;
+import java.util.regex.Pattern;
 
 import gg.joshbra.tagg.Fragments.NowPlayingBarFragment;
 import gg.joshbra.tagg.Fragments.SongListFragment;
 import gg.joshbra.tagg.MediaControllerHolder;
-import gg.joshbra.tagg.PlayQueue;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongAdapter;
 import gg.joshbra.tagg.SongManager;
 import gg.joshbra.tagg.TaggAdapter;
 import gg.joshbra.tagg.TaggSelector;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Observable;
-import java.util.regex.Pattern;
 
 public class TaggActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout mDrawerLayout;

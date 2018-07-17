@@ -2,9 +2,7 @@ package gg.joshbra.tagg;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
-import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
