@@ -79,6 +79,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         nowPlayingBarFragment.update(new Observable(), MediaControllerHolder.getMediaController().getPlaybackState());
         nowPlayingBarFragment.update(new Observable(), MediaControllerHolder.getMediaController().getMetadata());
 
+        updateSongRepeater();
+
         FloatingActionButton fab = findViewById(R.id.taggFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
