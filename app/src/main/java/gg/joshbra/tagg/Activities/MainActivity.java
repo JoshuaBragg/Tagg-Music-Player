@@ -21,6 +21,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -117,10 +118,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         songManager = SongManager.getSelf();
         currentPlaybackNotifier = CurrentPlaybackNotifier.getSelf();
 
-        CheckPermission();
-
         songListFragment = (SongListFragment) getSupportFragmentManager().findFragmentById(R.id.songList);
         nowPlayingBarFragment = (NowPlayingBarFragment) getSupportFragmentManager().findFragmentById(R.id.nowPlayingBar);
+
+        CheckPermission();
     }
 
     @Override
@@ -205,6 +206,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Collections.sort(loadedSongs);
 
             setTitle(loadedSongs.size() == 0 ? "Songs" : "Songs (" + loadedSongs.size() + ")");
+
+            songListFragment.initRecycler(loadedSongs);
         }
     }
 

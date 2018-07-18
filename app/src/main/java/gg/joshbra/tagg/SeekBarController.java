@@ -4,6 +4,7 @@ import android.os.Build;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.SeekBar;
 
 public class SeekBarController {
@@ -56,7 +57,6 @@ public class SeekBarController {
 
             while (running) {
                 try {
-                    Thread.sleep(1000);
                     if (mediaController.getPlaybackState() != null && mediaController.getPlaybackState().getState() != PlaybackStateCompat.STATE_NONE) {
                         seekBar.setMax(Math.round(PlayQueue.getSelf().getCurrSong().getDuration()));
                         if (Build.VERSION.SDK_INT >= 24) {
@@ -65,8 +65,13 @@ public class SeekBarController {
                             seekBar.setProgress(Math.round(mediaController.getPlaybackState().getPosition()));
                         }
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    try {
+                        Thread.interrupted();
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        Thread.interrupted();
+                    }
                 } catch (IllegalStateException e) {
                     e.printStackTrace();
                     killThread();  // Commit suicide

@@ -36,7 +36,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
 
     @Override
     public Character getCharacterForElement(int element) {
-        return songs.get(element).getSongName().charAt(0);
+        try {
+            return songs.get(element).getSongName().charAt(0);
+        } catch (IndexOutOfBoundsException e) {
+            return '~';
+        }
     }
 
     public SongAdapter(Context context,ArrayList<SongInfo> songs) {

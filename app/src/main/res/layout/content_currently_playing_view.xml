@@ -90,8 +90,9 @@
 
         <ImageButton
             android:id="@+id/shuffleBtn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="5dp"
             android:scaleType="fitXY"
             android:layout_alignTop="@+id/skipNextBtn"
             android:layout_alignParentEnd="true"

@@ -2,6 +2,7 @@ package gg.joshbra.tagg;
 
 import android.support.annotation.NonNull;
 import android.support.v4.media.MediaMetadataCompat;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -16,7 +17,7 @@ public class SongInfo implements Comparable<SongInfo> {
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artistName)
                 .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, songUrl)
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, albumName)
-                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration / 1000)
+                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
                 .putString( MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI,  albumArt)
                 .putString(MediaMetadataCompat.METADATA_KEY_DATE, dateAdded)
                 .build();
