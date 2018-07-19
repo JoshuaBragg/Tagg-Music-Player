@@ -196,6 +196,9 @@ public class DatabaseHelper {
         resolver.delete(uri, MediaStore.Audio.Playlists.Members.AUDIO_ID + " = ?", new String[] { Long.toString(id) });
     }
 
+    /**
+     * Deletes tagg
+     */
     public void deleteTagg(String taggName) {
         Long playlistid = getTaggID(taggName);
         ContentResolver resolver = context.getContentResolver();

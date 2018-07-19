@@ -1,7 +1,9 @@
 package gg.joshbra.tagg;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,10 +65,27 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SongManager.getSelf().removeTagg(holder.taggName.getText().toString());
-                int pos = taggs.indexOf(new TaggSelector(holder.taggName.getText().toString(), false));
-                taggs.remove(new TaggSelector(holder.taggName.getText().toString(), false));
-                notifyItemRemoved(pos);
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                SongManager.getSelf().removeTagg(holder.taggName.getText().toString());
+                                int pos = taggs.indexOf(new TaggSelector(holder.taggName.getText().toString(), false));
+                                taggs.remove(new TaggSelector(holder.taggName.getText().toString(), false));
+                                notifyItemRemoved(pos);
+                                break;
+                        }
+                    }
+                };
+
+                new AlertDialog.Builder(view.getContext(), R.style.Dialog)
+                        .setTitle("Remove Tagg: " + holder.taggName.getText().toString())
+                        .setMessage("Are you sure? You cannot undo this action.")
+                        .setPositiveButton("Yes, Delete Tagg", dialogClickListener)
+                        .setNegativeButton("Cancel", null)
+                        .create()
+                        .show();
             }
         });
 
