@@ -100,7 +100,7 @@ public class SongManager {
 
     public void removeTagg(String tagg) {
         taggs.remove(tagg);
-        databaseHelper.clearTagg(((Long) databaseHelper.getTaggID(tagg)).intValue());
+        databaseHelper.deleteTagg(tagg);
     }
 
     public void updateSongTaggRelations(SongInfo songInfo, ArrayList<String> updateTaggs) {
