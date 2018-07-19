@@ -103,7 +103,8 @@ public class DatabaseHelper {
         return context.getContentResolver().query(
                 MediaStore.Audio.Playlists.Members.getContentUri("external", taggID),
                 new String[]{
-                        MediaStore.Audio.Playlists.Members.AUDIO_ID
+                        MediaStore.Audio.Playlists.Members.AUDIO_ID,
+                        MediaStore.Audio.Playlists.Members.PLAY_ORDER
                 }, selection, null,
                 MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER);
     }
@@ -111,19 +112,21 @@ public class DatabaseHelper {
     /**
      * Given a cursor querying a playlist, returns the id's of songs within that playlist
      */
-    public long[] getSongListForCursor(Cursor cursor) {
+    public int[][] getSongListForCursor(Cursor cursor) {
         if (cursor == null) {
-            return new long[]{};
+            return new int[][]{};
         }
         int len = cursor.getCount();
-        long[] list = new long[len];
+        int[] list = new int[len];
+        int[] orders = new int[len];
         cursor.moveToFirst();
         for (int i = 0; i < len; i++) {
             list[i] = cursor.getInt(0);
+            orders[i] = cursor.getInt(1);
             cursor.moveToNext();
         }
         cursor.close();
-        return list;
+        return new int[][]{list, orders};
     }
 
     /**

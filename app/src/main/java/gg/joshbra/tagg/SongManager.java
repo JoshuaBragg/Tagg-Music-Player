@@ -61,32 +61,55 @@ public class SongManager {
     }
 
     public ArrayList<SongInfo> getCurrSongsFromTaggs() {
-        HashSet<SongInfo> newSongQueue = new HashSet<>();
+        HashSet<SongPlayOrderTuple> newSongQueue = new HashSet<>();
 
         for (String tagg : activeTaggs.keySet()) {
             Cursor cursor = databaseHelper.getTaggSongCursor(activeTaggs.get(tagg));
-            long[] ids = databaseHelper.getSongListForCursor(cursor);
-            for (long l : ids) {
-                newSongQueue.add(allSongsMap.get(((Long)l).intValue()));
+            int[][] ret = databaseHelper.getSongListForCursor(cursor);
+            int[] ids = ret[0];
+            int[] orders = ret[1];
+            for (int i = 0; i < ids.length; i++) {
+                SongPlayOrderTuple tuple = new SongPlayOrderTuple(allSongsMap.get(ids[i]), orders[i]);
+                newSongQueue.add(tuple);
             }
             cursor.close();
         }
-        return new ArrayList<>(newSongQueue);
+
+        ArrayList<SongPlayOrderTuple> temp = new ArrayList<>(newSongQueue);
+        Collections.sort(temp, new SongPlayOrderComparator());
+
+        ArrayList<SongInfo> out = new ArrayList<>();
+        for (SongPlayOrderTuple t : temp) {
+            out.add(t.songInfo);
+        }
+
+        return out;
     }
 
     public void updateCurrSongsFromTaggs() {
-        HashSet<SongInfo> newSongQueue = new HashSet<>();
+        HashSet<SongPlayOrderTuple> newSongQueue = new HashSet<>();
 
         for (String tagg : activeTaggs.keySet()) {
             Cursor cursor = databaseHelper.getTaggSongCursor(activeTaggs.get(tagg));
-            long[] ids = databaseHelper.getSongListForCursor(cursor);
-            for (long l : ids) {
-                newSongQueue.add(allSongsMap.get(((Long)l).intValue()));
+            int[][] ret = databaseHelper.getSongListForCursor(cursor);
+            int[] ids = ret[0];
+            int[] orders = ret[1];
+            for (int i = 0; i < ids.length; i++) {
+                SongPlayOrderTuple tuple = new SongPlayOrderTuple(allSongsMap.get(ids[i]), orders[i]);
+                newSongQueue.add(tuple);
             }
             cursor.close();
         }
 
-        playQueue.setCurrQueue(new ArrayList<>(newSongQueue));
+        ArrayList<SongPlayOrderTuple> temp = new ArrayList<>(newSongQueue);
+        Collections.sort(temp, new SongPlayOrderComparator());
+
+        ArrayList<SongInfo> out = new ArrayList<>();
+        for (SongPlayOrderTuple t : temp) {
+            out.add(t.songInfo);
+        }
+
+        playQueue.setCurrQueue(out);
     }
 
     public ArrayList<String> getTaggs() {

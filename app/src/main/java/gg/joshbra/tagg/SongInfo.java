@@ -95,11 +95,6 @@ public class SongInfo implements Comparable<SongInfo> {
 
     @Override
     public int compareTo(@NonNull SongInfo songInfo) {
-        if (getMediaID() > songInfo.getMediaID()) {
-            return 1;
-        } else if (getMediaID() < songInfo.getMediaID()) {
-            return -1;
-        }
-        return 0;
+        return getSongName().toUpperCase().compareTo(songInfo.getSongName().toUpperCase());
     }
 }
