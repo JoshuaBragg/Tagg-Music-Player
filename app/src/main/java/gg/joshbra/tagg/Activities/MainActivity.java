@@ -21,13 +21,11 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.regex.Pattern;
 
 import gg.joshbra.tagg.CurrentPlaybackNotifier;
@@ -134,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void CheckPermission() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 120);
             } else {
                 loadSongs();
             }
@@ -146,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case 123:
+            case 120:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     loadSongs();
                 } else {
@@ -154,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     CheckPermission();
                 }
                 break;
-
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -169,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void loadSongs() {
-        String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
+        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
         ContentResolver contentResolver = getBaseContext().getContentResolver();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor cursor = contentResolver.query(uri, null, selection, null, null);
@@ -178,32 +175,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(cursor.moveToFirst()){
                 do{
                     // TODO: make permanent solution to quote and SQL injection
-                    String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)).replaceAll("'", "''");
-                    String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)).replaceAll("'", "''");
-                    String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA)).replaceAll("'", "''");
-                    String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)).replaceAll("'", "''");
-                    String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)).replaceAll("'", "''");
+                    String id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+                    String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                    String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                    String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+                    String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+                    String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
                     // TODO: figure out album art
                     String albumArt =  ""; //cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.)).replaceAll("'", "''");
-                    String dateAdded = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED)).replaceAll("'", "''");
+                    String dateAdded = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED));
 
                     if (Pattern.matches(".*\\.mp3", name)) {
                         name = name.substring(0, name.length() - 4);
                     }
 
-                    SongInfo s = new SongInfo(url, name, artist, url, album, Long.parseLong(duration), albumArt, dateAdded);
+                    SongInfo s = new SongInfo(id, name, artist, url, album, Long.parseLong(duration), albumArt, dateAdded);
                     loadedSongs.add(s);
                 }while (cursor.moveToNext());
             }
             cursor.close();
 
             songManager.initDB(this);
-            songManager.readSongs();
-            songManager.checkSongsForChanges(loadedSongs);
-            songManager.readTaggs();
-
-            loadedSongs = songManager.getAllSongs();
-            Collections.sort(loadedSongs);
+            songManager.setSongList(loadedSongs);
 
             setTitle(loadedSongs.size() == 0 ? "Songs" : "Songs (" + loadedSongs.size() + ")");
 

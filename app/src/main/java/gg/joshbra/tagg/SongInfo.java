@@ -10,7 +10,7 @@ public class SongInfo implements Comparable<SongInfo> {
     private MediaMetadataCompat mediaMetadataCompat;
     private ArrayList<String> taggs;
 
-    public SongInfo(String mediaID, String songName, String artistName, String songUrl, String albumName, Long duration, String albumArt, String dateAdded) {
+    public SongInfo(String mediaID, String songName, String artistName, String songUrl, String albumName, long duration, String albumArt, String dateAdded) {
         mediaMetadataCompat = new MediaMetadataCompat.Builder()
                 .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaID)
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, songName)
@@ -44,8 +44,8 @@ public class SongInfo implements Comparable<SongInfo> {
         return taggs;
     }
 
-    public String getMediaID() {
-        return mediaMetadataCompat.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID);
+    public Long getMediaID() {
+        return Long.parseLong(mediaMetadataCompat.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID));
     }
 
     public String getSongName() {
@@ -81,15 +81,25 @@ public class SongInfo implements Comparable<SongInfo> {
     }
 
     public String toString() {
-        return getSongName() + " - " + getArtistName() + " - " + getSongUrl();
+        return getMediaID() + " - " + getSongName() + " - " + getArtistName() + " - " + getSongUrl();
     }
 
     public boolean equals(Object o) {
-        return o instanceof SongInfo && ((SongInfo)o).getSongName().equals(getSongName()) && ((SongInfo)o).getArtistName().equals(getArtistName()) && ((SongInfo)o).getSongUrl().equals(getSongUrl());
+        if (o instanceof SongInfo) {
+            return ((SongInfo)o).getMediaID().equals(getMediaID());
+        } else if (o instanceof Long) {
+            return o.equals(getMediaID());
+        }
+        return false;
     }
 
     @Override
     public int compareTo(@NonNull SongInfo songInfo) {
-        return getMediaID().toUpperCase().compareTo(songInfo.getMediaID().toUpperCase());
+        if (getMediaID() > songInfo.getMediaID()) {
+            return 1;
+        } else if (getMediaID() < songInfo.getMediaID()) {
+            return -1;
+        }
+        return 0;
     }
 }

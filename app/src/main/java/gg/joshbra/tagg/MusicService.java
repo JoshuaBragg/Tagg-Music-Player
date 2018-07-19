@@ -45,12 +45,12 @@ public class MusicService extends MediaBrowserServiceCompat {
 
                 @Override
                 public void onSkipToNext() {
-                    onPlayFromMediaId(playQueue.getNextSong().getMediaID(), null);
+                    onPlayFromMediaId(playQueue.getNextSong().getMediaID().toString(), null);
                 }
 
                 @Override
                 public void onSkipToPrevious() {
-                    onPlayFromMediaId(playQueue.getPrevSong().getMediaID(), null);
+                    onPlayFromMediaId(playQueue.getPrevSong().getMediaID().toString(), null);
                 }
 
                 @Override

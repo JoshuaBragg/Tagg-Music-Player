@@ -1,252 +1,206 @@
 package gg.joshbra.tagg;
 
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.provider.BaseColumns;
+import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelper {
 
     private static final String[] TABLE_NAMES;
     private static final String[][] COL_NAMES;
-
-    // TODO: use selection/where args
 
     static {
         TABLE_NAMES = new String[]{"songs", "taggs", "tagg_map"};
         COL_NAMES = new String[][]{{"ID", "media_id", "song_name", "artist_name", "url", "album_name", "duration", "album_art", "date_added"}, {"ID", "tagg_name"}, {"song_id", "tagg_id"}};
     }
 
+    private Context context;
+
+    // TODO: use selection/where args
+
     public DatabaseHelper(Context context) {
-        super(context, TABLE_NAMES[0], null, 1);
+        this.context = context;
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String createSongTable = "CREATE TABLE " + TABLE_NAMES[0] + " (" + COL_NAMES[0][0] + " INTEGER PRIMARY KEY, " + COL_NAMES[0][1] + " TEXT, " + COL_NAMES[0][2] + " TEXT, " + COL_NAMES[0][3] + " TEXT, " + COL_NAMES[0][4] + " TEXT, " + COL_NAMES[0][5] + " TEXT, " + COL_NAMES[0][6] + " INT, " + COL_NAMES[0][7] + " TEXT, " + COL_NAMES[0][8] + " TEXT, UNIQUE (" + COL_NAMES[0][1] + ", " + COL_NAMES[0][2] + ", " + COL_NAMES[0][3] + ", " + COL_NAMES[0][4] + ", " + COL_NAMES[0][5] + ", " + COL_NAMES[0][6] + ", " + COL_NAMES[0][7] + ", " + COL_NAMES[0][8] + ") ON CONFLICT IGNORE)";
-        sqLiteDatabase.execSQL(createSongTable);
+    public HashMap<String, Integer> getTaggs() {
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, new String[]{ MediaStore.Audio.PlaylistsColumns.NAME, BaseColumns._ID },
+                null, null,
+                MediaStore.Audio.PlaylistsColumns.NAME);
 
-        String createTaggTable = "CREATE TABLE " + TABLE_NAMES[1] + " (" + COL_NAMES[1][0] + " INTEGER PRIMARY KEY, " + COL_NAMES[1][1] + " TEXT, UNIQUE (" + COL_NAMES[1][1] + ") ON CONFLICT IGNORE)";
-        sqLiteDatabase.execSQL(createTaggTable);
-
-        String createMapTable = "CREATE TABLE " + TABLE_NAMES[2] + " (" + COL_NAMES[2][0] + " INTEGER, " + COL_NAMES[2][1] + " INTEGER, UNIQUE (" + COL_NAMES[2][0] + ", " + COL_NAMES[2][1] + ") ON CONFLICT IGNORE)";
-        sqLiteDatabase.execSQL(createMapTable);
+        if (cursor != null && cursor.moveToFirst()) {
+            HashMap<String, Integer> out = new HashMap<>();
+            do {
+                out.put(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.PlaylistsColumns.NAME)), cursor.getInt(cursor.getColumnIndex(BaseColumns._ID)));
+            } while (cursor.moveToNext());
+            cursor.close();
+            return out;
+        } else {
+            return new HashMap<>();
+        }
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP IF TABLE EXISTS " + TABLE_NAMES[0]);
-        onCreate(sqLiteDatabase);
+    /**
+     * Creates new playlist with title 'name'
+     */
+    public long createTagg(String name) {
+        if (name != null && name.length() > 0) {
+            ContentResolver resolver = context.getContentResolver();
+            String[] projection = new String[]{
+                    MediaStore.Audio.PlaylistsColumns.NAME
+            };
+            String selection = MediaStore.Audio.PlaylistsColumns.NAME + " = '" + name + "'";
+            Cursor cursor = resolver.query(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, projection, selection, null, null);
+
+            if (cursor == null) { return -1; }
+
+            if (cursor.getCount() <= 0) {
+                ContentValues values = new ContentValues(1);
+                values.put(MediaStore.Audio.PlaylistsColumns.NAME, name);
+                Uri uri = resolver.insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, values);
+                return Long.parseLong(uri.getLastPathSegment());
+            }
+            cursor.close();
+            return -1;
+        }
+        return -1;
     }
 
-    public boolean addSong(String media_id, String song_name, String artist_name, String url, String album_name, Long duration, String album_art, String date_added) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_NAMES[0][1], media_id);
-        contentValues.put(COL_NAMES[0][2], song_name);
-        contentValues.put(COL_NAMES[0][3], artist_name);
-        contentValues.put(COL_NAMES[0][4], url);
-        contentValues.put(COL_NAMES[0][5], album_name);
-        contentValues.put(COL_NAMES[0][6], duration);
-        contentValues.put(COL_NAMES[0][7], album_art);
-        contentValues.put(COL_NAMES[0][8], date_added);
+    /**
+     * Gets playlist length
+     */
+    private int getTaggLength(long taggID) {
+        Cursor c = context.getContentResolver().query(MediaStore.Audio.Playlists.Members.getContentUri("external", taggID),
+                new String[]{MediaStore.Audio.Playlists.Members.AUDIO_ID,}, null, null, MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER);
 
-        return db.insert(TABLE_NAMES[0], null, contentValues) > 0;
-    }
-
-    public boolean removeSong(String media_id, String song_name, String artist_name, String url, String album_name, Long duration, String album_art, String date_added) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAMES[0], COL_NAMES[0][1] + " = ? AND " + COL_NAMES[0][2] + " = ? AND " + COL_NAMES[0][3] + " = ? AND " + COL_NAMES[0][4] + " = ? AND " + COL_NAMES[0][5] + " = ? AND " + COL_NAMES[0][6] + " = ? AND " + COL_NAMES[0][7] + " = ? AND " + COL_NAMES[0][8] + " = ?", new String[] {media_id, song_name, artist_name, url, album_name, String.valueOf(duration), album_art, date_added}) > 0;
-    }
-
-    public boolean addTagg(String tagg) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_NAMES[1][1], tagg);
-
-        return db.insert(TABLE_NAMES[1], null, contentValues) > 0;
-    }
-
-    public boolean removeTagg(String tagg) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAMES[1], COL_NAMES[1][1] + " = '" + tagg + "'", null) > 0 && removeTaggFromMap(tagg);
-    }
-
-    private boolean removeTaggFromMap(String tagg) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAMES[2], COL_NAMES[2][1] + " = '" + tagg + "'", null) > 0;
-    }
-
-    public boolean addSongTaggRelation(String media_id, String song_name, String artist_name, String url, String album_name, Long duration, String album_art, String date_added, String tagg) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        String q = "SELECT " + COL_NAMES[0][0] + " FROM " + TABLE_NAMES[0] + " WHERE " + COL_NAMES[0][1] + " = ? AND " + COL_NAMES[0][2] + " = ? AND " + COL_NAMES[0][3] + " = ? AND " + COL_NAMES[0][4] + " = ? AND " + COL_NAMES[0][5] + " = ? AND " + COL_NAMES[0][6] + " = ? AND " + COL_NAMES[0][7] + " = ? AND " + COL_NAMES[0][8] + " = ?";
-        Cursor data = db.rawQuery(q, new String[] {media_id, song_name, artist_name, url, album_name, String.valueOf(duration), album_art, date_added});
-
-        int songID;
-
-        if (data.moveToFirst()) {
-            songID = data.getInt(0);
-        } else { return false; }
-        data.close();
-
-        String qT = "SELECT " + COL_NAMES[1][0] + " FROM " + TABLE_NAMES[1] + " WHERE " + COL_NAMES[1][1] + " = '" + tagg + "'";
-        Cursor dataT = db.rawQuery(qT, null);
-
-        int taggID;
-
-        if (dataT.moveToFirst()) {
-            taggID = dataT.getInt(0);
-        } else { return false; }
-        dataT.close();
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_NAMES[2][0], songID);
-        contentValues.put(COL_NAMES[2][1], taggID);
-
-        return db.insert(TABLE_NAMES[2], null, contentValues) > 0;
-    }
-
-    public boolean removeSongTaggRelation(String media_id, String song_name, String artist_name, String url, String album_name, Long duration, String album_art, String date_added, String tagg) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        String q = "SELECT " + COL_NAMES[0][0] + " FROM " + TABLE_NAMES[0] + " WHERE " + COL_NAMES[0][1] + " = ? AND " + COL_NAMES[0][2] + " = ? AND " + COL_NAMES[0][3] + " = ? AND " + COL_NAMES[0][4] + " = ? AND " + COL_NAMES[0][5] + " = ? AND " + COL_NAMES[0][6] + " = ? AND " + COL_NAMES[0][7] + " = ? AND " + COL_NAMES[0][8] + " = ?";
-        Cursor data = db.rawQuery(q, new String[] {media_id, song_name, artist_name, url, album_name, String.valueOf(duration), album_art, date_added});
-
-        int songID;
-
-        if (data.moveToFirst()) {
-            songID = data.getInt(0);
-        } else { return false; }
-        data.close();
-
-        String qT = "SELECT " + COL_NAMES[1][0] + " FROM " + TABLE_NAMES[1] + " WHERE " + COL_NAMES[1][1] + " = '" + tagg + "'";
-        Cursor dataT = db.rawQuery(qT, null);
-
-        int taggID;
-
-        if (dataT.moveToFirst()) {
-            taggID = dataT.getInt(0);
-        } else { return false; }
-        dataT.close();
-
-        return db.delete(TABLE_NAMES[2], COL_NAMES[2][0] + " = '" + songID + "' AND " + COL_NAMES[2][1] + " = '" + taggID + "'", null) > 0;
-    }
-
-    public Cursor getSongs() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String q = "SELECT * FROM " + TABLE_NAMES[0] + " ORDER BY " + COL_NAMES[0][2] + " ASC";
-        Cursor data = db.rawQuery(q, null);
-        return data;
-    }
-
-    public Cursor getTaggs() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String q = "SELECT * FROM " + TABLE_NAMES[1] + " ORDER BY " + COL_NAMES[1][1] + " ASC";
-        Cursor data = db.rawQuery(q, null);
-        return data;
-    }
-
-    public Cursor getSongTaggRelation() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String q = "SELECT * FROM " + TABLE_NAMES[2];
-        Cursor data = db.rawQuery(q, null);
-        return data;
-    }
-
-    public ArrayList<String> getSongsRelatedTaggs(String media_id, String song_name, String artist_name, String url, String album_name, Long duration, String album_art, String date_added) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        String q = "SELECT " + COL_NAMES[0][0] + " FROM " + TABLE_NAMES[0] + " WHERE " + COL_NAMES[0][1] + " = ? AND " + COL_NAMES[0][2] + " = ? AND " + COL_NAMES[0][3] + " = ? AND " + COL_NAMES[0][4] + " = ? AND " + COL_NAMES[0][5] + " = ? AND " + COL_NAMES[0][6] + " = ? AND " + COL_NAMES[0][7] + " = ? AND " + COL_NAMES[0][8] + " = ?";
-        Cursor data = db.rawQuery(q, new String[] {media_id, song_name, artist_name, url, album_name, String.valueOf(duration), album_art, date_added});
-
-        int songID;
-
-        if (data.moveToFirst()) {
-            songID = data.getInt(0);
-        } else { return new ArrayList<>(); }
-        data.close();
-
-        String q1 = "SELECT " + COL_NAMES[2][1] + " FROM " + TABLE_NAMES[2] + " WHERE " + COL_NAMES[2][0] + " = '" + songID + "'";
-        Cursor data1 = db.rawQuery(q1, null);
-
-        ArrayList<Integer> taggIDs = new ArrayList<>();
-
-        if (!data1.moveToFirst()) {
-            return new ArrayList<>();
+        if (c != null) {
+            int out = c.getCount();
+            c.close();
+            return out;
         }
 
-        do {
-            taggIDs.add(data1.getInt(0));
-        } while (data1.moveToNext());
-        data1.close();
-
-        String implodedArray = TextUtils.join(",", taggIDs);
-
-        String q2 = "SELECT " + COL_NAMES[1][1] + " FROM " + TABLE_NAMES[1] + " WHERE " + COL_NAMES[1][0] + " IN (" + implodedArray + ")";
-        Cursor data2 = db.rawQuery(q2, null);
-
-        if (!data2.moveToFirst()) {
-            return new ArrayList<>();
-        }
-
-        ArrayList<String> relatedTaggs = new ArrayList<>();
-
-        do {
-            relatedTaggs.add(data2.getString(0));
-        } while (data2.moveToNext());
-        data2.close();
-
-        return relatedTaggs;
+        return 0;
     }
 
-    public ArrayList<String[]> getTaggsRelatedSongs(String tagg) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    /**
+     * Makes cursor for a playlist
+     */
+    public Cursor getTaggSongCursor(long taggID) {
+        String selection = MediaStore.Audio.AudioColumns.IS_MUSIC + " = 1 AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''";
+        return context.getContentResolver().query(
+                MediaStore.Audio.Playlists.Members.getContentUri("external", taggID),
+                new String[]{
+                        MediaStore.Audio.Playlists.Members.AUDIO_ID
+                }, selection, null,
+                MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER);
+    }
 
-        String q = "SELECT " + COL_NAMES[1][0] + " FROM " + TABLE_NAMES[1] + " WHERE " + COL_NAMES[1][1] + " = '" + tagg + "'";
-        Cursor data = db.rawQuery(q, null);
+    /**
+     * Given a cursor querying a playlist, returns the id's of songs within that playlist
+     */
+    public long[] getSongListForCursor(Cursor cursor) {
+        if (cursor == null) {
+            return new long[]{};
+        }
+        int len = cursor.getCount();
+        long[] list = new long[len];
+        cursor.moveToFirst();
+        for (int i = 0; i < len; i++) {
+            list[i] = cursor.getInt(0);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return list;
+    }
 
-        int taggID;
+    /**
+     * Gets the id for a given playlist
+     */
+    public long getTaggID(String name) {
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, new String[]{ BaseColumns._ID },
+                MediaStore.Audio.PlaylistsColumns.NAME + " = ?", new String[]{ name },
+                MediaStore.Audio.PlaylistsColumns.NAME);
+        int id = -1;
+        if (cursor != null) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                id = cursor.getInt(0);
+            }
+            cursor.close();
+        }
+        return id;
+    }
 
-        if (data.moveToFirst()) {
-            taggID = data.getInt(0);
-        } else { return new ArrayList<>(); }
-        data.close();
+    /**
+     * Returns the name of the playlist with the given ID
+     */
+    public String getTaggName(long id) {
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Audio.PlaylistsColumns.NAME},
+                BaseColumns._ID + " = ?",
+                new String[]{Long.toString(id)},
+                null);
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    return cursor.getString(0);
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        // nothing found
+        return null;
+    }
 
-        String q1 = "SELECT " + COL_NAMES[2][0] + " FROM " + TABLE_NAMES[2] + " WHERE " + COL_NAMES[2][1] + " = '" + taggID + "'";
-        Cursor data1 = db.rawQuery(q1, null);
+    /**
+     * Adds song to playlist
+     */
+    public void addToTagg(long[] ids, long taggID) {
+        ContentResolver resolver = context.getContentResolver();
+        String[] projection = new String[] { "count(*)" };
+        Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", taggID);
 
-        ArrayList<Integer> songIDs = new ArrayList<>();
+        ContentValues[] contentValues = new ContentValues[ids.length];
 
-        if (!data1.moveToFirst()) {
-            return new ArrayList<>();
+        for (int i = 0; i < ids.length; i++) {
+            contentValues[i] = new ContentValues();
+            contentValues[i].put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, getTaggLength(taggID) + 1);
+            contentValues[i].put(MediaStore.Audio.Playlists.Members.AUDIO_ID, ids[i]);
         }
 
-        do {
-            songIDs.add(data1.getInt(0));
-        } while (data1.moveToNext());
-        data1.close();
+        resolver.bulkInsert(uri, contentValues);
+    }
 
-        String implodedArray = TextUtils.join(",", songIDs);
+    /**
+     * Removes song from playlist
+     */
+    public void removeFromTagg(long id, long taggID) {
+        Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", taggID);
+        ContentResolver resolver = context.getContentResolver();
+        resolver.delete(uri, MediaStore.Audio.Playlists.Members.AUDIO_ID + " = ?", new String[] { Long.toString(id) });
+    }
 
-        String q2 = "SELECT * FROM " + TABLE_NAMES[0] + " WHERE " + COL_NAMES[0][0] + " IN (" + implodedArray + ")";
-        Cursor data2 = db.rawQuery(q2, null);
-
-        if (!data2.moveToFirst()) {
-            return new ArrayList<>();
-        }
-
-        ArrayList<String[]> relatedSongs = new ArrayList<>();
-
-        do {
-            relatedSongs.add(new String[] {data2.getString(1), data2.getString(2), data2.getString(3), data2.getString(4), data2.getString(5), data2.getString(6), data2.getString(7), data2.getString(8)});
-        } while (data2.moveToNext());
-        data2.close();
-
-        return relatedSongs;
+    /**
+     * Deletes playlist
+     */
+    public void clearTagg(int taggID) {
+        final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", taggID);
+        context.getContentResolver().delete(uri, null, null);
     }
 }

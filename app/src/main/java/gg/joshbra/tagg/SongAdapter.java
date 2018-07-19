@@ -43,7 +43,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         }
     }
 
-    public SongAdapter(Context context,ArrayList<SongInfo> songs) {
+    public SongAdapter(Context context, ArrayList<SongInfo> songs) {
         this.context = context;
         this.mediaController = MediaControllerHolder.getMediaController();
         this.songs = songs;
@@ -69,7 +69,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                 } else if (context instanceof TaggActivity) {
                     SongManager.getSelf().updateCurrSongsFromTaggs();
                 }
-                mediaController.getTransportControls().playFromMediaId(c.getMediaID(), null);
+                mediaController.getTransportControls().playFromMediaId(c.getMediaID().toString(), null);
             }
         });
 

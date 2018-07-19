@@ -59,14 +59,14 @@ public class PlayQueue {
 
     public SongInfo getSongByID(String id) {
         for (SongInfo s : currQueue) {
-            if (s.getMediaID().equals(id)) {
+            if (s.getMediaID().toString().equals(id)) {
                 return s;
             }
         }
         return null;
     }
 
-    public String getCurrentMediaId() {
+    public Long getCurrentMediaId() {
         return currSong.getMediaID();
     }
 
