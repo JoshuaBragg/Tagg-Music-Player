@@ -5,20 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="1"
         android:padding="1dp"
         android:background="@color/colorSecondary"
-        android:foreground="@drawable/custom_ripple_effect"
-        android:orientation="horizontal">
+        android:foreground="@drawable/custom_ripple_effect">
 
         <CheckBox
             android:id="@+id/taggCheckbox"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"/>
 
         <TextView
             android:id="@+id/taggNameTextView"
@@ -27,26 +28,25 @@
             android:ellipsize="end"
             android:fontFamily="@font/hkgrot_semibold"
             android:maxLines="1"
+            android:layout_toEndOf="@+id/taggCheckbox"
+            android:layout_centerVertical="true"
             android:paddingStart="10dp"
+            android:paddingEnd="5dp"
             android:text="Tagg Name"
             android:textColor="@color/colorTextPrimary"
             android:textSize="15sp" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <ImageButton
-                android:id="@+id/removeTaggBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_clear_white_24dp"
-                android:tint="@color/colorAccent"
-                android:background="@null"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:visibility="invisible"/>
-        </RelativeLayout>
+        <ImageButton
+            android:id="@+id/removeTaggBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_clear_white_24dp"
+            android:tint="@color/colorAccent"
+            android:background="@null"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:visibility="invisible"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>

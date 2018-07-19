@@ -91,7 +91,7 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
 
                 // TODO: https://stackoverflow.com/questions/3221488/blur-or-dim-background-when-android-popupwindow-active
 
-                popupWindow = new PopupWindow(container, (int) Math.round(Resources.getSystem().getDisplayMetrics().widthPixels * (2.0 / 3.0)), ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                popupWindow = new PopupWindow(container, (int) Math.round(Resources.getSystem().getDisplayMetrics().widthPixels * (4.0 / 5.0)), ViewGroup.LayoutParams.WRAP_CONTENT, true);
                 popupWindow.setTouchable(true);
                 popupWindow.setFocusable(true);
 
@@ -167,16 +167,35 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
                         for (int i = 0; i < taggRV.getChildCount(); i++) {
                             TaggAdapter.TaggHolder holder = (TaggAdapter.TaggHolder) taggRV.findViewHolderForAdapterPosition(i);
                             ImageButton removeBtn = holder.getDeleteBtn();
+                            TextView taggName = holder.getTaggName();
                             if (removeBtn.getVisibility() == View.INVISIBLE) {
                                 removeBtn.setVisibility(View.VISIBLE);
+                                setMargins(taggName, 0, 0, 24, 0);
                             } else {
                                 removeBtn.setVisibility(View.INVISIBLE);
+                                setMargins(taggName, 0, 0, 0, 0);
                             }
                         }
                     }
                 });
             }
         });
+    }
+
+    private void setMargins (View view, int left, int top, int right, int bottom) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+
+            final float scale = getBaseContext().getResources().getDisplayMetrics().density;
+            // convert the DP into pixel
+            int l =  (int)(left * scale + 0.5f);
+            int r =  (int)(right * scale + 0.5f);
+            int t =  (int)(top * scale + 0.5f);
+            int b =  (int)(bottom * scale + 0.5f);
+
+            p.setMargins(l, t, r, b);
+            view.requestLayout();
+        }
     }
 
     private void createCheckboxes(View view) {

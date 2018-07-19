@@ -113,6 +113,10 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
             return deleteBtn;
         }
 
+        public TextView getTaggName() {
+            return taggName;
+        }
+
         public View getView() {
             return view;
         }
