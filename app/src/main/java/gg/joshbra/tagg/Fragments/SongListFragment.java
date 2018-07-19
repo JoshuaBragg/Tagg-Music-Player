@@ -58,11 +58,15 @@ public class SongListFragment extends Fragment {
 
         MaterialScrollBar scrollBar = getView().findViewById(R.id.touchScrollBar);
         scrollBar.setRecyclerView(recyclerView);
-        scrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
     }
 
     public void initRecycler(ArrayList<SongInfo> songs) {
         songAdapter = new SongAdapter(getContext(), songs);
         recyclerView.setAdapter(songAdapter);
+    }
+
+    public void enableIndicator(boolean e) {
+        MaterialScrollBar scrollBar = getView().findViewById(R.id.touchScrollBar);
+        scrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
     }
 }
