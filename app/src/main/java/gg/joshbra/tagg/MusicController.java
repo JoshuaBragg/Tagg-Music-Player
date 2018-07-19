@@ -131,7 +131,7 @@ public class MusicController extends Observable implements AudioManager.OnAudioF
     }
 
     public boolean isPlaying() {
-        return mediaPlayer.isPlaying();
+        return mediaPlayer != null && mediaPlayer.isPlaying();
     }
 
     @Override

@@ -14,6 +14,7 @@ public class MusicService extends MediaBrowserServiceCompat {
     private PlaybackStateCompat.Builder stateBuilder;
     private MusicController musicController;
     private PlayQueue playQueue;
+    private MediaNotificationManager mediaNotificationManager;
 
     final MediaSessionCompat.Callback callback =
             new MediaSessionCompat.Callback() {
@@ -85,12 +86,13 @@ public class MusicService extends MediaBrowserServiceCompat {
                 .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE);
         session.setPlaybackState(stateBuilder.build());
 
-        final MediaNotificationManager mediaNotificationManager = new MediaNotificationManager(this);
+        mediaNotificationManager = new MediaNotificationManager(this);
 
         musicController = new MusicController(this, new MusicController.Callback() {
                             @Override
                             public void onPlaybackStatusChanged(PlaybackStateCompat state) {
                                 session.setPlaybackState(state);
+                                if (playQueue.getCurrSong() == null) { return; }
                                 mediaNotificationManager.update(playQueue.getCurrSong().getMediaMetadataCompat(), state, getSessionToken());
                             }
                         });
@@ -100,6 +102,7 @@ public class MusicService extends MediaBrowserServiceCompat {
     public void onDestroy() {
         musicController.stopSong();
         session.release();
+        unregisterReceiver(mediaNotificationManager);
     }
 
     @Override

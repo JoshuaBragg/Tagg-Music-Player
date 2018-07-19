@@ -91,6 +91,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
 
                 // TODO: https://stackoverflow.com/questions/3221488/blur-or-dim-background-when-android-popupwindow-active
 
+                final ArrayList<String> aTagg = SongManager.getSelf().getActiveTaggs();
+
                 popupWindow = new PopupWindow(container, (int) Math.round(Resources.getSystem().getDisplayMetrics().widthPixels * (4.0 / 5.0)), ViewGroup.LayoutParams.WRAP_CONTENT, true);
                 popupWindow.setTouchable(true);
                 popupWindow.setFocusable(true);
@@ -103,7 +105,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
                 popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        updateSongRepeater();
+                        if (!SongManager.getSelf().getActiveTaggs().equals(aTagg))
+                            updateSongRepeater();
                     }
                 });
 

@@ -233,4 +233,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onResume();
         ((NavigationView)findViewById(R.id.navView)).getMenu().getItem(0).setChecked(true);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mediaBrowser.disconnect();
+    }
 }
