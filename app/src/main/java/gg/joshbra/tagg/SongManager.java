@@ -123,6 +123,7 @@ public class SongManager {
 
     public void removeTagg(String tagg) {
         taggs.remove(tagg);
+        activeTaggs.remove(tagg);
         databaseHelper.deleteTagg(tagg);
     }
 
