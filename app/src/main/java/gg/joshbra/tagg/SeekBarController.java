@@ -1,23 +1,36 @@
 package gg.joshbra.tagg;
 
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.SeekBar;
 
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+
+import gg.joshbra.tagg.Activities.CurrentlyPlayingActivity;
+
 public class SeekBarController {
     private SeekBar seekBar;
     private MediaControllerCompat mediaController;
     private SeekBarThread seekBarThread;
     private boolean running;
+    private ArrayList<Observer> observers;
+    private Handler handler;
 
     public SeekBarController(AppCompatActivity m) {
         seekBarThread = new SeekBarThread();
         seekBar = m.findViewById(R.id.seekBar);
         running = false;
         mediaController = MediaControllerHolder.getMediaController();
+        observers = new ArrayList<>();
+        handler = ((CurrentlyPlayingActivity)m).getHandler();
         // seekBar.setMax(Math.round(PlayQueue.getSelf().getCurrSong().getDuration()));
         // seekBar.setProgress(Math.round(mediaController.getPlaybackState().getPosition()));
     }
@@ -41,6 +54,9 @@ public class SeekBarController {
                     // Only update the mediaPlayer position if the user moved seekBar and song is loaded
                     if (b && mediaController.getPlaybackState() != null && mediaController.getPlaybackState().getState() != PlaybackStateCompat.STATE_NONE) {
                         mediaController.getTransportControls().seekTo((long)i);
+                        Message msg = new Message();
+                        msg.arg1 = ((Long)mediaController.getPlaybackState().getPosition()).intValue();
+                        handler.sendMessage(msg);
                     }
                 }
 
@@ -64,6 +80,9 @@ public class SeekBarController {
                         } else {
                             seekBar.setProgress(Math.round(mediaController.getPlaybackState().getPosition()));
                         }
+                        Message msg = new Message();
+                        msg.arg1 = ((Long)mediaController.getPlaybackState().getPosition()).intValue();
+                        handler.sendMessage(msg);
                     }
                     try {
                         Thread.interrupted();

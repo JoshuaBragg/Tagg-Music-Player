@@ -2,15 +2,17 @@ package gg.joshbra.tagg.Activities;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -37,6 +39,7 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
         }
         ((TextView)findViewById(R.id.songNameTextView)).setText(mediaController.getMetadata().getString(MediaMetadataCompat.METADATA_KEY_TITLE));
         ((TextView)findViewById(R.id.artistNameTextView)).setText(mediaController.getMetadata().getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
+        ((TextView)findViewById(R.id.totalTimeTextView)).setText(parseTime(PlayQueue.getSelf().getCurrSong().getDuration().intValue()));
 
         if (PlayQueue.getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
             ImageButton shuffleBtn = findViewById(R.id.shuffleBtn);
@@ -126,12 +129,30 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
         });
     }
 
+    public String parseTime(int time) {
+        time = time / 1000;
+        String s = (time % 60) + "";
+        if (s.length() == 1) { s = "0" + s; }
+        String m = ((time - (time % 60))/60) + "";
+
+        return m + ":" + s;
+    }
+
     @Override
-    public void onStop() {
+    protected void onStop() {
         super.onStop();
+        overridePendingTransition(R.anim.empty_transition, R.anim.slide_out_down);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         seekBarController.killThread();
         CurrentPlaybackNotifier.getSelf().detach(this);
-        overridePendingTransition(R.anim.empty_transition, R.anim.slide_out_down);
+    }
+
+    private void updateCurrTime(int time) {
+        ((TextView)findViewById(R.id.currentTimeTextView)).setText(parseTime(time));
     }
 
     @Override
@@ -153,6 +174,31 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
 
             songName.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
             artistName.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
+            ((TextView)findViewById(R.id.totalTimeTextView)).setText(parseTime(PlayQueue.getSelf().getCurrSong().getDuration().intValue()));
+        } else if (o instanceof Integer) {
+
         }
+    }
+
+    //static inner class doesn't hold an implicit reference to the outer class
+    private static class MyHandler extends Handler {
+        //Using a weak reference means you won't prevent garbage collection
+        private final WeakReference<CurrentlyPlayingActivity> myClassWeakReference;
+
+        public MyHandler(CurrentlyPlayingActivity myClassInstance) {
+            myClassWeakReference = new WeakReference<>(myClassInstance);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            CurrentlyPlayingActivity myClass = myClassWeakReference.get();
+            if (myClass != null) {
+                myClass.updateCurrTime(msg.arg1);
+            }
+        }
+    }
+
+    public Handler getHandler() {
+        return new MyHandler(this);
     }
 }
