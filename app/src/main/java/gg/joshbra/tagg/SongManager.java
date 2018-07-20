@@ -145,8 +145,24 @@ public class SongManager {
     }
 
     public ArrayList<String> getSongsRelatedTaggs(SongInfo songInfo) {
-        // TODO: make this work without making it take 37 years to find song
-        return new ArrayList<>();
+        HashMap<Integer, String> ids = new HashMap<>();
+
+        for (String t : taggs.keySet()) {
+            int[] songs = databaseHelper.getSongListFromTagg(taggs.get(t));
+            for (int i : songs) {
+                ids.put(i, t);
+            }
+        }
+
+        ArrayList<String> out = new ArrayList<>();
+
+        for (int id : ids.keySet()) {
+            if (allSongsMap.get(id) == songInfo) {
+                out.add(ids.get(id));
+            }
+        }
+
+        return out;
     }
 
     public ArrayList<SongInfo> getAllSongs() {

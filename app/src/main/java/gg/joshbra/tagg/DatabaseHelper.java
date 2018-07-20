@@ -98,7 +98,7 @@ public class DatabaseHelper {
     /**
      * Makes cursor for a playlist
      */
-    public Cursor getTaggSongCursor(long taggID) {
+    public Cursor getTaggSongCursor(int taggID) {
         String selection = MediaStore.Audio.AudioColumns.IS_MUSIC + " = 1 AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''";
         return context.getContentResolver().query(
                 MediaStore.Audio.Playlists.Members.getContentUri("external", taggID),
@@ -127,6 +127,30 @@ public class DatabaseHelper {
         }
         cursor.close();
         return new int[][]{list, orders};
+    }
+
+    public int[] getSongListFromTagg(int taggID) {
+        String selection = MediaStore.Audio.AudioColumns.IS_MUSIC + " = 1 AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''";
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Audio.Playlists.Members.getContentUri("external", taggID),
+                new String[]{
+                        MediaStore.Audio.Playlists.Members.AUDIO_ID
+                }, selection, null,
+                MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER);
+
+        if (cursor == null) { return new int[]{}; }
+
+        int len = cursor.getCount();
+        int[] out = new int[len];
+
+        cursor.moveToFirst();
+
+        for (int i = 0; i < len; i++) {
+            out[i] = cursor.getInt(0);
+            cursor.moveToNext();
+        }
+
+        return out;
     }
 
     /**
