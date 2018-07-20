@@ -4,10 +4,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +19,17 @@ import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
 import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
+import gg.joshbra.tagg.CurrentPlaybackNotifier;
+import gg.joshbra.tagg.MediaControllerHolder;
+import gg.joshbra.tagg.PlayQueue;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongAdapter;
 import gg.joshbra.tagg.SongInfo;
 
-public class SongListFragment extends Fragment {
+public class SongListFragment extends Fragment implements Observer {
 
     private RecyclerView recyclerView;
     private SongAdapter songAdapter;
@@ -37,6 +45,7 @@ public class SongListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CurrentPlaybackNotifier.getSelf().attach(this);
     }
 
     @Override
@@ -68,5 +77,18 @@ public class SongListFragment extends Fragment {
     public void enableIndicator(boolean e) {
         MaterialScrollBar scrollBar = getView().findViewById(R.id.touchScrollBar);
         scrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        CurrentPlaybackNotifier.getSelf().detach(this);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        ((SongAdapter) recyclerView.getAdapter()).setActiveRow(PlayQueue.getSelf().getSongIndex(PlayQueue.getSelf().getCurrSong()));
+        if (((SongAdapter) recyclerView.getAdapter()).getActiveRow() == -1) { return; }
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 }

@@ -51,7 +51,6 @@ public class SongManager {
         Collections.sort(songs);
         allSongs = songs;
         for (SongInfo s : songs) {
-            Log.i("d", s.getMediaID().intValue() + " " + s);
             allSongsMap.put(s.getMediaID().intValue(), s);
         }
     }

@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,13 +19,17 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.turingtechnologies.materialscrollbar.INameableAdapter;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
+import es.claucookie.miniequalizerlibrary.EqualizerView;
 import gg.joshbra.tagg.Activities.MainActivity;
 import gg.joshbra.tagg.Activities.TaggActivity;
 
@@ -33,6 +38,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
     private ArrayList<SongInfo> songs;
     private Context context;
     private MediaControllerCompat mediaController;
+
+    private int activeRow = -1;
 
     @Override
     public Character getCharacterForElement(int element) {
@@ -52,7 +59,12 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
     @NonNull
     @Override
     public SongHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View myView = LayoutInflater.from(context).inflate(R.layout.row_song, parent, false);
+        View myView;
+        if (viewType == 0) {
+            myView = LayoutInflater.from(context).inflate(R.layout.row_song, parent, false);
+        } else {
+            myView = LayoutInflater.from(context).inflate(R.layout.row_song_active, parent, false);
+        }
         return new SongHolder(myView);
     }
 
@@ -127,6 +139,22 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         });
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (position == activeRow) {
+            return 1;
+        }
+        return 0;
+    }
+
+    public void setActiveRow(int activeRow) {
+        this.activeRow = activeRow;
+    }
+
+    public int getActiveRow() {
+        return activeRow;
+    }
+
     private void populateList(View view, SongInfo songInfo) {
         RecyclerView recyclerView = view.findViewById(R.id.taggSelectRGroup);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
@@ -165,6 +193,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
 
     public class SongHolder extends RecyclerView.ViewHolder {
         TextView songName, artistName, dropDownMenu;
+        EqualizerView equalizer;
         View view;
 
         public SongHolder(View itemView) {
@@ -173,10 +202,22 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
             songName = itemView.findViewById(R.id.songNameTextView);
             artistName = itemView.findViewById(R.id.artistNameTextView);
             dropDownMenu = itemView.findViewById(R.id.textViewOptions);
+            equalizer = itemView.findViewById(R.id.equalizer);
+            equalizer.animateBars();
+        }
+
+        public TextView getSongName() {
+            return songName;
         }
 
         public View getView() {
             return view;
         }
+
+        public EqualizerView getEqualizer() {
+            return equalizer;
+        }
     }
+
+
 }

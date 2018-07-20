@@ -171,11 +171,11 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
                             TaggAdapter.TaggHolder holder = (TaggAdapter.TaggHolder) taggRV.findViewHolderForAdapterPosition(i);
                             ImageButton removeBtn = holder.getDeleteBtn();
                             TextView taggName = holder.getTaggName();
-                            if (removeBtn.getVisibility() == View.INVISIBLE) {
+                            if (removeBtn.getVisibility() == View.GONE) {
                                 removeBtn.setVisibility(View.VISIBLE);
                                 setMargins(taggName, 0, 0, 24, 0);
                             } else {
-                                removeBtn.setVisibility(View.INVISIBLE);
+                                removeBtn.setVisibility(View.GONE);
                                 setMargins(taggName, 0, 0, 0, 0);
                             }
                         }

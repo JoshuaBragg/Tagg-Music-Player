@@ -32,6 +32,10 @@ public class PlayQueue {
         return shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL ? currQueueShuffled : currQueue;
     }
 
+    public int getSongIndex(SongInfo songInfo) {
+        return currQueue.indexOf(songInfo);
+    }
+
     public void setCurrQueue(ArrayList<SongInfo> currQueue) {
         PlayQueue.currQueue = currQueue;
         shuffle();

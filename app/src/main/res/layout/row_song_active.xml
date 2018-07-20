@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorSecondary"
+    android:background="@color/colorPrimary"
     android:foreground="@drawable/custom_ripple_effect">
 
     <LinearLayout
@@ -24,7 +24,7 @@
             android:textColor="@color/colorTextPrimary"
             android:fontFamily="@font/hkgrot_semibold"
             android:textSize="20sp"
-            android:layout_marginEnd="40dp"/>
+            android:layout_marginEnd="80dp"/>
 
         <TextView
             android:id="@+id/artistNameTextView"
@@ -35,7 +35,7 @@
             android:ellipsize="end"
             android:fontFamily="@font/hkgrot_reg"
             android:textColor="@color/colorTextSecondary"
-            android:layout_marginEnd="40dp"/>
+            android:layout_marginEnd="80dp"/>
 
     </LinearLayout>
 
@@ -45,11 +45,10 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         custom:foregroundColor="@color/colorAccent"
-        custom:animDuration="5000"
+        custom:animDuration="5500"
         android:layout_toStartOf="@+id/textViewOptions"
         android:padding="5dp"
-        android:layout_centerVertical="true"
-        android:visibility="gone"/>
+        android:layout_centerVertical="true" />
 
     <TextView
         android:id="@+id/textViewOptions"
