@@ -152,6 +152,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         return 0;
     }
 
+    public SongInfo getSong(int i) {
+        return songs.get(i);
+    }
+
     public void setActiveRow(int activeRow) {
         this.activeRow = activeRow;
     }
@@ -211,10 +215,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
             equalizer.animateBars();
         }
 
-        public TextView getSongName() {
-            return songName;
-        }
-
         public View getView() {
             return view;
         }
@@ -234,6 +234,4 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
             }
         }
     }
-
-
 }

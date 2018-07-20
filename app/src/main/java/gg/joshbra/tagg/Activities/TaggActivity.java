@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.Observable;
 import java.util.regex.Pattern;
 
+import gg.joshbra.tagg.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.Fragments.NowPlayingBarFragment;
 import gg.joshbra.tagg.Fragments.SongListFragment;
 import gg.joshbra.tagg.MediaControllerHolder;
@@ -271,5 +272,6 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
         ((NavigationView)findViewById(R.id.navView)).getMenu().getItem(1).setChecked(true);
+        CurrentPlaybackNotifier.getSelf().notifyPlaybackStateChanged(MediaControllerHolder.getMediaController().getPlaybackState());
     }
 }

@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         songListFragment = (SongListFragment) getSupportFragmentManager().findFragmentById(R.id.songList);
         songListFragment.enableIndicator(true);
+        songListFragment.initRecycler(loadedSongs);
         nowPlayingBarFragment = (NowPlayingBarFragment) getSupportFragmentManager().findFragmentById(R.id.nowPlayingBar);
 
         CheckPermission();
