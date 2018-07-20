@@ -150,6 +150,8 @@ public class DatabaseHelper {
             cursor.moveToNext();
         }
 
+        cursor.close();
+
         return out;
     }
 
