@@ -233,6 +233,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
         ((NavigationView)findViewById(R.id.navView)).getMenu().getItem(0).setChecked(true);
+        try {
+            currentPlaybackNotifier.notifyPlaybackStateChanged(MediaControllerHolder.getMediaController().getPlaybackState());
+        } catch (NullPointerException e) {}
     }
 
     @Override

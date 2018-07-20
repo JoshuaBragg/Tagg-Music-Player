@@ -46,12 +46,24 @@ public class MusicService extends MediaBrowserServiceCompat {
 
                 @Override
                 public void onSkipToNext() {
-                    onPlayFromMediaId(playQueue.getNextSong().getMediaID().toString(), null);
+                    try {
+                        onPlayFromMediaId(playQueue.getNextSong().getMediaID().toString(), null);
+                    } catch (NullPointerException e) {
+                        onStop();
+                    }
                 }
 
                 @Override
                 public void onSkipToPrevious() {
-                    onPlayFromMediaId(playQueue.getPrevSong().getMediaID().toString(), null);
+                    if (musicController.getCurrentPosition() > 6000) {
+                        onPlayFromMediaId(playQueue.getCurrentMediaId().toString(), null);
+                    } else {
+                        try {
+                            onPlayFromMediaId(playQueue.getPrevSong().getMediaID().toString(), null);
+                        } catch (NullPointerException e) {
+                            onStop();
+                        }
+                    }
                 }
 
                 @Override
@@ -102,7 +114,11 @@ public class MusicService extends MediaBrowserServiceCompat {
     public void onDestroy() {
         musicController.stopSong();
         session.release();
-        unregisterReceiver(mediaNotificationManager);
+        try {
+            unregisterReceiver(mediaNotificationManager);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

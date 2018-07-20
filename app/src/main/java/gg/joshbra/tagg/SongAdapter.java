@@ -212,7 +212,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
             artistName = itemView.findViewById(R.id.artistNameTextView);
             dropDownMenu = itemView.findViewById(R.id.textViewOptions);
             equalizer = itemView.findViewById(R.id.equalizer);
-            equalizer.animateBars();
+
+            try {
+                if (MediaControllerHolder.getMediaController().getPlaybackState().getState() == PlaybackStateCompat.STATE_PLAYING) {
+                    equalizer.animateBars();
+                } else {
+                    equalizer.stopBars();
+                }
+            } catch (NullPointerException e) {}
         }
 
         public View getView() {

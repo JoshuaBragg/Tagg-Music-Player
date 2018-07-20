@@ -6,6 +6,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -100,6 +101,26 @@ public class CurrentlyPlayingActivity extends AppCompatActivity implements Obser
                     PlayQueue.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
                     shuffleBtn.setColorFilter(getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
                     PlayQueue.shuffle();
+                }
+            }
+        });
+
+        final ImageButton repeatBtn = findViewById(R.id.repeatBtn);
+
+        repeatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayQueue.setRepeatMode(PlayQueue.getNextRepeatMode());
+
+                if (PlayQueue.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
+                    repeatBtn.setImageResource(R.drawable.ic_repeat_white_24dp);
+                    repeatBtn.setColorFilter(getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+                } else if (PlayQueue.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_NONE) {
+                    repeatBtn.setImageResource(R.drawable.ic_repeat_white_24dp);
+                    repeatBtn.setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+                } else if (PlayQueue.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ONE) {
+                    repeatBtn.setImageResource(R.drawable.ic_repeat_one_white_24dp);
+                    repeatBtn.setColorFilter(getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
                 }
             }
         });

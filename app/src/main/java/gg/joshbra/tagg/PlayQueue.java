@@ -11,6 +11,7 @@ public class PlayQueue {
     private static ArrayList<SongInfo> currQueue, currQueueShuffled;
     private SongInfo currSong;
     private static int shuffleMode;
+    private static int repeatMode;
 
     ////////////////////////////// Singleton ///////////////////////////////
 
@@ -20,6 +21,7 @@ public class PlayQueue {
         currQueue = new ArrayList<>();
         currSong = null;
         shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_NONE;
+        repeatMode = PlaybackStateCompat.REPEAT_MODE_ALL;
     }
 
     public static PlayQueue getSelf() {
@@ -50,12 +52,28 @@ public class PlayQueue {
     }
 
     public SongInfo getNextSong() {
+        if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE) {
+            return currSong;
+        }
+        if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE) {
+            return shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL ?
+                    currQueueShuffled.indexOf(currSong) + 1 == currQueueShuffled.size() ? null : currQueueShuffled.get(currQueueShuffled.indexOf(currSong) + 1) :
+                    currQueue.indexOf(currSong) + 1 == currQueue.size() ? null : currQueue.get(currQueue.indexOf(currSong) + 1);
+        }
         return shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL ?
                 currQueueShuffled.indexOf(currSong) + 1 == currQueueShuffled.size() ? currQueueShuffled.get(0) : currQueueShuffled.get(currQueueShuffled.indexOf(currSong) + 1) :
                 currQueue.indexOf(currSong) + 1 == currQueue.size() ? currQueue.get(0) : currQueue.get(currQueue.indexOf(currSong) + 1);
     }
 
     public SongInfo getPrevSong() {
+        if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE) {
+            return currSong;
+        }
+        if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE) {
+            return shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL ?
+                    currQueueShuffled.indexOf(currSong) - 1 < 0 ? null : currQueueShuffled.get(currQueueShuffled.indexOf(currSong) - 1) :
+                    currQueue.indexOf(currSong) - 1 < 0 ? null : currQueue.get(currQueue.indexOf(currSong) - 1);
+        }
         return shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL ?
                 currQueueShuffled.indexOf(currSong) - 1 < 0 ? currQueueShuffled.get(currQueueShuffled.size() - 1) : currQueueShuffled.get(currQueueShuffled.indexOf(currSong) - 1) :
                 currQueue.indexOf(currSong) - 1 < 0 ? currQueue.get(currQueue.size() - 1) : currQueue.get(currQueue.indexOf(currSong) - 1);
@@ -72,6 +90,22 @@ public class PlayQueue {
 
     public Long getCurrentMediaId() {
         return currSong.getMediaID();
+    }
+
+    public static void setRepeatMode(int mode) {
+        repeatMode = mode;
+    }
+
+    public static int getRepeatMode() {
+        return repeatMode;
+    }
+
+    public static int getNextRepeatMode() {
+        if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE)
+            return PlaybackStateCompat.REPEAT_MODE_ALL;
+        if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL)
+            return PlaybackStateCompat.REPEAT_MODE_ONE;
+        return  PlaybackStateCompat.REPEAT_MODE_NONE;
     }
 
     public static void setShuffleMode(int mode) {
