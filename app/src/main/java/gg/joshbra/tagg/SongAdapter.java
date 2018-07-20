@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -137,6 +138,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                 popup.show();
             }
         });
+
+        if (i == activeRow) {
+            CurrentPlaybackNotifier.getSelf().attach(holder);
+        }
     }
 
     @Override
@@ -191,7 +196,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         return songs.size();
     }
 
-    public class SongHolder extends RecyclerView.ViewHolder {
+    public class SongHolder extends RecyclerView.ViewHolder implements Observer{
         TextView songName, artistName, dropDownMenu;
         EqualizerView equalizer;
         View view;
@@ -216,6 +221,17 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
 
         public EqualizerView getEqualizer() {
             return equalizer;
+        }
+
+        @Override
+        public void update(Observable o, Object arg) {
+            if (arg instanceof PlaybackStateCompat) {
+                if (((PlaybackStateCompat) arg).getState() == PlaybackStateCompat.STATE_PLAYING) {
+                    equalizer.animateBars();
+                } else {
+                    equalizer.stopBars();
+                }
+            }
         }
     }
 
