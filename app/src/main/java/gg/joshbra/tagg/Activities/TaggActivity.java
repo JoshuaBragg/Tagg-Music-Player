@@ -33,14 +33,14 @@ import java.util.Collections;
 import java.util.Observable;
 import java.util.regex.Pattern;
 
-import gg.joshbra.tagg.CurrentPlaybackNotifier;
+import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.Fragments.NowPlayingBarFragment;
 import gg.joshbra.tagg.Fragments.SongListFragment;
-import gg.joshbra.tagg.MediaControllerHolder;
+import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.R;
-import gg.joshbra.tagg.SongAdapter;
+import gg.joshbra.tagg.Adapters.SongAdapter;
 import gg.joshbra.tagg.SongManager;
-import gg.joshbra.tagg.TaggAdapter;
+import gg.joshbra.tagg.Adapters.TaggAdapter;
 import gg.joshbra.tagg.TaggSelector;
 
 public class TaggActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

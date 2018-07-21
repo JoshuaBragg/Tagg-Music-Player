@@ -1,4 +1,4 @@
-package gg.joshbra.tagg;
+package gg.joshbra.tagg.Helpers;
 
 import android.content.Context;
 import android.content.res.Resources;

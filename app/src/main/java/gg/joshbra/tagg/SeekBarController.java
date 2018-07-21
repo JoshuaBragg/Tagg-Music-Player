@@ -3,18 +3,16 @@ package gg.joshbra.tagg;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.SeekBar;
 
 import java.util.ArrayList;
-import java.util.Observable;
 import java.util.Observer;
 
 import gg.joshbra.tagg.Activities.CurrentlyPlayingActivity;
+import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 
 public class SeekBarController {
     private SeekBar seekBar;

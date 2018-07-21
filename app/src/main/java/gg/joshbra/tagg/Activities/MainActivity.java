@@ -28,10 +28,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import gg.joshbra.tagg.CurrentPlaybackNotifier;
+import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.Fragments.NowPlayingBarFragment;
 import gg.joshbra.tagg.Fragments.SongListFragment;
-import gg.joshbra.tagg.MediaControllerHolder;
+import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.MusicService;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongInfo;

@@ -1,4 +1,6 @@
-package gg.joshbra.tagg;
+package gg.joshbra.tagg.Helpers;
+
+import gg.joshbra.tagg.SongInfo;
 
 public class SongPlayOrderTuple {
     public final SongInfo songInfo;

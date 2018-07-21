@@ -10,15 +10,14 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
 import java.util.Observable;
 
-import gg.joshbra.tagg.CurrentPlaybackNotifier;
+import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.Fragments.NowPlayingBarFragment;
 import gg.joshbra.tagg.Fragments.SongListFragment;
-import gg.joshbra.tagg.MediaControllerHolder;
+import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.R;
-import gg.joshbra.tagg.SongComparator;
+import gg.joshbra.tagg.Comparators.SongComparator;
 import gg.joshbra.tagg.SongManager;
 
 public class RecentlyAddedActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

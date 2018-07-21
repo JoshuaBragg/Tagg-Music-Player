@@ -1,6 +1,8 @@
-package gg.joshbra.tagg;
+package gg.joshbra.tagg.Comparators;
 
 import java.util.Comparator;
+
+import gg.joshbra.tagg.Helpers.SongPlayOrderTuple;
 
 public class SongPlayOrderComparator implements Comparator<SongPlayOrderTuple> {
     @Override

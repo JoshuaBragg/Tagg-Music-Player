@@ -1,6 +1,8 @@
-package gg.joshbra.tagg;
+package gg.joshbra.tagg.Comparators;
 
 import java.util.Comparator;
+
+import gg.joshbra.tagg.SongInfo;
 
 public class SongComparator implements Comparator<SongInfo> {
     public final static int SORT_ALPH_ASC = 0;

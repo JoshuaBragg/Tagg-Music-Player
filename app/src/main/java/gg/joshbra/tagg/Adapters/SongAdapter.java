@@ -1,4 +1,4 @@
-package gg.joshbra.tagg;
+package gg.joshbra.tagg.Adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -9,7 +9,6 @@ import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,7 +19,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +32,13 @@ import es.claucookie.miniequalizerlibrary.EqualizerView;
 import gg.joshbra.tagg.Activities.MainActivity;
 import gg.joshbra.tagg.Activities.RecentlyAddedActivity;
 import gg.joshbra.tagg.Activities.TaggActivity;
+import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
+import gg.joshbra.tagg.Helpers.MediaControllerHolder;
+import gg.joshbra.tagg.R;
+import gg.joshbra.tagg.Comparators.SongComparator;
+import gg.joshbra.tagg.SongInfo;
+import gg.joshbra.tagg.SongManager;
+import gg.joshbra.tagg.TaggSelector;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> implements INameableAdapter {
 

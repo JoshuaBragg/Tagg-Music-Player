@@ -4,13 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +18,10 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import gg.joshbra.tagg.Activities.MainActivity;
-import gg.joshbra.tagg.CurrentPlaybackNotifier;
-import gg.joshbra.tagg.MediaControllerHolder;
+import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.PlayQueue;
 import gg.joshbra.tagg.R;
-import gg.joshbra.tagg.SongAdapter;
+import gg.joshbra.tagg.Adapters.SongAdapter;
 import gg.joshbra.tagg.SongInfo;
 
 public class SongListFragment extends Fragment implements Observer {

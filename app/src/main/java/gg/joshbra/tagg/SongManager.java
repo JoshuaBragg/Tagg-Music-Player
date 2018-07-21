@@ -2,16 +2,15 @@ package gg.joshbra.tagg;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+
+import gg.joshbra.tagg.Comparators.SongComparator;
+import gg.joshbra.tagg.Comparators.SongPlayOrderComparator;
+import gg.joshbra.tagg.Helpers.SongPlayOrderTuple;
 
 public class SongManager {
     private ArrayList<SongInfo> allSongs;

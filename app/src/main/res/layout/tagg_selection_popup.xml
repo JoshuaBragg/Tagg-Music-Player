@@ -54,7 +54,7 @@
         android:layout_below="@+id/taggSelectTitle">
     </LinearLayout>
 
-    <gg.joshbra.tagg.MaxDimensionRecycler
+    <gg.joshbra.tagg.Helpers.MaxDimensionRecycler
         android:id="@+id/taggSelectRGroup"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
@@ -63,6 +63,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/noTaggMessageSpace">
-    </gg.joshbra.tagg.MaxDimensionRecycler>
+    </gg.joshbra.tagg.Helpers.MaxDimensionRecycler>
 
 </RelativeLayout>

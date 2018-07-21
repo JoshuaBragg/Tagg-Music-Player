@@ -1,4 +1,4 @@
-package gg.joshbra.tagg;
+package gg.joshbra.tagg.Helpers;
 
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;

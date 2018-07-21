@@ -1,4 +1,4 @@
-package gg.joshbra.tagg;
+package gg.joshbra.tagg.Adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +14,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import gg.joshbra.tagg.R;
+import gg.joshbra.tagg.SongManager;
+import gg.joshbra.tagg.TaggSelector;
 
 public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
 

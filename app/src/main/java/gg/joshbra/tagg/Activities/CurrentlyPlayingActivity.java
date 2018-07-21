@@ -16,8 +16,8 @@ import java.lang.ref.WeakReference;
 import java.util.Observable;
 import java.util.Observer;
 
-import gg.joshbra.tagg.CurrentPlaybackNotifier;
-import gg.joshbra.tagg.MediaControllerHolder;
+import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
+import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.PlayQueue;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SeekBarController;

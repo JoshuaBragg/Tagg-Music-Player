@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +19,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 import gg.joshbra.tagg.Activities.CurrentlyPlayingActivity;
-import gg.joshbra.tagg.Activities.MainActivity;
-import gg.joshbra.tagg.CurrentPlaybackNotifier;
-import gg.joshbra.tagg.MediaControllerHolder;
+import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
+import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.R;
-import gg.joshbra.tagg.SongInfo;
 
 public class NowPlayingBarFragment extends Fragment implements Observer {
     private MediaControllerCompat mediaController;
