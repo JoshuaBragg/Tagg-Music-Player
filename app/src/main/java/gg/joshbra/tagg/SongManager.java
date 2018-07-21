@@ -145,20 +145,22 @@ public class SongManager {
     }
 
     public ArrayList<String> getSongsRelatedTaggs(SongInfo songInfo) {
-        HashMap<Integer, String> ids = new HashMap<>();
+        ArrayList<Integer> ids = new ArrayList<>();
+        ArrayList<String> taggList = new ArrayList<>();
 
         for (String t : taggs.keySet()) {
             int[] songs = databaseHelper.getSongListFromTagg(taggs.get(t));
             for (int i : songs) {
-                ids.put(i, t);
+                ids.add(i);
+                taggList.add(t);
             }
         }
 
         ArrayList<String> out = new ArrayList<>();
 
-        for (int id : ids.keySet()) {
-            if (allSongsMap.get(id) == songInfo) {
-                out.add(ids.get(id));
+        for (int i = 0; i < ids.size(); i++) {
+            if (allSongsMap.get(ids.get(i)).equals(songInfo)) {
+                out.add(taggList.get(i));
             }
         }
 
