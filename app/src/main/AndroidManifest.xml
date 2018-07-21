@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -19,7 +19,6 @@
             android:configChanges="orientation"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
-
         </activity>
         <activity
             android:name=".Activities.CurrentlyPlayingActivity"
@@ -28,14 +27,18 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar">
-
         </activity>
         <activity
             android:name=".Activities.TaggActivity"
             android:configChanges="orientation"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
-
+        </activity>
+        <activity
+            android:name=".Activities.RecentlyAddedActivity"
+            android:configChanges="orientation"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".Activities.SplashActivity"
@@ -52,7 +55,7 @@
         <service
             android:name=".MusicService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>

@@ -16,5 +16,11 @@
             android:icon="@drawable/ic_library_music_white_24dp"
             android:background="?android:attr/selectableItemBackground"/>
 
+        <item
+            android:id="@+id/recentMenu"
+            android:title="Recently Added"
+            android:icon="@drawable/ic_access_time_white_24dp"
+            android:background="?android:attr/selectableItemBackground"/>
+
     </group>
 </menu>

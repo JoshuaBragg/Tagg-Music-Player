@@ -111,6 +111,20 @@ public class SongManager {
         playQueue.setCurrQueue(out);
     }
 
+    public ArrayList<SongInfo> getDateSortedSongs(int sortMode) {
+        ArrayList<SongInfo> out = new ArrayList<>(allSongs);
+        Collections.sort(out, new SongComparator(sortMode));
+
+        return out;
+    }
+
+    public void updateCurrSongsFromSorted(int sortMode) {
+        ArrayList<SongInfo> out = new ArrayList<>(allSongs);
+        Collections.sort(out, new SongComparator(sortMode));
+
+        playQueue.setCurrQueue(out);
+    }
+
     public ArrayList<String> getTaggs() {
         return new ArrayList<>(taggs.keySet());
     }

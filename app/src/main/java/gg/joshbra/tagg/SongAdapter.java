@@ -32,6 +32,7 @@ import java.util.Observer;
 
 import es.claucookie.miniequalizerlibrary.EqualizerView;
 import gg.joshbra.tagg.Activities.MainActivity;
+import gg.joshbra.tagg.Activities.RecentlyAddedActivity;
 import gg.joshbra.tagg.Activities.TaggActivity;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> implements INameableAdapter {
@@ -81,6 +82,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                     SongManager.getSelf().resetCurrSongs();
                 } else if (context instanceof TaggActivity) {
                     SongManager.getSelf().updateCurrSongsFromTaggs();
+                } else if (context instanceof RecentlyAddedActivity) {
+                    SongManager.getSelf().updateCurrSongsFromSorted(SongComparator.SORT_DATE_DESC);
                 }
                 mediaController.getTransportControls().playFromMediaId(c.getMediaID().toString(), null);
             }
