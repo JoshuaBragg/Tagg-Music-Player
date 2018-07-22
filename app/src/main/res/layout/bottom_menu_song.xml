@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/songNameBotMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="Song Name"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:fontFamily="@font/hkgrot_reg"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:textColor="@color/colorTextSecondary" />
+
+    <View
+        android:layout_width="80dp"
+        android:layout_height="1dp"
+        android:background="@color/colorTextSecondary" />
+
+    <Button
+        android:id="@+id/playBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Play"
+        android:fontFamily="@font/hkgrot_semibold"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:textColor="@color/colorTextPrimary"
+        android:background="@color/colorPrimary"
+        android:gravity="start|center_vertical"/>
+
+    <Button
+        android:id="@+id/updateTaggBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update Taggs"
+        android:fontFamily="@font/hkgrot_semibold"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:textColor="@color/colorTextPrimary"
+        android:background="@color/colorPrimary"
+        android:gravity="start|center_vertical"/>
+
+</LinearLayout>

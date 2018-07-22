@@ -4,20 +4,19 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,8 +31,10 @@ import es.claucookie.miniequalizerlibrary.EqualizerView;
 import gg.joshbra.tagg.Activities.MainActivity;
 import gg.joshbra.tagg.Activities.RecentlyAddedActivity;
 import gg.joshbra.tagg.Activities.TaggActivity;
+import gg.joshbra.tagg.Fragments.BottomSongMenuDialogFragment;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
+import gg.joshbra.tagg.PlayQueue;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.Comparators.SongComparator;
 import gg.joshbra.tagg.SongInfo;
@@ -97,16 +98,22 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         holder.dropDownMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context wrapper = new ContextThemeWrapper(context, R.style.PopupMenu);
-                final PopupMenu popup = new PopupMenu(wrapper, holder.dropDownMenu);
+                BottomSongMenuDialogFragment bottomSongMenuDialogFragment = new BottomSongMenuDialogFragment();
 
-                popup.inflate(R.menu.song_menu);
+                Bundle bundle = new Bundle();
 
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                bundle.putString("songName", c.getSongName());
+
+                bottomSongMenuDialogFragment.setArguments(bundle);
+
+                bottomSongMenuDialogFragment.setListener(new BottomSongMenuDialogFragment.BottomMenuListener() {
                     @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            case R.id.updateTaggs:
+                    public void onOptionSelected(String type) {
+                        switch (type) {
+                            case (BottomSongMenuDialogFragment.OPTION_PLAY):
+                                holder.getView().callOnClick();
+                                break;
+                            case (BottomSongMenuDialogFragment.OPTION_UPDATE_TAGGS):
                                 LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
                                 final ViewGroup container = (ViewGroup) inflater.inflate(R.layout.tagg_selection_popup_simple, null);
 
@@ -135,15 +142,12 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                                         popupWindow.dismiss();
                                     }
                                 });
-
-                                return true;
-                            default:
-                                return false;
+                                break;
                         }
                     }
                 });
 
-                popup.show();
+                bottomSongMenuDialogFragment.show(((AppCompatActivity)context).getSupportFragmentManager(), "bottomSheet");
             }
         });
 
