@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import java.util.Observable;
 
+import gg.joshbra.tagg.Helpers.AboutDialogGenerator;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.Fragments.NowPlayingBarFragment;
 import gg.joshbra.tagg.Fragments.SongListFragment;
@@ -75,6 +76,8 @@ public class RecentlyAddedActivity extends AppCompatActivity implements Navigati
         } else if (id == R.id.recentMenu) {
             item.setChecked(true);
             //Toast.makeText(this, "Recently Added", Toast.LENGTH_LONG).show();
+        } else if (id == R.id.aboutMenu) {
+            AboutDialogGenerator.createDialog(this);
         }
 
         mDrawerLayout.closeDrawer(Gravity.START);

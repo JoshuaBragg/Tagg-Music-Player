@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group
         android:checkableBehavior="single"
-        android:background="?android:attr/selectableItemBackground">
+        android:id="@+id/top">
 
         <item
             android:id="@+id/songMenu"
@@ -21,6 +21,24 @@
             android:title="Recently Added"
             android:icon="@drawable/ic_access_time_white_24dp"
             android:background="?android:attr/selectableItemBackground"/>
+
+    </group>
+
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/bottom">
+
+        <item
+            android:id="@+id/aboutMenu"
+            android:title="About"
+            android:icon="@drawable/ic_info_white_24dp"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <item
+            android:id="@+id/settingsMenu"
+            android:title="Settings"
+            android:icon="@drawable/ic_settings_white_24dp"
+            android:background="?android:attr/selectableItemBackground" />
 
     </group>
 </menu>

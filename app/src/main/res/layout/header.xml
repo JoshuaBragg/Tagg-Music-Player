@@ -16,32 +16,15 @@
         android:contentDescription="Tagg Icon"
         android:src="@drawable/tagg_icon_small"/>
 
-    <LinearLayout
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/taggIconHeader"
         android:layout_toEndOf="@+id/taggIconHeader"
-        android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_centerVertical="true"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorTextPrimary"
-            android:text="Tagg Music Player"
-            android:fontFamily="@font/hkgrot_semibold"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorTextPrimary"
-            android:text="Created by: Joshua Bragg"
-            android:fontFamily="@font/hkgrot_semibold"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"/>
-
-    </LinearLayout>
+        android:textColor="@color/colorTextPrimary"
+        android:text="Tagg Music Player"
+        android:fontFamily="@font/hkgrot_semibold"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
 
 </RelativeLayout>
