@@ -1,33 +1,36 @@
 package gg.joshbra.tagg.Activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 
-import java.util.Observable;
-
+import gg.joshbra.tagg.Comparators.SongComparator;
+import gg.joshbra.tagg.CurrentlyPlayingSheet;
+import gg.joshbra.tagg.Fragments.SongListFragment;
 import gg.joshbra.tagg.Helpers.AboutDialogGenerator;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
-import gg.joshbra.tagg.Fragments.NowPlayingBarFragment;
-import gg.joshbra.tagg.Fragments.SongListFragment;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.R;
-import gg.joshbra.tagg.Comparators.SongComparator;
 import gg.joshbra.tagg.SongManager;
 
-public class RecentlyAddedActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class RecentlyAddedActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CurrentlyPlayingSheet.UsesCurrentlyPlayingSheet {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
 
     private SongListFragment songListFragment;
-    private NowPlayingBarFragment nowPlayingBarFragment;
+    private CurrentlyPlayingSheet currentlyPlayingSheet;
+    private BottomSheetBehavior bottomSheetBehavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +52,13 @@ public class RecentlyAddedActivity extends AppCompatActivity implements Navigati
         songListFragment = (SongListFragment) getSupportFragmentManager().findFragmentById(R.id.songList);
         songListFragment.initRecycler(SongManager.getSelf().getDateSortedSongs(SongComparator.SORT_DATE_DESC));
 
-        nowPlayingBarFragment = (NowPlayingBarFragment) getSupportFragmentManager().findFragmentById(R.id.nowPlayingBar);
-        nowPlayingBarFragment.initNowPlayingBar();
-        nowPlayingBarFragment.update(new Observable(), MediaControllerHolder.getMediaController().getPlaybackState());
-        nowPlayingBarFragment.update(new Observable(), MediaControllerHolder.getMediaController().getMetadata());
+        View v = findViewById(R.id.bottomSheet);
+
+        currentlyPlayingSheet = new CurrentlyPlayingSheet((RelativeLayout) v);
+        bottomSheetBehavior = BottomSheetBehavior.from(v);
+
+        CurrentPlaybackNotifier.getSelf().notifyPlaybackStateChanged(MediaControllerHolder.getMediaController().getPlaybackState());
+        CurrentPlaybackNotifier.getSelf().notifyMetadataChanged(MediaControllerHolder.getMediaController().getMetadata());
     }
 
     @Override
@@ -98,5 +104,24 @@ public class RecentlyAddedActivity extends AppCompatActivity implements Navigati
         super.onResume();
         ((NavigationView)findViewById(R.id.navView)).getMenu().getItem(2).setChecked(true);
         CurrentPlaybackNotifier.getSelf().notifyPlaybackStateChanged(MediaControllerHolder.getMediaController().getPlaybackState());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        currentlyPlayingSheet.destroy();
+    }
+
+    @Override
+    public void nothing(View v) {}
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK && bottomSheetBehavior != null && bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

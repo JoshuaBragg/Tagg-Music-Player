@@ -21,14 +21,6 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".Activities.CurrentlyPlayingActivity"
-            android:configChanges="orientation"
-            android:label="Current Song"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar">
-        </activity>
-        <activity
             android:name=".Activities.TaggActivity"
             android:configChanges="orientation"
             android:launchMode="singleTask"

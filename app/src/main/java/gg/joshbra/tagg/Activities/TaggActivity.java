@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,34 +28,33 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Observable;
 import java.util.regex.Pattern;
 
+import gg.joshbra.tagg.Adapters.TaggAdapter;
+import gg.joshbra.tagg.CurrentlyPlayingSheet;
+import gg.joshbra.tagg.Fragments.SongListFragment;
 import gg.joshbra.tagg.Helpers.AboutDialogGenerator;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
-import gg.joshbra.tagg.Fragments.NowPlayingBarFragment;
-import gg.joshbra.tagg.Fragments.SongListFragment;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.R;
-import gg.joshbra.tagg.Adapters.SongAdapter;
 import gg.joshbra.tagg.SongManager;
-import gg.joshbra.tagg.Adapters.TaggAdapter;
 import gg.joshbra.tagg.TaggSelector;
 
-public class TaggActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class TaggActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CurrentlyPlayingSheet.UsesCurrentlyPlayingSheet {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
 
     private PopupWindow popupWindow;
-    private SongAdapter songAdapter;
     private SongManager songManager;
 
     private SongListFragment songListFragment;
-    private NowPlayingBarFragment nowPlayingBarFragment;
+    private CurrentlyPlayingSheet currentlyPlayingSheet;
+    private BottomSheetBehavior bottomSheetBehavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +76,14 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         navigationView.getMenu().getItem(1).setChecked(true);
 
         songListFragment = (SongListFragment) getSupportFragmentManager().findFragmentById(R.id.songList);
-        nowPlayingBarFragment = (NowPlayingBarFragment) getSupportFragmentManager().findFragmentById(R.id.nowPlayingBar);
 
-        nowPlayingBarFragment.initNowPlayingBar();
-        nowPlayingBarFragment.update(new Observable(), MediaControllerHolder.getMediaController().getPlaybackState());
-        nowPlayingBarFragment.update(new Observable(), MediaControllerHolder.getMediaController().getMetadata());
+        View v = findViewById(R.id.bottomSheet);
+
+        currentlyPlayingSheet = new CurrentlyPlayingSheet((RelativeLayout) v);
+        bottomSheetBehavior = BottomSheetBehavior.from(v);
+
+        CurrentPlaybackNotifier.getSelf().notifyPlaybackStateChanged(MediaControllerHolder.getMediaController().getPlaybackState());
+        CurrentPlaybackNotifier.getSelf().notifyMetadataChanged(MediaControllerHolder.getMediaController().getMetadata());
 
         updateSongRepeater();
 
@@ -281,5 +285,24 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         super.onResume();
         ((NavigationView)findViewById(R.id.navView)).getMenu().getItem(1).setChecked(true);
         CurrentPlaybackNotifier.getSelf().notifyPlaybackStateChanged(MediaControllerHolder.getMediaController().getPlaybackState());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        currentlyPlayingSheet.destroy();
+    }
+
+    @Override
+    public void nothing(View v) {}
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK && bottomSheetBehavior != null && bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

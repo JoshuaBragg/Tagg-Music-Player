@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.media.MediaBrowserCompat;
@@ -22,23 +23,26 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+import gg.joshbra.tagg.CurrentlyPlayingSheet;
+import gg.joshbra.tagg.Fragments.SongListFragment;
 import gg.joshbra.tagg.Helpers.AboutDialogGenerator;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
-import gg.joshbra.tagg.Fragments.NowPlayingBarFragment;
-import gg.joshbra.tagg.Fragments.SongListFragment;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.MusicService;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongInfo;
 import gg.joshbra.tagg.SongManager;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CurrentlyPlayingSheet.UsesCurrentlyPlayingSheet {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
@@ -46,8 +50,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ArrayList<SongInfo> loadedSongs;
     private SongManager songManager;
     private SongListFragment songListFragment;
-    private NowPlayingBarFragment nowPlayingBarFragment;
     private CurrentPlaybackNotifier currentPlaybackNotifier;
+    private CurrentlyPlayingSheet currentlyPlayingSheet;
+    private BottomSheetBehavior bottomSheetBehavior;
 
     private MediaBrowserCompat mediaBrowser;
 
@@ -61,7 +66,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     songListFragment.initRecycler(loadedSongs);
 
-                    nowPlayingBarFragment.initNowPlayingBar();
+                    View v = findViewById(R.id.bottomSheet);
+
+                    currentlyPlayingSheet = new CurrentlyPlayingSheet((RelativeLayout) v);
+                    bottomSheetBehavior = BottomSheetBehavior.from(v);
 
                     currentPlaybackNotifier.notifyPlaybackStateChanged(mediaController.getPlaybackState());
                     currentPlaybackNotifier.notifyMetadataChanged(mediaController.getMetadata());
@@ -78,21 +86,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public void onSessionDestroyed() {
             super.onSessionDestroyed();
             currentPlaybackNotifier.notifyPlaybackStateChanged(null);
-            //nowPlayingBarFragment.updatePlaybackState(null);
         }
 
         @Override
         public void onPlaybackStateChanged(PlaybackStateCompat state) {
             super.onPlaybackStateChanged(state);
             currentPlaybackNotifier.notifyPlaybackStateChanged(state);
-            //nowPlayingBarFragment.updatePlaybackState(state);
         }
 
         @Override
         public void onMetadataChanged(MediaMetadataCompat metadata) {
             super.onMetadataChanged(metadata);
             currentPlaybackNotifier.notifyMetadataChanged(metadata);
-            //nowPlayingBarFragment.updateMetadata(metadata);
         }
     };
 
@@ -120,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         songListFragment = (SongListFragment) getSupportFragmentManager().findFragmentById(R.id.songList);
         songListFragment.enableIndicator(true);
         songListFragment.initRecycler(loadedSongs);
-        nowPlayingBarFragment = (NowPlayingBarFragment) getSupportFragmentManager().findFragmentById(R.id.nowPlayingBar);
 
         CheckPermission();
     }
@@ -238,6 +242,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public void nothing(View v) {}
+
+    @Override
     protected void onResume() {
         super.onResume();
         ((NavigationView)findViewById(R.id.navView)).getMenu().getItem(0).setChecked(true);
@@ -250,5 +257,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onDestroy() {
         super.onDestroy();
         mediaBrowser.disconnect();
+        currentlyPlayingSheet.destroy();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK && bottomSheetBehavior != null && bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

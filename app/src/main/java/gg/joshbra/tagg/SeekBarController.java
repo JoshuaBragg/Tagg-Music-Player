@@ -5,13 +5,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
-import java.util.ArrayList;
-import java.util.Observer;
-
-import gg.joshbra.tagg.Activities.CurrentlyPlayingActivity;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 
 public class SeekBarController {
@@ -19,16 +15,15 @@ public class SeekBarController {
     private MediaControllerCompat mediaController;
     private SeekBarThread seekBarThread;
     private boolean running;
-    private ArrayList<Observer> observers;
     private Handler handler;
 
-    public SeekBarController(AppCompatActivity m) {
+    public SeekBarController(RelativeLayout r, CurrentlyPlayingSheet currentlyPlayingSheet) {
         seekBarThread = new SeekBarThread();
-        seekBar = m.findViewById(R.id.seekBar);
+        seekBar = r.findViewById(R.id.seekBar);
         running = false;
         mediaController = MediaControllerHolder.getMediaController();
-        observers = new ArrayList<>();
-        handler = ((CurrentlyPlayingActivity)m).getHandler();
+        //observers = new ArrayList<>();
+        handler = currentlyPlayingSheet.getHandler();
         // seekBar.setMax(Math.round(PlayQueue.getSelf().getCurrSong().getDuration()));
         // seekBar.setProgress(Math.round(mediaController.getPlaybackState().getPosition()));
     }

@@ -1,20 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayoutNowPlaying"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".Activities.CurrentlyPlayingActivity"
-    tools:showIn="@layout/activity_currently_playing_view"
-    android:background="@color/colorTertiary">
+    android:background="@color/colorPrimary"
+    app:behavior_peekHeight="75dp"
+    app:layout_behavior=".Helpers.TempLockedBottomSheetBehavior"
+    app:behavior_hideable="false"
+    android:onClick="nothing">
+
+    <LinearLayout
+        android:id="@+id/peekBar"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/pausePlayBtnPeek"
+            android:layout_width="?android:attr/actionBarSize"
+            android:layout_height="?android:attr/actionBarSize"
+            android:scaleType="fitXY"
+            android:background="@null"
+            android:src="@drawable/ic_play_arrow_white_24dp"
+            android:tint="@color/colorAccent"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/songNameTextViewPeek"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/hkgrot_semibold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:textColor="@color/colorTextPrimary"/>
+
+            <TextView
+                android:id="@+id/artistNameTextViewPeek"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/hkgrot_reg"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingTop="2dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/colorTextSecondary"/>
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/songNameTextViewHolder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingRight="25dp"
-        android:paddingLeft="25dp"
+        android:paddingEnd="25dp"
+        android:paddingStart="25dp"
         android:paddingTop="150dp"
         android:layout_centerHorizontal="true">
 
