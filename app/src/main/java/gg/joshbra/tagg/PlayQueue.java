@@ -89,6 +89,7 @@ public class PlayQueue {
     }
 
     public Long getCurrentMediaId() {
+        if (currSong == null) { return null; }
         return currSong.getMediaID();
     }
 

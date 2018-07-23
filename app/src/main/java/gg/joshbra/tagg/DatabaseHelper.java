@@ -202,7 +202,6 @@ public class DatabaseHelper {
      */
     public void addToTagg(long[] ids, long taggID) {
         ContentResolver resolver = context.getContentResolver();
-        String[] projection = new String[] { "count(*)" };
         Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", taggID);
 
         ContentValues[] contentValues = new ContentValues[ids.length];
