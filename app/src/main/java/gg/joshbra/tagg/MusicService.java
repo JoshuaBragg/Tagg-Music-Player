@@ -1,12 +1,20 @@
 package gg.joshbra.tagg;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserServiceCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import java.util.List;
+
+import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 
 public class MusicService extends MediaBrowserServiceCompat {
 
@@ -16,69 +24,73 @@ public class MusicService extends MediaBrowserServiceCompat {
     private PlayQueue playQueue;
     private MediaNotificationManager mediaNotificationManager;
 
-    final MediaSessionCompat.Callback callback =
-            new MediaSessionCompat.Callback() {
-                @Override
-                public void onPlayFromMediaId(String mediaId, Bundle extras) {
-                    session.setActive(true);
-                    SongInfo song = playQueue.getSongByID(mediaId);
-                    session.setMetadata(song.getMediaMetadataCompat());
-                    musicController.playSong(song);
-                }
+    private IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+    private BecomingNoisyReceiver noisyAudioStreamReceiver = new BecomingNoisyReceiver();
 
-                @Override
-                public void onPlay() {
-                    if (playQueue.getCurrentMediaId() != null) {
-                        //onPlayFromMediaId(playQueue.getCurrentMediaId(), null);
-                        musicController.playSong();
-                    }
-                }
+    final MediaSessionCompat.Callback callback = new MediaSessionCompat.Callback() {
+        @Override
+        public void onPlayFromMediaId(String mediaId, Bundle extras) {
+            session.setActive(true);
+            registerReceiver(noisyAudioStreamReceiver, intentFilter);
+            SongInfo song = playQueue.getSongByID(mediaId);
+            session.setMetadata(song.getMediaMetadataCompat());
+            musicController.playSong(song);
+        }
 
-                @Override
-                public void onPause() {
-                    musicController.pauseSong();
-                }
+        @Override
+        public void onPlay() {
+            if (playQueue.getCurrentMediaId() != null) {
+                //onPlayFromMediaId(playQueue.getCurrentMediaId(), null);
+                musicController.playSong();
+            }
+        }
 
-                @Override
-                public void onStop() {
-                    stopSelf();
-                }
+        @Override
+        public void onPause() {
+            musicController.pauseSong();
+        }
 
-                @Override
-                public void onSkipToNext() {
-                    try {
-                        onPlayFromMediaId(playQueue.getNextSong().getMediaID().toString(), null);
-                    } catch (NullPointerException e) {
-                        onStop();
-                    }
-                }
+        @Override
+        public void onStop() {
+            stopSelf();
+            unregisterReceiver(noisyAudioStreamReceiver);
+        }
 
-                @Override
-                public void onSkipToPrevious() {
-                    if (musicController.getCurrentPosition() > 6000) {
-                        onPlayFromMediaId(playQueue.getCurrentMediaId().toString(), null);
-                    } else {
-                        try {
-                            onPlayFromMediaId(playQueue.getPrevSong().getMediaID().toString(), null);
-                        } catch (NullPointerException e) {
-                            onStop();
-                        }
-                    }
-                }
+        @Override
+        public void onSkipToNext() {
+            try {
+                onPlayFromMediaId(playQueue.getNextSong().getMediaID().toString(), null);
+            } catch (NullPointerException e) {
+                onStop();
+            }
+        }
 
-                @Override
-                public void onSeekTo(long pos) {
-                    super.onSeekTo(pos);
-                    musicController.seekTo((int)pos);
-                    musicController.updatePlaybackState();
+        @Override
+        public void onSkipToPrevious() {
+            if (musicController.getCurrentPosition() > 6000) {
+                onPlayFromMediaId(playQueue.getCurrentMediaId().toString(), null);
+            } else {
+                try {
+                    onPlayFromMediaId(playQueue.getPrevSong().getMediaID().toString(), null);
+                } catch (NullPointerException e) {
+                    onStop();
                 }
+            }
+        }
 
-                @Override
-                public void onSetShuffleMode(int shuffleMode) {
-                    super.onSetShuffleMode(shuffleMode);
-                    PlayQueue.setShuffleMode(shuffleMode);
-                }
-            };
+        @Override
+        public void onSeekTo(long pos) {
+            super.onSeekTo(pos);
+            musicController.seekTo((int)pos);
+            musicController.updatePlaybackState();
+        }
+
+        @Override
+        public void onSetShuffleMode(int shuffleMode) {
+            super.onSetShuffleMode(shuffleMode);
+            PlayQueue.setShuffleMode(shuffleMode);
+        }
+    };
 
     @Override
     public void onCreate() {
@@ -129,5 +141,14 @@ public class MusicService extends MediaBrowserServiceCompat {
     @Override
     public void onLoadChildren(final String parentMediaId, final Result<List<MediaBrowserCompat.MediaItem>> result) {
         result.sendResult(PlayQueue.getMediaItems());
+    }
+
+    private class BecomingNoisyReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
+                MediaControllerHolder.getMediaController().getTransportControls().pause();
+            }
+        }
     }
 }

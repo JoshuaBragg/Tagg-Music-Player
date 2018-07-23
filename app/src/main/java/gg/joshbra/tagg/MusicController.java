@@ -96,6 +96,7 @@ public class MusicController extends Observable implements AudioManager.OnAudioF
     }
 
     public void playSong() {
+        if (mediaPlayer == null) { return; }
         mediaPlayer.start();
         notifyAllObservers(true);
         state = PlaybackStateCompat.STATE_PLAYING;
@@ -103,6 +104,7 @@ public class MusicController extends Observable implements AudioManager.OnAudioF
     }
 
     public void pauseSong() {
+        if (mediaPlayer == null) { return; }
         mediaPlayer.pause();
         notifyAllObservers(false);
         state = PlaybackStateCompat.STATE_PAUSED;
