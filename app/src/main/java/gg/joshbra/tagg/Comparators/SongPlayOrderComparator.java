@@ -12,6 +12,6 @@ public class SongPlayOrderComparator implements Comparator<SongPlayOrderTuple> {
         } else if (o1.playOrder < o2.playOrder) {
             return -1;
         }
-        return 0;
+        return o1.songInfo.compareTo(o2.songInfo);
     }
 }

@@ -2,6 +2,7 @@ package gg.joshbra.tagg;
 
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;

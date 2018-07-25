@@ -81,7 +81,7 @@ public class SongInfo implements Comparable<SongInfo> {
     }
 
     public String toString() {
-        return getMediaID() + " - " + getSongName() + " - " + getArtistName() + " - " + getSongUrl();
+        return getMediaID() + " - " + getSongName();
     }
 
     public boolean equals(Object o) {

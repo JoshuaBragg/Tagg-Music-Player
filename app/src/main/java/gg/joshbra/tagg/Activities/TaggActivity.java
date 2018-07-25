@@ -17,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -42,6 +43,7 @@ import gg.joshbra.tagg.Helpers.AboutDialogGenerator;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.R;
+import gg.joshbra.tagg.SongInfo;
 import gg.joshbra.tagg.SongManager;
 import gg.joshbra.tagg.TaggSelector;
 

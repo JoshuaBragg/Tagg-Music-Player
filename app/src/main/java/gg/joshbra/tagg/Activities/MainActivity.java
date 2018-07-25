@@ -204,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             songManager.initDB(this);
             songManager.setSongList(loadedSongs);
+            songManager.resetCurrSongs();
 
             setTitle(loadedSongs.size() == 0 ? "Songs" : "Songs (" + loadedSongs.size() + ")");
 

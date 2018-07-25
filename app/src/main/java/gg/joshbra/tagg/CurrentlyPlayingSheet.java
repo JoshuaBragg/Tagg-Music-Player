@@ -30,8 +30,6 @@ public class CurrentlyPlayingSheet implements Observer {
     private BottomSheetBehavior bottomSheetBehavior;
 
     public CurrentlyPlayingSheet(final RelativeLayout relativeLayout) {
-        Log.e("d", relativeLayout + "");
-
         this.relativeLayout = relativeLayout;
 
         mediaController = MediaControllerHolder.getMediaController();
