@@ -32,6 +32,8 @@ import gg.joshbra.tagg.Activities.MainActivity;
 import gg.joshbra.tagg.Activities.RecentlyAddedActivity;
 import gg.joshbra.tagg.Activities.TaggActivity;
 import gg.joshbra.tagg.Fragments.BottomSongMenuDialogFragment;
+import gg.joshbra.tagg.Fragments.BottomTaggSelectionFragment;
+import gg.joshbra.tagg.Fragments.BottomTaggUpdateFragment;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.PlayQueue;
@@ -114,34 +116,16 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                                 holder.getView().callOnClick();
                                 break;
                             case (BottomSongMenuDialogFragment.OPTION_UPDATE_TAGGS):
-                                LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-                                final ViewGroup container = (ViewGroup) inflater.inflate(R.layout.tagg_selection_popup_simple, null);
+                                BottomTaggUpdateFragment bottomTaggUpdateFragment = new BottomTaggUpdateFragment();
 
-                                populateList(container, c);
-
-                                final PopupWindow popupWindow = new PopupWindow(container, (int) Math.round(Resources.getSystem().getDisplayMetrics().widthPixels * (2.0 / 3.0)), ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                                popupWindow.setTouchable(true);
-                                popupWindow.setFocusable(true);
-
-                                popupWindow.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
-                                popupWindow.setElevation(50);
-
-                                popupWindow.showAtLocation(holder.getView(), Gravity.CENTER, 0, 0);
-
-                                Button updateBtn = container.findViewById(R.id.updateTaggBtn);
-
-                                updateBtn.setOnClickListener(new View.OnClickListener() {
+                                bottomTaggUpdateFragment.setListener(new BottomTaggUpdateFragment.BottomTaggUpdateListener() {
                                     @Override
-                                    public void onClick(View view) {
-                                        Toast.makeText(context, "Taggs Updated", Toast.LENGTH_SHORT).show();
-                                        RecyclerView recyclerView = container.findViewById(R.id.taggSelectRGroup);
-                                        TaggAdapter adapter = (TaggAdapter) recyclerView.getAdapter();
-                                        if (adapter == null) { popupWindow.dismiss(); return; }
-                                        ArrayList<String> updateTaggs = adapter.getCheckedTaggs();
-                                        SongManager.getSelf().updateSongTaggRelations(c, updateTaggs);
-                                        popupWindow.dismiss();
+                                    public SongInfo getSong() {
+                                        return c;
                                     }
                                 });
+
+                                bottomTaggUpdateFragment.show(((AppCompatActivity)context).getSupportFragmentManager(), "bottomTaggUpdateSheet");
                                 break;
                         }
                     }
