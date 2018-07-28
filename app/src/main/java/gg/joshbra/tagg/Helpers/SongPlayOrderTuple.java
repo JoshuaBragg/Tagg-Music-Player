@@ -1,5 +1,7 @@
 package gg.joshbra.tagg.Helpers;
 
+import android.util.Log;
+
 import gg.joshbra.tagg.SongInfo;
 
 public class SongPlayOrderTuple {
@@ -12,7 +14,18 @@ public class SongPlayOrderTuple {
     }
 
     @Override
+    public String toString() {
+        return songInfo.toString() + " - order: " + playOrder;
+    }
+
+    @Override
     public boolean equals(Object obj) {
-        return obj instanceof SongPlayOrderTuple && this.songInfo.equals(((SongPlayOrderTuple) obj).songInfo) && this.playOrder == ((SongPlayOrderTuple) obj).playOrder;
+        Log.e("d", " I am comparing " + songInfo + " to " + obj.toString());
+        return obj instanceof SongPlayOrderTuple && this.songInfo.equals(((SongPlayOrderTuple) obj).songInfo);
+    }
+
+    @Override
+    public int hashCode() {
+        return songInfo.getMediaID().intValue();
     }
 }
