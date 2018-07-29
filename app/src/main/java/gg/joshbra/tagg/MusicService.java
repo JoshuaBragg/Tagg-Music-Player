@@ -27,6 +27,8 @@ public class MusicService extends MediaBrowserServiceCompat {
     private IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
     private BecomingNoisyReceiver noisyAudioStreamReceiver = new BecomingNoisyReceiver();
 
+    private final int REPEAT_THRESHOLD = 6000;
+
     final MediaSessionCompat.Callback callback = new MediaSessionCompat.Callback() {
         @Override
         public void onPlayFromMediaId(String mediaId, Bundle extras) {
@@ -67,7 +69,7 @@ public class MusicService extends MediaBrowserServiceCompat {
 
         @Override
         public void onSkipToPrevious() {
-            if (musicController.getCurrentPosition() > 6000) {
+            if (musicController.getCurrentPosition() > REPEAT_THRESHOLD) {
                 onPlayFromMediaId(playQueue.getCurrentMediaId().toString(), null);
             } else {
                 try {

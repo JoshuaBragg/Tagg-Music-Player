@@ -8,11 +8,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import gg.joshbra.tagg.Helpers.MediaControllerHolder;
+
 public class PlayQueue {
     private static ArrayList<SongInfo> currQueue, currQueueShuffled;
     private SongInfo currSong;
     private static int shuffleMode;
     private static int repeatMode;
+    private int index = -1, shuffledIndex = -1;
 
     ////////////////////////////// Singleton ///////////////////////////////
 
@@ -50,34 +53,42 @@ public class PlayQueue {
 
     public void setCurrSong(SongInfo currSong) {
         this.currSong = currSong;
+        index = currQueue.indexOf(currSong);
+        shuffledIndex = currQueueShuffled.indexOf(currSong);
     }
 
     public SongInfo getNextSong() {
-        if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE) {
+        if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL ? shuffledIndex == -1 : index == -1) {
+            return null;
+        }
+        if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE || currSong == null) {
             return currSong;
         }
         if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE) {
             return shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL ?
-                    currQueueShuffled.indexOf(currSong) + 1 == currQueueShuffled.size() ? null : currQueueShuffled.get(currQueueShuffled.indexOf(currSong) + 1) :
-                    currQueue.indexOf(currSong) + 1 == currQueue.size() ? null : currQueue.get(currQueue.indexOf(currSong) + 1);
+                    shuffledIndex + 1 == currQueueShuffled.size() ? null : currQueueShuffled.get(++shuffledIndex) :
+                    index + 1 == currQueue.size() ? null : currQueue.get(++index);
         }
         return shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL ?
-                currQueueShuffled.indexOf(currSong) + 1 == currQueueShuffled.size() ? currQueueShuffled.get(0) : currQueueShuffled.get(currQueueShuffled.indexOf(currSong) + 1) :
-                currQueue.indexOf(currSong) + 1 == currQueue.size() ? currQueue.get(0) : currQueue.get(currQueue.indexOf(currSong) + 1);
+                shuffledIndex + 1 == currQueueShuffled.size() ? currQueueShuffled.get(0) : currQueueShuffled.get(++shuffledIndex) :
+                index + 1 == currQueue.size() ? currQueue.get(0) : currQueue.get(++index);
     }
 
     public SongInfo getPrevSong() {
-        if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE) {
+        if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL ? shuffledIndex == -1 : index == -1) {
+            return null;
+        }
+        if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE || currSong == null) {
             return currSong;
         }
         if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE) {
             return shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL ?
-                    currQueueShuffled.indexOf(currSong) - 1 < 0 ? null : currQueueShuffled.get(currQueueShuffled.indexOf(currSong) - 1) :
-                    currQueue.indexOf(currSong) - 1 < 0 ? null : currQueue.get(currQueue.indexOf(currSong) - 1);
+                    shuffledIndex - 1 < 0 ? null : currQueueShuffled.get(--shuffledIndex) :
+                    index - 1 < 0 ? null : currQueue.get(--index);
         }
         return shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL ?
-                currQueueShuffled.indexOf(currSong) - 1 < 0 ? currQueueShuffled.get(currQueueShuffled.size() - 1) : currQueueShuffled.get(currQueueShuffled.indexOf(currSong) - 1) :
-                currQueue.indexOf(currSong) - 1 < 0 ? currQueue.get(currQueue.size() - 1) : currQueue.get(currQueue.indexOf(currSong) - 1);
+                shuffledIndex - 1 < 0 ? currQueueShuffled.get(currQueueShuffled.size() - 1) : currQueueShuffled.get(--shuffledIndex) :
+                index - 1 < 0 ? currQueue.get(currQueue.size() - 1) : currQueue.get(--index);
     }
 
     public SongInfo getSongByID(String id) {
