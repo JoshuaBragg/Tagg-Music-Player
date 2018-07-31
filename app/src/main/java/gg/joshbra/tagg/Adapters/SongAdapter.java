@@ -89,11 +89,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
             @Override
             public void onClick(View v) {
                 if (context instanceof MainActivity) {
-                    SongManager.getSelf().resetCurrSongs();
+                    SongManager.getSelf().updateCurrQueue(SongManager.TYPE_ALL_SONGS);
                 } else if (context instanceof TaggActivity) {
-                    SongManager.getSelf().updateCurrSongsFromTaggs();
+                    SongManager.getSelf().updateCurrQueue(SongManager.TYPE_TAGG);
                 } else if (context instanceof RecentlyAddedActivity) {
-                    SongManager.getSelf().updateCurrSongsFromSorted(SongComparator.SORT_DATE_DESC);
+                    SongManager.getSelf().updateCurrQueue(SongManager.TYPE_RECENT);
                 }
                 Bundle extra = new Bundle();
                 extra.putInt(MusicController.PLAY_TYPE, MusicController.PLAY_BY_USER);

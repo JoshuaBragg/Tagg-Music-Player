@@ -19,8 +19,9 @@ public class SongManager {
     private HashMap<Integer, SongInfo> allSongsMap;
 
     private PlayQueue playQueue;
-
     private DatabaseHelper databaseHelper;
+
+    public static final int TYPE_ALL_SONGS = 0, TYPE_TAGG = 1, TYPE_RECENT = 2;
 
     ////////////////////////////// Singleton ///////////////////////////////
 
@@ -85,7 +86,7 @@ public class SongManager {
         return out;
     }
 
-    public void updateCurrSongsFromTaggs() {
+    private void updateCurrSongsFromTaggs() {
         HashSet<SongPlayOrderTuple> newSongQueue = new HashSet<>();
 
         for (String tagg : activeTaggs.keySet()) {
@@ -118,11 +119,25 @@ public class SongManager {
         return out;
     }
 
-    public void updateCurrSongsFromSorted(int sortMode) {
+    private void updateCurrSongsFromSorted(int sortMode) {
         ArrayList<SongInfo> out = new ArrayList<>(allSongs);
         Collections.sort(out, new SongComparator(sortMode));
 
         playQueue.setCurrQueue(out);
+    }
+
+    public void updateCurrQueue(int queueType) {
+        switch (queueType) {
+            case (TYPE_ALL_SONGS):
+                resetCurrSongs();
+                break;
+            case (TYPE_TAGG):
+                updateCurrSongsFromTaggs();
+                break;
+            case (TYPE_RECENT):
+                updateCurrSongsFromSorted(SongComparator.SORT_DATE_DESC);
+                break;
+        }
     }
 
     public ArrayList<String> getTaggs() {
