@@ -17,6 +17,7 @@ public class BottomSongMenuDialogFragment extends BottomSheetDialogFragment {
 
     public final static String OPTION_UPDATE_TAGGS = "update_taggs";
     public final static String OPTION_PLAY = "play";
+    public final static String OPTION_PLAY_NEXT = "play_next";
 
     @Nullable
     @Override
@@ -30,6 +31,16 @@ public class BottomSongMenuDialogFragment extends BottomSheetDialogFragment {
         try {
             songNameTextView.setText(args.getString("songName"));
         } catch (NullPointerException e) {}
+
+        Button playNextBtn = view.findViewById(R.id.playNextBtn);
+
+        playNextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onOptionSelected(OPTION_PLAY_NEXT);
+                dismiss();
+            }
+        });
 
         Button playBtn = view.findViewById(R.id.playBtn);
 

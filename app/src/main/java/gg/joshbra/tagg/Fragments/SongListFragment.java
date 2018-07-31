@@ -82,15 +82,10 @@ public class SongListFragment extends Fragment implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        try {
-            if (((SongAdapter) recyclerView.getAdapter()).getSong(PlayQueue.getSelf().getSongIndex(PlayQueue.getSelf().getCurrSong())) != PlayQueue.getSelf().getCurrSong()) {
-                return;
-            }
-        } catch (Exception e) {
-            return;
-        }
-        ((SongAdapter) recyclerView.getAdapter()).setActiveRow(PlayQueue.getSelf().getSongIndex(PlayQueue.getSelf().getCurrSong()));
-        if (((SongAdapter) recyclerView.getAdapter()).getActiveRow() == -1) { return; }
+        if (recyclerView.getAdapter() == null) { return; }
+        int[] temp = ((SongAdapter) recyclerView.getAdapter()).getRowsForSong(PlayQueue.getSelf().getCurrSong());
+        ((SongAdapter) recyclerView.getAdapter()).setActiveRows(temp);
+        if (((SongAdapter) recyclerView.getAdapter()).getActiveRows().length == 0) { return; }
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 }

@@ -25,6 +25,17 @@
         android:background="@color/colorTextSecondary" />
 
     <Button
+        android:id="@+id/playNextBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Play Next"
+        android:fontFamily="@font/hkgrot_semibold"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:textColor="@color/colorTextPrimary"
+        android:background="@color/colorPrimary"
+        android:gravity="start|center_vertical"/>
+
+    <Button
         android:id="@+id/playBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

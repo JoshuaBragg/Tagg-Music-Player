@@ -3,6 +3,7 @@ package gg.joshbra.tagg;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.media.session.PlaybackStateCompat;
 
@@ -14,48 +15,24 @@ import java.util.Observer;
 
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 
-public class MusicController extends Observable implements AudioManager.OnAudioFocusChangeListener {
+public class MusicController implements AudioManager.OnAudioFocusChangeListener {
 
     private MediaPlayer mediaPlayer;
     private PlayQueue playQueue;
-
     private int state;
 
     private final Callback callback;
-    private final AudioManager audioManager;
-    private final Context context;
 
-    ////////////////////////////// Observer  ///////////////////////////////
+    public static final int PLAY_BY_USER = 0, PLAY_BY_COMPLETION = 1;
+    public static final String PLAY_TYPE = "play_type";
 
-    private List<Observer> observers = new ArrayList<>();
-
-    public void attach(Observer observer) { observers.add(observer); }
-
-    public void detach(Observer observer) { observers.remove(observer); }
-
-    private void notifyAllObservers(Boolean playing) {
-        for (Observer o : observers) {
-            o.update(this, playing);
-        }
-    }
-
-    private void notifyAllObservers(SongInfo song) {
-        for (Observer o : observers) {
-            o.update(this, song);
-        }
-    }
-
-    ////////////////////////////// Observer  ///////////////////////////////
-
-    public MusicController(Context context, Callback callback) {
+    public MusicController(Callback callback) {
         mediaPlayer = new MediaPlayer();
         playQueue = PlayQueue.getSelf();
-        this.context = context;
-        this.audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         this.callback = callback;
     }
 
-    public void playSong(SongInfo songInfo) {
+    public void playSong(SongInfo songInfo, Bundle extras) {
         try {
             if (mediaPlayer == null) {
                 mediaPlayer = new MediaPlayer();
@@ -70,8 +47,6 @@ public class MusicController extends Observable implements AudioManager.OnAudioF
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
                     MediaControllerHolder.getMediaController().getTransportControls().skipToNext();
-//                    playSong(playQueue.getNextSong());
-//                    CurrentPlaybackNotifier.getSelf().notifyMetadataChanged(playQueue.getCurrSong().getMediaMetadataCompat());
                 }
             });
 
@@ -85,9 +60,13 @@ public class MusicController extends Observable implements AudioManager.OnAudioF
                 }
             });
 
-            playQueue.setCurrSong(songInfo);
-            notifyAllObservers(playQueue.getCurrSong());
-            notifyAllObservers(true);
+            if (extras != null) {
+                int extra = extras.getInt(PLAY_TYPE);
+                if (extra == PLAY_BY_USER) {
+                    playQueue.setCurrSong(songInfo);
+                }
+            }
+
             state = PlaybackStateCompat.STATE_PLAYING;
             updatePlaybackState();
         } catch (IOException e) {
@@ -98,7 +77,6 @@ public class MusicController extends Observable implements AudioManager.OnAudioF
     public void playSong() {
         if (mediaPlayer == null) { return; }
         mediaPlayer.start();
-        notifyAllObservers(true);
         state = PlaybackStateCompat.STATE_PLAYING;
         updatePlaybackState();
     }
@@ -106,7 +84,6 @@ public class MusicController extends Observable implements AudioManager.OnAudioF
     public void pauseSong() {
         if (mediaPlayer == null) { return; }
         mediaPlayer.pause();
-        notifyAllObservers(false);
         state = PlaybackStateCompat.STATE_PAUSED;
         updatePlaybackState();
     }

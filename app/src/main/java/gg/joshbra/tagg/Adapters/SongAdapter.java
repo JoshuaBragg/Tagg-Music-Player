@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +37,7 @@ import gg.joshbra.tagg.Fragments.BottomTaggSelectionFragment;
 import gg.joshbra.tagg.Fragments.BottomTaggUpdateFragment;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
+import gg.joshbra.tagg.MusicController;
 import gg.joshbra.tagg.PlayQueue;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.Comparators.SongComparator;
@@ -49,7 +51,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
     private Context context;
     private MediaControllerCompat mediaController;
 
-    private int activeRow = -1;
+    private int[] activeRows = new int[]{};
 
     @Override
     public Character getCharacterForElement(int element) {
@@ -93,7 +95,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                 } else if (context instanceof RecentlyAddedActivity) {
                     SongManager.getSelf().updateCurrSongsFromSorted(SongComparator.SORT_DATE_DESC);
                 }
-                mediaController.getTransportControls().playFromMediaId(c.getMediaID().toString(), null);
+                Bundle extra = new Bundle();
+                extra.putInt(MusicController.PLAY_TYPE, MusicController.PLAY_BY_USER);
+                mediaController.getTransportControls().playFromMediaId(c.getMediaID().toString(), extra);
             }
         });
 
@@ -112,6 +116,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                     @Override
                     public void onOptionSelected(String type) {
                         switch (type) {
+                            case (BottomSongMenuDialogFragment.OPTION_PLAY_NEXT):
+                                PlayQueue.getSelf().insertSongNextInQueue(c);
+                                Toast.makeText(context, "Song added to queue", Toast.LENGTH_SHORT).show();
+                                break;
                             case (BottomSongMenuDialogFragment.OPTION_PLAY):
                                 holder.getView().callOnClick();
                                 break;
@@ -135,15 +143,20 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
             }
         });
 
-        if (i == activeRow) {
-            CurrentPlaybackNotifier.getSelf().attach(holder);
+        for (int n : activeRows) {
+            if (n == i) {
+                CurrentPlaybackNotifier.getSelf().attach(holder);
+                break;
+            }
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == activeRow) {
-            return 1;
+        for (int i : activeRows) {
+            if (position == i) {
+                return 1;
+            }
         }
         return 0;
     }
@@ -152,43 +165,30 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         return songs.get(i);
     }
 
-    public void setActiveRow(int activeRow) {
-        this.activeRow = activeRow;
-    }
+    public int[] getRowsForSong(SongInfo songInfo) {
+        ArrayList<Integer> temp = new ArrayList<>();
 
-    public int getActiveRow() {
-        return activeRow;
-    }
-
-    private void populateList(View view, SongInfo songInfo) {
-        RecyclerView recyclerView = view.findViewById(R.id.taggSelectRGroup);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(linearLayoutManager);
-
-        ArrayList<String> taggs = SongManager.getSelf().getTaggs();
-
-        if (taggs.size() == 0) {
-            TextView noTaggs = new TextView(context);
-            noTaggs.setText("No Taggs exist");
-            noTaggs.setTextColor(context.getResources().getColor(R.color.colorTextSecondary));
-            noTaggs.setPadding(0, 50, 0, 20);
-            ((LinearLayout)view.findViewById(R.id.noTaggMessageSpace)).addView(noTaggs);
-            return;
-        } else {
-            ((LinearLayout)view.findViewById(R.id.noTaggMessageSpace)).removeAllViews();
+        for (int i = 0; i < songs.size(); i++) {
+            if (songs.get(i).equals(songInfo)) {
+                temp.add(i);
+            }
         }
 
-        ArrayList<TaggSelector> selectors = new ArrayList<>();
+        int[] out = new int[temp.size()];
 
-        ArrayList<String> songTaggs = SongManager.getSelf().getSongsRelatedTaggs(songInfo);
-
-        for (String t : taggs) {
-            selectors.add(new TaggSelector(t, songTaggs.contains(t)));
+        for (int i = 0; i < temp.size(); i++) {
+            out[i] = temp.get(i);
         }
 
-        TaggAdapter taggAdapter = new TaggAdapter(view.getContext(), selectors, TaggAdapter.UPDATE_TYPE);
+        return out;
+    }
 
-        recyclerView.setAdapter(taggAdapter);
+    public void setActiveRows(int[] activeRows) {
+        this.activeRows = activeRows;
+    }
+
+    public int[] getActiveRows() {
+        return activeRows;
     }
 
     @Override

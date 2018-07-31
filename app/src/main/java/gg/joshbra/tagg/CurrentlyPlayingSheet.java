@@ -34,7 +34,7 @@ public class CurrentlyPlayingSheet implements Observer {
 
         mediaController = MediaControllerHolder.getMediaController();
 
-        if (PlayQueue.getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
+        if (PlayQueue.getSelf().getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
             ImageButton shuffleBtn = relativeLayout.findViewById(R.id.shuffleBtn);
             shuffleBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
         }
@@ -124,13 +124,12 @@ public class CurrentlyPlayingSheet implements Observer {
         shuffleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (PlayQueue.getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
-                    PlayQueue.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE);
+                if (PlayQueue.getSelf().getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
+                    PlayQueue.getSelf().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE);
                     shuffleBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
                 } else {
-                    PlayQueue.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
+                    PlayQueue.getSelf().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
                     shuffleBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
-                    PlayQueue.shuffle();
                 }
             }
         });
@@ -140,15 +139,15 @@ public class CurrentlyPlayingSheet implements Observer {
         repeatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PlayQueue.setRepeatMode(PlayQueue.getNextRepeatMode());
+                PlayQueue.getSelf().setRepeatMode(PlayQueue.getSelf().getNextRepeatMode());
 
-                if (PlayQueue.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
+                if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
                     repeatBtn.setImageResource(R.drawable.ic_repeat_white_24dp);
                     repeatBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
-                } else if (PlayQueue.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_NONE) {
+                } else if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_NONE) {
                     repeatBtn.setImageResource(R.drawable.ic_repeat_white_24dp);
                     repeatBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
-                } else if (PlayQueue.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ONE) {
+                } else if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ONE) {
                     repeatBtn.setImageResource(R.drawable.ic_repeat_one_white_24dp);
                     repeatBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
                 }

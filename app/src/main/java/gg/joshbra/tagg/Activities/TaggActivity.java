@@ -105,6 +105,7 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.songMenu) {
             item.setChecked(true);
             //Toast.makeText(this, "Songs", Toast.LENGTH_LONG).show();
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
             Intent intent = new Intent(this, gg.joshbra.tagg.Activities.MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -115,7 +116,7 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.recentMenu) {
             item.setChecked(true);
             //Toast.makeText(this, "Recently Added", Toast.LENGTH_LONG).show();
-
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             Intent intent = new Intent(this, RecentlyAddedActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);

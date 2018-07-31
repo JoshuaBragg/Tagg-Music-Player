@@ -34,7 +34,7 @@ public class MusicService extends MediaBrowserServiceCompat {
             registerReceiver(noisyAudioStreamReceiver, intentFilter);
             SongInfo song = playQueue.getSongByID(mediaId);
             session.setMetadata(song.getMediaMetadataCompat());
-            musicController.playSong(song);
+            musicController.playSong(song, extras);
         }
 
         @Override
@@ -59,7 +59,9 @@ public class MusicService extends MediaBrowserServiceCompat {
         @Override
         public void onSkipToNext() {
             try {
-                onPlayFromMediaId(playQueue.getNextSong().getMediaID().toString(), null);
+                Bundle extra = new Bundle();
+                extra.putInt(MusicController.PLAY_TYPE, MusicController.PLAY_BY_COMPLETION);
+                onPlayFromMediaId(playQueue.getNextSong().getMediaID().toString(), extra);
             } catch (NullPointerException e) {
                 onStop();
             }
@@ -68,10 +70,14 @@ public class MusicService extends MediaBrowserServiceCompat {
         @Override
         public void onSkipToPrevious() {
             if (musicController.getCurrentPosition() > 6000) {
-                onPlayFromMediaId(playQueue.getCurrentMediaId().toString(), null);
+                Bundle extra = new Bundle();
+                extra.putInt(MusicController.PLAY_TYPE, MusicController.PLAY_BY_COMPLETION);
+                onPlayFromMediaId(playQueue.getCurrentMediaId().toString(), extra);
             } else {
                 try {
-                    onPlayFromMediaId(playQueue.getPrevSong().getMediaID().toString(), null);
+                    Bundle extra = new Bundle();
+                    extra.putInt(MusicController.PLAY_TYPE, MusicController.PLAY_BY_COMPLETION);
+                    onPlayFromMediaId(playQueue.getPrevSong().getMediaID().toString(), extra);
                 } catch (NullPointerException e) {
                     onStop();
                 }
@@ -88,7 +94,7 @@ public class MusicService extends MediaBrowserServiceCompat {
         @Override
         public void onSetShuffleMode(int shuffleMode) {
             super.onSetShuffleMode(shuffleMode);
-            PlayQueue.setShuffleMode(shuffleMode);
+            PlayQueue.getSelf().setShuffleMode(shuffleMode);
         }
     };
 
@@ -112,7 +118,7 @@ public class MusicService extends MediaBrowserServiceCompat {
 
         mediaNotificationManager = new MediaNotificationManager(this);
 
-        musicController = new MusicController(this, new MusicController.Callback() {
+        musicController = new MusicController(new MusicController.Callback() {
                             @Override
                             public void onPlaybackStatusChanged(PlaybackStateCompat state) {
                                 session.setPlaybackState(state);

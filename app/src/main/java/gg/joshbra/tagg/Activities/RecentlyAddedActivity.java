@@ -68,14 +68,14 @@ public class RecentlyAddedActivity extends AppCompatActivity implements Navigati
         if (id == R.id.songMenu) {
             item.setChecked(true);
             //Toast.makeText(this, "Songs", Toast.LENGTH_LONG).show();
-
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             Intent intent = new Intent(this, gg.joshbra.tagg.Activities.MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         } else if (id == R.id.taggMenu) {
             item.setChecked(true);
             //Toast.makeText(this, "Taggs", Toast.LENGTH_LONG).show();
-
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             Intent intent = new Intent(this, TaggActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
