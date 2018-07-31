@@ -38,7 +38,7 @@ public class PlayQueue {
     }
 
     public int getSongIndex(SongInfo songInfo) {
-        // TODO: consider going back to indexOffset since that may be a faster method
+        // TODO: consider going back to indexOffset since that may be a faster method.
         for (int i = 0; i < currQueue.size(); i++) {
             if (currQueue.get(i).getSongInfo().equals(songInfo)) {
                 return i;
