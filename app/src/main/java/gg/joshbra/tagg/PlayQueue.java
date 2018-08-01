@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.Helpers.SongPlayOrderTriplet;
 
 public class PlayQueue {
@@ -188,6 +189,7 @@ public class PlayQueue {
 
     public void setRepeatMode(int mode) {
         repeatMode = mode;
+        MediaControllerHolder.getMediaController().getTransportControls().setRepeatMode(mode);
     }
 
     public int getRepeatMode() {
@@ -205,6 +207,7 @@ public class PlayQueue {
     public void setShuffleMode(int mode) {
         shuffleMode = mode;
         shuffle(currQueue);
+        MediaControllerHolder.getMediaController().getTransportControls().setShuffleMode(mode);
     }
 
     public int getShuffleMode() {

@@ -18,6 +18,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import gg.joshbra.tagg.Activities.MainActivity;
+import gg.joshbra.tagg.Activities.SplashActivity;
 
 /**
  * Keeps track of a notification and updates it automatically for a given MediaSession. This is
@@ -210,7 +211,7 @@ public class MediaNotificationManager extends BroadcastReceiver {
     }
 
     private PendingIntent createContentIntent() {
-        Intent openUI = new Intent(musicService, MainActivity.class);
+        Intent openUI = new Intent(musicService, SplashActivity.class);
         openUI.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return PendingIntent.getActivity(
                 musicService, REQUEST_CODE, openUI, PendingIntent.FLAG_CANCEL_CURRENT);

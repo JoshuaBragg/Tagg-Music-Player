@@ -202,6 +202,28 @@ public class CurrentlyPlayingSheet implements Observer {
                 pausePlayBtn.setImageResource(R.drawable.ic_pause_white_24dp);
                 pausePlayBtnPeek.setImageResource(R.drawable.ic_pause_white_24dp);
             }
+
+            ImageButton repeatBtn = relativeLayout.findViewById(R.id.repeatBtn);
+
+            if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
+                repeatBtn.setImageResource(R.drawable.ic_repeat_white_24dp);
+                repeatBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+            } else if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_NONE) {
+                repeatBtn.setImageResource(R.drawable.ic_repeat_white_24dp);
+                repeatBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+            } else if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ONE) {
+                repeatBtn.setImageResource(R.drawable.ic_repeat_one_white_24dp);
+                repeatBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+            }
+
+            ImageButton shuffleBtn = relativeLayout.findViewById(R.id.shuffleBtn);
+
+            if (PlayQueue.getSelf().getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
+                shuffleBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+            } else {
+                shuffleBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+            }
+
         } else if (o instanceof MediaMetadataCompat) {
             MediaMetadataCompat metadata = (MediaMetadataCompat)o;
 

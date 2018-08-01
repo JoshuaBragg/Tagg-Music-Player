@@ -1,32 +1,16 @@
-package gg.joshbra.tagg;
+package gg.joshbra.tagg.Helpers;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
-import android.text.TextUtils;
-import android.util.Log;
-import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DatabaseHelper {
-
-    private static final String[] TABLE_NAMES;
-    private static final String[][] COL_NAMES;
-
-    static {
-        TABLE_NAMES = new String[]{"songs", "taggs", "tagg_map"};
-        COL_NAMES = new String[][]{{"ID", "media_id", "song_name", "artist_name", "url", "album_name", "duration", "album_art", "date_added"}, {"ID", "tagg_name"}, {"song_id", "tagg_id"}};
-    }
-
     private Context context;
 
     // TODO: use selection/where args

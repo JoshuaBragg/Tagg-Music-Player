@@ -22,6 +22,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -36,8 +37,10 @@ import gg.joshbra.tagg.CurrentlyPlayingSheet;
 import gg.joshbra.tagg.Fragments.SongListFragment;
 import gg.joshbra.tagg.Helpers.AboutDialogGenerator;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
+import gg.joshbra.tagg.Helpers.FlagManager;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.MusicService;
+import gg.joshbra.tagg.PlayQueue;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongInfo;
 import gg.joshbra.tagg.SongManager;
@@ -74,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     currentPlaybackNotifier.notifyPlaybackStateChanged(mediaController.getPlaybackState());
                     currentPlaybackNotifier.notifyMetadataChanged(mediaController.getMetadata());
 
+                    setFlags();
+
                     mediaController.registerCallback(controllerCallback);
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
@@ -92,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public void onPlaybackStateChanged(PlaybackStateCompat state) {
             super.onPlaybackStateChanged(state);
             currentPlaybackNotifier.notifyPlaybackStateChanged(state);
+            Log.e("d", "woah who woulda thunk it");
         }
 
         @Override
@@ -127,13 +133,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         songListFragment.initRecycler(loadedSongs);
 
         CheckPermission();
+
+        mediaBrowser = new MediaBrowserCompat(this, new ComponentName(this, MusicService.class), connectionCallback,null);
+        mediaBrowser.connect();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mediaBrowser = new MediaBrowserCompat(this, new ComponentName(this, MusicService.class), connectionCallback,null);
-        mediaBrowser.connect();
     }
 
     private void CheckPermission() {
@@ -146,6 +153,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             loadSongs();
         }
+    }
+
+    private void setFlags() {
+        int[] flags = FlagManager.getSelf().getFlags();
+        PlayQueue.getSelf().setShuffleMode(flags[0]);
+        PlayQueue.getSelf().setRepeatMode(flags[1]);
     }
 
     @Override
@@ -259,6 +272,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onDestroy();
         mediaBrowser.disconnect();
         currentlyPlayingSheet.destroy();
+        int[] flags = new int[]{PlayQueue.getSelf().getShuffleMode(), PlayQueue.getSelf().getRepeatMode()};
+        FlagManager.getSelf().setFlags(this, flags);
     }
 
     @Override

@@ -92,9 +92,15 @@ public class MusicService extends MediaBrowserServiceCompat {
         }
 
         @Override
+        public void onSetRepeatMode(int repeatMode) {
+            super.onSetRepeatMode(repeatMode);
+            musicController.updatePlaybackState();
+        }
+
+        @Override
         public void onSetShuffleMode(int shuffleMode) {
             super.onSetShuffleMode(shuffleMode);
-            PlayQueue.getSelf().setShuffleMode(shuffleMode);
+            musicController.updatePlaybackState();
         }
     };
 
