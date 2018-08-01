@@ -114,6 +114,7 @@ public class PlayQueue {
         if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_NONE) {
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL) {
                 if (currSong.getOrderSeq() + 1 == currQueue.size()) {
+                    currSong = currQueue.get(0);
                     return currQueue.get(0).getSongInfo();
                 }
             }
@@ -126,6 +127,7 @@ public class PlayQueue {
         } else if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL) {
                 if (currSong.getOrderShuffle() + 1 == currQueue.size()) {
+                    currSong = currQueue.get(0);
                     return currQueue.get(0).getSongInfo();
                 }
             }
@@ -143,6 +145,7 @@ public class PlayQueue {
         if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_NONE) {
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL) {
                 if (currSong.getOrderSeq() - 1 < 0) {
+                    currSong = currQueue.get(currQueue.size() - 1);
                     return currQueue.get(currQueue.size() - 1).getSongInfo();
                 }
             }
@@ -155,6 +158,7 @@ public class PlayQueue {
         } else if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL) {
                 if (currSong.getOrderShuffle() - 1 < 0) {
+                    currSong = currQueue.get(currQueue.size() - 1);
                     return currQueue.get(currQueue.size() - 1).getSongInfo();
                 }
             }
