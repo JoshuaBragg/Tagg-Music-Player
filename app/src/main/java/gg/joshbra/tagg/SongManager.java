@@ -11,12 +11,14 @@ import java.util.HashSet;
 import gg.joshbra.tagg.Comparators.SongComparator;
 import gg.joshbra.tagg.Comparators.SongPlayOrderComparator;
 import gg.joshbra.tagg.Helpers.DatabaseHelper;
+import gg.joshbra.tagg.Helpers.FlagManager;
 import gg.joshbra.tagg.Helpers.SongPlayOrderTuple;
 
 public class SongManager {
     private ArrayList<SongInfo> allSongs;
     private HashMap<String, Integer> taggs, activeTaggs;
     private HashMap<Integer, SongInfo> allSongsMap;
+    private int queueType;
 
     private PlayQueue playQueue;
     private DatabaseHelper databaseHelper;
@@ -37,27 +39,32 @@ public class SongManager {
 
     ////////////////////////////// Singleton ///////////////////////////////
 
-    public void initDB(Context c) {
+    public void initDB(Context c, ArrayList<SongInfo> songs) {
         databaseHelper = new DatabaseHelper(c);
 
         allSongs = new ArrayList<>();
         allSongsMap = new HashMap<>();
-        playQueue.setCurrQueue(allSongs);
 
-        taggs = databaseHelper.getTaggs();
-        activeTaggs = new HashMap<>();
-    }
-
-    public void setSongList(ArrayList<SongInfo> songs) {
         Collections.sort(songs);
         allSongs = songs;
         for (SongInfo s : songs) {
             allSongsMap.put(s.getMediaID().intValue(), s);
         }
+
+        taggs = databaseHelper.getTaggs();
+        activeTaggs = FlagManager.getSelf().getActiveTaggs();
+
+        int queueType = FlagManager.getSelf().getQueueType();
+        updateCurrQueue(queueType);
+        PlayQueue.getSelf().addIntoQueue(FlagManager.getSelf().getSongsAddedToQueue());
     }
 
     public void resetCurrSongs() {
         playQueue.setCurrQueue(allSongs);
+    }
+
+    public SongInfo getSongInfoFromID(int ID) {
+        return allSongsMap.get(ID);
     }
 
     public ArrayList<SongInfo> getCurrSongsFromTaggs() {
@@ -138,6 +145,11 @@ public class SongManager {
                 updateCurrSongsFromSorted(SongComparator.SORT_DATE_DESC);
                 break;
         }
+        this.queueType = queueType;
+    }
+
+    public int getQueueType() {
+        return queueType;
     }
 
     public ArrayList<String> getTaggs() {
@@ -211,4 +223,6 @@ public class SongManager {
     public ArrayList<String> getActiveTaggs() {
         return new ArrayList<>(activeTaggs.keySet());
     }
+
+    public HashMap<String, Integer> getActiveTaggsRaw() { return activeTaggs; }
 }

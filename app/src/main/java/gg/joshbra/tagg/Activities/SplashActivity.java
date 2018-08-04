@@ -13,6 +13,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         FlagManager.getSelf().fetchFlags(this);
+        FlagManager.getSelf().fetchSongPreferences(this);
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

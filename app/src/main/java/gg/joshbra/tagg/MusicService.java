@@ -14,6 +14,7 @@ import android.util.Log;
 
 import java.util.List;
 
+import gg.joshbra.tagg.Helpers.FlagManager;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 
 public class MusicService extends MediaBrowserServiceCompat {
@@ -23,6 +24,7 @@ public class MusicService extends MediaBrowserServiceCompat {
     private MusicController musicController;
     private PlayQueue playQueue;
     private MediaNotificationManager mediaNotificationManager;
+    public static boolean running;
 
     private IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
     private BecomingNoisyReceiver noisyAudioStreamReceiver = new BecomingNoisyReceiver();
@@ -35,6 +37,7 @@ public class MusicService extends MediaBrowserServiceCompat {
             SongInfo song = playQueue.getSongByID(mediaId);
             session.setMetadata(song.getMediaMetadataCompat());
             musicController.playSong(song, extras);
+            updateFlags();
         }
 
         @Override
@@ -104,6 +107,10 @@ public class MusicService extends MediaBrowserServiceCompat {
         }
     };
 
+    private void updateFlags() {
+        FlagManager.getSelf().setSongPreferences(this);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -132,12 +139,15 @@ public class MusicService extends MediaBrowserServiceCompat {
                                 mediaNotificationManager.update(playQueue.getCurrSong().getMediaMetadataCompat(), state, getSessionToken());
                             }
                         });
+
+        running = true;
     }
 
     @Override
     public void onDestroy() {
         musicController.stopSong();
         session.release();
+        running = false;
         try {
             unregisterReceiver(mediaNotificationManager);
         } catch (IllegalArgumentException e) {
@@ -152,7 +162,7 @@ public class MusicService extends MediaBrowserServiceCompat {
 
     @Override
     public void onLoadChildren(final String parentMediaId, final Result<List<MediaBrowserCompat.MediaItem>> result) {
-        result.sendResult(PlayQueue.getMediaItems());
+        result.sendResult(PlayQueue.getSelf().getMediaItems());
     }
 
     private class BecomingNoisyReceiver extends BroadcastReceiver {

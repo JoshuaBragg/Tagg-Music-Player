@@ -29,10 +29,10 @@ public class MediaNotificationManager extends BroadcastReceiver {
     private static final int REQUEST_CODE = 100;
     private static final String CHANNEL_ID = "media_playback_channel";
 
-    private static final String ACTION_PAUSE = "com.example.android.musicplayercodelab.pause";
-    private static final String ACTION_PLAY = "com.example.android.musicplayercodelab.play";
-    private static final String ACTION_NEXT = "com.example.android.musicplayercodelab.next";
-    private static final String ACTION_PREV = "com.example.android.musicplayercodelab.prev";
+    private static final String ACTION_PAUSE = "action_pause";
+    private static final String ACTION_PLAY = "action_play";
+    private static final String ACTION_NEXT = "action_next";
+    private static final String ACTION_PREV = "action_prev";
 
     private final MusicService musicService;
 

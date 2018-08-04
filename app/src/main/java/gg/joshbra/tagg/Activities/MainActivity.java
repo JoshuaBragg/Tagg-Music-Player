@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public void onPlaybackStateChanged(PlaybackStateCompat state) {
             super.onPlaybackStateChanged(state);
             currentPlaybackNotifier.notifyPlaybackStateChanged(state);
-            Log.e("d", "woah who woulda thunk it");
         }
 
         @Override
@@ -136,11 +135,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mediaBrowser = new MediaBrowserCompat(this, new ComponentName(this, MusicService.class), connectionCallback,null);
         mediaBrowser.connect();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     private void CheckPermission() {
@@ -215,9 +209,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             cursor.close();
 
-            songManager.initDB(this);
-            songManager.setSongList(loadedSongs);
-            songManager.resetCurrSongs();
+            songManager.initDB(this, loadedSongs);
 
             setTitle(loadedSongs.size() == 0 ? "Songs" : "Songs (" + loadedSongs.size() + ")");
 
@@ -264,7 +256,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ((NavigationView)findViewById(R.id.navView)).getMenu().getItem(0).setChecked(true);
         try {
             currentPlaybackNotifier.notifyPlaybackStateChanged(MediaControllerHolder.getMediaController().getPlaybackState());
-        } catch (NullPointerException e) {}
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -272,8 +266,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onDestroy();
         mediaBrowser.disconnect();
         currentlyPlayingSheet.destroy();
-        int[] flags = new int[]{PlayQueue.getSelf().getShuffleMode(), PlayQueue.getSelf().getRepeatMode()};
-        FlagManager.getSelf().setFlags(this, flags);
+        FlagManager.getSelf().setFlags(this);
+        FlagManager.getSelf().setSongPreferences(this);
     }
 
     @Override

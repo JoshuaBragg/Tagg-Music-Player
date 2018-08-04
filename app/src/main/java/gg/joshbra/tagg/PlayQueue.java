@@ -12,7 +12,7 @@ import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.Helpers.SongPlayOrderTriplet;
 
 public class PlayQueue {
-    private static ArrayList<SongPlayOrderTriplet> currQueue;
+    private ArrayList<SongPlayOrderTriplet> currQueue, addedToQueue;
     private SongPlayOrderTriplet currSong;
     private int shuffleMode;
     private int repeatMode;
@@ -23,6 +23,7 @@ public class PlayQueue {
 
     private PlayQueue() {
         currQueue = new ArrayList<>();
+        addedToQueue = new ArrayList<>();
         currSong = null;
         shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_NONE;
         repeatMode = PlaybackStateCompat.REPEAT_MODE_ALL;
@@ -57,7 +58,8 @@ public class PlayQueue {
 
         shuffle(triplets);
 
-        PlayQueue.currQueue = triplets;
+        this.currQueue = triplets;
+        addedToQueue = new ArrayList<>();
     }
 
     private void shuffle(ArrayList<SongPlayOrderTriplet> triplets) {
@@ -73,7 +75,6 @@ public class PlayQueue {
     }
 
     public void insertSongNextInQueue(SongInfo songInfo) {
-        // TODO: make this work for shuffled queue
         int index = currQueue.indexOf(currSong) + 1;
 
         for (SongPlayOrderTriplet s : currQueue) {
@@ -82,18 +83,36 @@ public class PlayQueue {
             }
         }
 
-        currQueue.add(index, new SongPlayOrderTriplet(songInfo, index, index));
+        SongPlayOrderTriplet triplet = new SongPlayOrderTriplet(songInfo, index, index);
+
+        currQueue.add(index, triplet);
+
+        addedToQueue.add(triplet);
 
         shuffle(currQueue);
+    }
 
-        for (SongPlayOrderTriplet s : currQueue) {
-            Log.e("d", s + "");
+    public void addIntoQueue(ArrayList<SongPlayOrderTriplet> songs) {
+        // TODO: make this run in faster time
+        for (SongPlayOrderTriplet triplet : songs) {
+            for (SongPlayOrderTriplet s : currQueue) {
+                if (s.getOrderSeq() >= triplet.getOrderSeq()) {
+                    s.setOrderSeq(s.getOrderSeq() + 1);
+                }
+            }
+            currQueue.add(triplet.getOrderSeq(), triplet);
         }
+
+        shuffle(currQueue);
     }
 
     public SongInfo getCurrSong() {
         if (currSong == null) { return null; }
         return currSong.getSongInfo();
+    }
+
+    public ArrayList<SongPlayOrderTriplet> getSongsAddedToQueue() {
+        return addedToQueue;
     }
 
     public SongInfo getNextSong() {
@@ -224,7 +243,7 @@ public class PlayQueue {
 
     public static String getRoot() { return "root"; }
 
-    public static List<MediaBrowserCompat.MediaItem> getMediaItems() {
+    public List<MediaBrowserCompat.MediaItem> getMediaItems() {
         List<MediaBrowserCompat.MediaItem> result = new ArrayList<>();
         for (SongPlayOrderTriplet song : currQueue) {
             result.add(new MediaBrowserCompat.MediaItem(song.getSongInfo().getMediaMetadataCompat().getDescription(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE));

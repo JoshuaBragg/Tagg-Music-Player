@@ -97,6 +97,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                 }
                 Bundle extra = new Bundle();
                 extra.putInt(MusicController.PLAY_TYPE, MusicController.PLAY_BY_USER);
+                if (mediaController == null) { return; }
                 mediaController.getTransportControls().playFromMediaId(c.getMediaID().toString(), extra);
             }
         });

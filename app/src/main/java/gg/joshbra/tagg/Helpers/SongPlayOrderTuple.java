@@ -20,7 +20,6 @@ public class SongPlayOrderTuple {
 
     @Override
     public boolean equals(Object obj) {
-        Log.e("d", " I am comparing " + songInfo + " to " + obj.toString());
         return obj instanceof SongPlayOrderTuple && this.songInfo.equals(((SongPlayOrderTuple) obj).songInfo);
     }
 
