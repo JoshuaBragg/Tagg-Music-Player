@@ -1,17 +1,22 @@
 package gg.joshbra.tagg;
 
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,6 +25,7 @@ import java.lang.ref.WeakReference;
 import java.util.Observable;
 import java.util.Observer;
 
+import gg.joshbra.tagg.Helpers.AlbumArtRetriever;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 
@@ -28,6 +34,7 @@ public class CurrentlyPlayingSheet implements Observer {
     private SeekBarController seekBarController;
     private RelativeLayout relativeLayout;
     private BottomSheetBehavior bottomSheetBehavior;
+    private final int ALBUM_ART_SIZE = (int) Math.round(Resources.getSystem().getDisplayMetrics().widthPixels * (5.0 / 9.0));
 
     public CurrentlyPlayingSheet(final RelativeLayout relativeLayout) {
         this.relativeLayout = relativeLayout;
@@ -37,6 +44,22 @@ public class CurrentlyPlayingSheet implements Observer {
         if (PlayQueue.getSelf().getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
             ImageButton shuffleBtn = relativeLayout.findViewById(R.id.shuffleBtn);
             shuffleBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+        }
+
+        ImageView albumArtImageView = relativeLayout.findViewById(R.id.albumArtImageView);
+        String albumPath = null;
+        if (PlayQueue.getSelf().getCurrSong() != null) {
+            albumPath = AlbumArtRetriever.getAlbumArt(Integer.valueOf(PlayQueue.getSelf().getCurrSong().getAlbumID()));
+        }
+        if (albumPath != null) {
+            Drawable image = Drawable.createFromPath(albumPath);
+            albumArtImageView.getLayoutParams().height = ALBUM_ART_SIZE;
+            albumArtImageView.getLayoutParams().width = ALBUM_ART_SIZE;
+            albumArtImageView.setImageDrawable(image);
+        } else {
+            albumArtImageView.getLayoutParams().height = ALBUM_ART_SIZE;
+            albumArtImageView.getLayoutParams().width = ALBUM_ART_SIZE;
+            albumArtImageView.setImageDrawable(relativeLayout.getResources().getDrawable(R.drawable.ic_album_white_24dp));
         }
 
         seekBarController = new SeekBarController(relativeLayout, this);
@@ -226,6 +249,22 @@ public class CurrentlyPlayingSheet implements Observer {
 
         } else if (o instanceof MediaMetadataCompat) {
             MediaMetadataCompat metadata = (MediaMetadataCompat)o;
+
+            ImageView albumArtImageView = relativeLayout.findViewById(R.id.albumArtImageView);
+            String albumPath = null;
+            if (PlayQueue.getSelf().getCurrSong() != null) {
+                albumPath = AlbumArtRetriever.getAlbumArt(Integer.valueOf(PlayQueue.getSelf().getCurrSong().getAlbumID()));
+            }
+            if (albumPath != null) {
+                Drawable image = Drawable.createFromPath(albumPath);
+                albumArtImageView.getLayoutParams().height = ALBUM_ART_SIZE;
+                albumArtImageView.getLayoutParams().width = ALBUM_ART_SIZE;
+                albumArtImageView.setImageDrawable(image);
+            } else {
+                albumArtImageView.getLayoutParams().height = ALBUM_ART_SIZE;
+                albumArtImageView.getLayoutParams().width = ALBUM_ART_SIZE;
+                albumArtImageView.setImageDrawable(relativeLayout.getResources().getDrawable(R.drawable.ic_album_white_24dp));
+            }
 
             TextView songName = relativeLayout.findViewById(R.id.songNameTextView);
             TextView artistName = relativeLayout.findViewById(R.id.artistNameTextView);

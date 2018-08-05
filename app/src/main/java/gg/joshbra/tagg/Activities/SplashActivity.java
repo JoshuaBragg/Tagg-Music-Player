@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import gg.joshbra.tagg.Helpers.AlbumArtRetriever;
 import gg.joshbra.tagg.Helpers.FlagManager;
 
 public class SplashActivity extends AppCompatActivity {
@@ -14,6 +15,7 @@ public class SplashActivity extends AppCompatActivity {
 
         FlagManager.getSelf().fetchFlags(this);
         FlagManager.getSelf().fetchSongPreferences(this);
+        AlbumArtRetriever.setContentResolver(getContentResolver());
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

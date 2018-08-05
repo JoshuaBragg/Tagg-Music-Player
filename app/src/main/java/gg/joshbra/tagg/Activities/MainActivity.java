@@ -181,29 +181,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void loadSongs() {
         String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
-        ContentResolver contentResolver = getBaseContext().getContentResolver();
+        ContentResolver contentResolver = getContentResolver();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor cursor = contentResolver.query(uri, null, selection, null, null);
 
-        if(cursor != null){
-            if(cursor.moveToFirst()){
+        if(cursor != null) {
+            if(cursor.moveToFirst()) {
                 do{
                     // TODO: make permanent solution to quote and SQL injection
                     String id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
-                    String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                    String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
                     String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
                     String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
                     String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
                     String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-                    // TODO: figure out album art
-                    String albumArt =  ""; //cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.)).replaceAll("'", "''");
+                    String albumID = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)));
                     String dateAdded = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED));
 
                     if (Pattern.matches(".*\\.mp3", name)) {
                         name = name.substring(0, name.length() - 4);
                     }
 
-                    SongInfo s = new SongInfo(id, name, artist, url, album, Long.parseLong(duration), albumArt, dateAdded);
+                    SongInfo s = new SongInfo(id, name, artist, url, album, Long.parseLong(duration), albumID, dateAdded);
                     loadedSongs.add(s);
                 }while (cursor.moveToNext());
             }

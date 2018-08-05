@@ -61,13 +61,23 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/albumArtImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/peekBar"
+        android:scaleType="fitXY"
+        android:layout_marginBottom="25dp"
+        />
+
     <LinearLayout
         android:id="@+id/songNameTextViewHolder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingEnd="25dp"
         android:paddingStart="25dp"
-        android:paddingTop="150dp"
+        android:layout_below="@+id/albumArtImageView"
         android:layout_centerHorizontal="true">
 
         <TextView
@@ -75,6 +85,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Song Name"
+            android:gravity="center"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:fontFamily="@font/hkgrot_semibold"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
             android:textColor="@color/colorTextPrimary" />
@@ -89,6 +102,8 @@
         android:layout_centerInParent="true"
         android:paddingTop="10dp"
         android:text="Artist"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:fontFamily="@font/hkgrot_reg"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         android:textColor="@color/colorTextSecondary" />

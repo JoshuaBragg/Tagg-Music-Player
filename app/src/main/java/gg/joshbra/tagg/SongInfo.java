@@ -18,7 +18,7 @@ public class SongInfo implements Comparable<SongInfo> {
                 .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, songUrl)
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, albumName)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
-                .putString( MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI,  albumArt)
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, albumArt)
                 .putString(MediaMetadataCompat.METADATA_KEY_DATE, dateAdded)
                 .build();
         this.taggs = new ArrayList<>();
@@ -68,7 +68,7 @@ public class SongInfo implements Comparable<SongInfo> {
         return mediaMetadataCompat.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
     }
 
-    public String getAlbumArt() {
+    public String getAlbumID() {
         return mediaMetadataCompat.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI);
     }
 
