@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +40,9 @@ public class BottomTaggUpdateFragment extends BottomSheetDialogFragment {
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Taggs Updated", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(getContext(), "Taggs Updated", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, (int) getResources().getDimension(R.dimen.toast_offset));
+                toast.show();
                 RecyclerView recyclerView = hostView.findViewById(R.id.taggSelectRGroup);
                 TaggAdapter adapter = (TaggAdapter) recyclerView.getAdapter();
                 if (adapter == null) { dismiss(); return; }

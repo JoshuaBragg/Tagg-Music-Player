@@ -74,10 +74,6 @@ public class FlagManager {
         for (int i = 0; i < SONG_PREF_NAMES.length; i++) {
             songPreferences[i] = preferences.getString(SONG_PREF_NAMES[i], DEFAULT_SONG_PREF_VAL[i]);
         }
-
-        for (String s : songPreferences) {
-            Log.e("d", s + " __");
-        }
     }
 
     public void setSongPreferences(Object o) {
@@ -86,12 +82,9 @@ public class FlagManager {
             editor = PreferenceManager.getDefaultSharedPreferences((MediaBrowserServiceCompat) o).edit();
         } else if (o instanceof AppCompatActivity) {
             editor = PreferenceManager.getDefaultSharedPreferences((AppCompatActivity) o).edit();
-            //editor = ((AppCompatActivity)o).getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit();
         } else {
             return;
         }
-
-        Log.e("d", "setting song prefs");
 
         HashMap<String, Integer> activeTaggs = SongManager.getSelf().getActiveTaggsRaw();
 

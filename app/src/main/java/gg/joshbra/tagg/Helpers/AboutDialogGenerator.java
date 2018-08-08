@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import gg.joshbra.tagg.R;
@@ -22,7 +23,9 @@ public class AboutDialogGenerator {
                     intent.setData(Uri.parse("http://www.joshbra.gg"));
                     context.startActivity(intent);
                 } catch (ActivityNotFoundException exception) {
-                    Toast.makeText(context, "Webpage could not be opened", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(context, "Webpage could not be opened", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, (int) context.getResources().getDimension(R.dimen.toast_offset));
+                    toast.show();
                 }
             }
         };

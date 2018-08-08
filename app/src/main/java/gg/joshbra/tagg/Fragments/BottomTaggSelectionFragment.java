@@ -47,7 +47,7 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 final EditText newTaggEditText = new EditText(view.getContext());
-                newTaggEditText.setTextColor(getResources().getColor(R.color.colorTextSecondary));
+                newTaggEditText.setTextColor((int) getResources().getColor(R.color.colorTextSecondary));
 
                 newTaggEditText.requestFocus();
 

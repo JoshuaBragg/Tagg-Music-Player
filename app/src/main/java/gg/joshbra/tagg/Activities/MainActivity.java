@@ -162,7 +162,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     loadSongs();
                 } else {
-                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, (int) getResources().getDimension(R.dimen.toast_offset));
+                    toast.show();
                     CheckPermission();
                 }
                 break;

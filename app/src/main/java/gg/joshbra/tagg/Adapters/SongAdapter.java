@@ -119,7 +119,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                         switch (type) {
                             case (BottomSongMenuDialogFragment.OPTION_PLAY_NEXT):
                                 PlayQueue.getSelf().insertSongNextInQueue(c);
-                                Toast.makeText(context, "Song added to queue", Toast.LENGTH_SHORT).show();
+                                Toast toast = Toast.makeText(context, "Song added to queue", Toast.LENGTH_SHORT);
+                                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, (int) context.getResources().getDimension(R.dimen.toast_offset));
+                                toast.show();
                                 break;
                             case (BottomSongMenuDialogFragment.OPTION_PLAY):
                                 holder.getView().callOnClick();
