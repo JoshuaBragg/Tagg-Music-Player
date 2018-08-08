@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     View v = findViewById(R.id.bottomSheet);
 
-                    currentlyPlayingSheet = new CurrentlyPlayingSheet((RelativeLayout) v);
+                    currentlyPlayingSheet = new CurrentlyPlayingSheet((ConstraintLayout) v);
                     bottomSheetBehavior = BottomSheetBehavior.from(v);
 
                     currentPlaybackNotifier.notifyPlaybackStateChanged(mediaController.getPlaybackState());

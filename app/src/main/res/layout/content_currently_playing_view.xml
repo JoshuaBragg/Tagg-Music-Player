@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayoutNowPlaying"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -11,209 +12,289 @@
     android:onClick="nothing"
     android:elevation="16dp">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/peekBar"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/pausePlayBtnPeek"
-            android:layout_width="?android:attr/actionBarSize"
-            android:layout_height="?android:attr/actionBarSize"
-            android:scaleType="fitXY"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:background="@null"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_play_arrow_white_24dp"
             android:tint="@color/colorAccent"
-            android:layout_gravity="center_vertical"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.333" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/linearLayout2"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
             android:orientation="vertical"
-            android:layout_gravity="center_vertical">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/textViewOptions"
+            app:layout_constraintStart_toEndOf="@+id/pausePlayBtnPeek"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.75">
 
             <TextView
                 android:id="@+id/songNameTextViewPeek"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:fontFamily="@font/hkgrot_semibold"
                 android:maxLines="1"
-                android:ellipsize="end"
-                android:paddingStart="10dp"
                 android:paddingEnd="10dp"
+                android:paddingStart="10dp"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-                android:textColor="@color/colorTextPrimary"/>
+                android:textColor="@color/colorTextPrimary" />
 
             <TextView
                 android:id="@+id/artistNameTextViewPeek"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:fontFamily="@font/hkgrot_reg"
                 android:maxLines="1"
-                android:ellipsize="end"
-                android:paddingTop="2dp"
-                android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:textColor="@color/colorTextSecondary"/>
+                android:paddingStart="10dp"
+                android:paddingTop="2dp"
+                android:textColor="@color/colorTextSecondary" />
         </LinearLayout>
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/textViewOptions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="8dp"
+            android:paddingEnd="25dp"
+            android:paddingStart="15dp"
+            android:text="&#8942;"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/colorTextPrimary"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
 
     <ImageView
         android:id="@+id/albumArtImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_width="99dp"
+        android:layout_height="81dp"
         android:layout_below="@+id/peekBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:scaleType="fitXY"
-        android:layout_marginBottom="25dp"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/peekBar" />
 
-    <LinearLayout
-        android:id="@+id/songNameTextViewHolder"
+    <TextView
+        android:id="@+id/songNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingEnd="25dp"
-        android:paddingStart="25dp"
-        android:layout_below="@+id/albumArtImageView"
-        android:layout_centerHorizontal="true">
-
-        <TextView
-            android:id="@+id/songNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Song Name"
-            android:gravity="center"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:fontFamily="@font/hkgrot_semibold"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-            android:textColor="@color/colorTextPrimary" />
-
-    </LinearLayout>
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/hkgrot_semibold"
+        android:gravity="center"
+        android:maxLines="2"
+        android:text="Song Name"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+        android:textColor="@color/colorTextPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/albumArtImageView" />
 
     <TextView
         android:id="@+id/artistNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/songNameTextViewHolder"
         android:layout_centerInParent="true"
-        android:paddingTop="10dp"
-        android:text="Artist"
-        android:maxLines="1"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:fontFamily="@font/hkgrot_reg"
+        android:maxLines="1"
+        android:paddingTop="10dp"
+        android:text="Artist"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-        android:textColor="@color/colorTextSecondary" />
+        android:textColor="@color/colorTextSecondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/songNameTextView" />
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorSecondary">
+        android:background="@color/colorSecondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
             android:id="@+id/pausePlayBtn"
             android:layout_width="?android:attr/actionBarSize"
             android:layout_height="?android:attr/actionBarSize"
-            android:scaleType="fitXY"
             android:layout_above="@+id/seekBar"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:background="@null"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_play_arrow_white_24dp"
-            android:tint="@color/colorAccent"/>
+            android:tint="@color/colorAccent"
+            app:layout_constraintBottom_toTopOf="@+id/seekBar"
+            app:layout_constraintEnd_toStartOf="@+id/skipNextBtn"
+            app:layout_constraintStart_toEndOf="@+id/skipPrevBtn"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/skipNextBtn"
             android:layout_width="?android:attr/actionBarSize"
             android:layout_height="?android:attr/actionBarSize"
-            android:scaleType="fitXY"
             android:layout_above="@+id/seekBar"
-            android:layout_toEndOf="@+id/pausePlayBtn"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="54dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/pausePlayBtn"
             android:background="@null"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_skip_next_white_24dp"
-            android:tint="@color/colorAccent"/>
+            android:tint="@color/colorAccent"
+            app:layout_constraintBottom_toTopOf="@+id/seekBar"
+            app:layout_constraintEnd_toStartOf="@+id/shuffleBtn"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/skipPrevBtn"
             android:layout_width="?android:attr/actionBarSize"
             android:layout_height="?android:attr/actionBarSize"
-            android:scaleType="fitXY"
             android:layout_above="@+id/seekBar"
-            android:layout_toStartOf="@+id/pausePlayBtn"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="54dp"
+            android:layout_marginTop="8dp"
+            android:layout_toStartOf="@+id/pausePlayBtn"
             android:background="@null"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_skip_previous_white_24dp"
-            android:tint="@color/colorAccent"/>
+            android:tint="@color/colorAccent"
+            app:layout_constraintBottom_toTopOf="@+id/seekBar"
+            app:layout_constraintStart_toEndOf="@+id/repeatBtn"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/shuffleBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/skipNextBtn"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginTop="8dp"
+            android:background="@null"
             android:padding="5dp"
             android:scaleType="fitXY"
-            android:layout_alignTop="@+id/skipNextBtn"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="5dp"
-            android:background="@null"
             android:src="@drawable/ic_shuffle_white_24dp"
-            android:tint="@color/colorAccent"/>
+            android:tint="@color/colorAccent"
+            app:layout_constraintBottom_toTopOf="@+id/seekBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/repeatBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/skipPrevBtn"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="8dp"
+            android:background="@null"
             android:padding="5dp"
             android:scaleType="fitXY"
-            android:layout_alignTop="@+id/skipPrevBtn"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="5dp"
-            android:background="@null"
             android:src="@drawable/ic_repeat_white_24dp"
-            android:tint="@color/colorActivated"/>
+            android:tint="@color/colorActivated"
+            app:layout_constraintBottom_toTopOf="@+id/seekBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_height="14dp"
             android:layout_above="@+id/currentTimeTextView"
-            android:layout_marginStart="75dp" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="42dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/currentTimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0:00"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/seekBar"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/hkgrot_reg"
+            android:text="0:00"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
             android:textColor="@color/colorTextSecondary"
-            android:layout_alignStart="@+id/seekBar"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="15dp"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/seekBar" />
 
         <TextView
             android:id="@+id/totalTimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="9:99"
-            android:fontFamily="@font/hkgrot_reg"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-            android:textColor="@color/colorTextSecondary"
             android:layout_alignEnd="@+id/seekBar"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginEnd="15dp"/>
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/hkgrot_reg"
+            android:text="9:99"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+            android:textColor="@color/colorTextSecondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/seekBar" />
 
-    </RelativeLayout>
-</RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

@@ -3,6 +3,7 @@ package gg.joshbra.tagg;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.RelativeLayout;
@@ -17,7 +18,7 @@ public class SeekBarController {
     private boolean running;
     private Handler handler;
 
-    public SeekBarController(RelativeLayout r, CurrentlyPlayingSheet currentlyPlayingSheet) {
+    public SeekBarController(ConstraintLayout r, CurrentlyPlayingSheet currentlyPlayingSheet) {
         seekBarThread = new SeekBarThread();
         seekBar = r.findViewById(R.id.seekBar);
         running = false;

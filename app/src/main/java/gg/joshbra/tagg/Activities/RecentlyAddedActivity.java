@@ -3,6 +3,7 @@ package gg.joshbra.tagg.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -54,7 +55,7 @@ public class RecentlyAddedActivity extends AppCompatActivity implements Navigati
 
         View v = findViewById(R.id.bottomSheet);
 
-        currentlyPlayingSheet = new CurrentlyPlayingSheet((RelativeLayout) v);
+        currentlyPlayingSheet = new CurrentlyPlayingSheet((ConstraintLayout) v);
         bottomSheetBehavior = BottomSheetBehavior.from(v);
 
         CurrentPlaybackNotifier.getSelf().notifyPlaybackStateChanged(MediaControllerHolder.getMediaController().getPlaybackState());

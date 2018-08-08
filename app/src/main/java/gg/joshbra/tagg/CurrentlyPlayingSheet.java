@@ -1,14 +1,12 @@
 package gg.joshbra.tagg;
 
 import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -32,21 +30,21 @@ import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 public class CurrentlyPlayingSheet implements Observer {
     private MediaControllerCompat mediaController;
     private SeekBarController seekBarController;
-    private RelativeLayout relativeLayout;
+    private ConstraintLayout constraintLayout;
     private BottomSheetBehavior bottomSheetBehavior;
     private final int ALBUM_ART_SIZE = (int) Math.round(Resources.getSystem().getDisplayMetrics().widthPixels * (5.0 / 9.0));
 
-    public CurrentlyPlayingSheet(final RelativeLayout relativeLayout) {
-        this.relativeLayout = relativeLayout;
+    public CurrentlyPlayingSheet(final ConstraintLayout constraintLayout) {
+        this.constraintLayout = constraintLayout;
 
         mediaController = MediaControllerHolder.getMediaController();
 
         if (PlayQueue.getSelf().getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
-            ImageButton shuffleBtn = relativeLayout.findViewById(R.id.shuffleBtn);
-            shuffleBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+            ImageButton shuffleBtn = constraintLayout.findViewById(R.id.shuffleBtn);
+            shuffleBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
         }
 
-        ImageView albumArtImageView = relativeLayout.findViewById(R.id.albumArtImageView);
+        ImageView albumArtImageView = constraintLayout.findViewById(R.id.albumArtImageView);
         String albumPath = null;
         if (PlayQueue.getSelf().getCurrSong() != null) {
             albumPath = AlbumArtRetriever.getAlbumArt(Integer.valueOf(PlayQueue.getSelf().getCurrSong().getAlbumID()));
@@ -59,13 +57,13 @@ public class CurrentlyPlayingSheet implements Observer {
         } else {
             albumArtImageView.getLayoutParams().height = ALBUM_ART_SIZE;
             albumArtImageView.getLayoutParams().width = ALBUM_ART_SIZE;
-            albumArtImageView.setImageDrawable(relativeLayout.getResources().getDrawable(R.drawable.ic_album_white_24dp));
+            albumArtImageView.setImageDrawable(constraintLayout.getResources().getDrawable(R.drawable.ic_album_white_24dp));
         }
 
-        seekBarController = new SeekBarController(relativeLayout, this);
+        seekBarController = new SeekBarController(constraintLayout, this);
         seekBarController.startThread();
 
-        bottomSheetBehavior = BottomSheetBehavior.from(relativeLayout);
+        bottomSheetBehavior = BottomSheetBehavior.from(constraintLayout);
 
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -75,7 +73,7 @@ public class CurrentlyPlayingSheet implements Observer {
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                LinearLayout peekBar = relativeLayout.findViewById(R.id.peekBar);
+                ConstraintLayout peekBar = constraintLayout.findViewById(R.id.peekBar);
                 peekBar.setAlpha(fadeCurve(slideOffset));
             }
         });
@@ -90,7 +88,7 @@ public class CurrentlyPlayingSheet implements Observer {
     }
 
     public void setOnClickListeners() {
-        ImageButton pausePlayBtn = relativeLayout.findViewById(R.id.pausePlayBtn);
+        ImageButton pausePlayBtn = constraintLayout.findViewById(R.id.pausePlayBtn);
 
         pausePlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +103,7 @@ public class CurrentlyPlayingSheet implements Observer {
             }
         });
 
-        ImageButton pausePlayBtnPeek = relativeLayout.findViewById(R.id.pausePlayBtnPeek);
+        ImageButton pausePlayBtnPeek = constraintLayout.findViewById(R.id.pausePlayBtnPeek);
 
         pausePlayBtnPeek.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +118,7 @@ public class CurrentlyPlayingSheet implements Observer {
             }
         });
 
-        ImageButton skipNextBtn = relativeLayout.findViewById(R.id.skipNextBtn);
+        ImageButton skipNextBtn = constraintLayout.findViewById(R.id.skipNextBtn);
 
         skipNextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +129,7 @@ public class CurrentlyPlayingSheet implements Observer {
             }
         });
 
-        ImageButton skipPrevBtn = relativeLayout.findViewById(R.id.skipPrevBtn);
+        ImageButton skipPrevBtn = constraintLayout.findViewById(R.id.skipPrevBtn);
 
         skipPrevBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,22 +140,22 @@ public class CurrentlyPlayingSheet implements Observer {
             }
         });
 
-        final ImageButton shuffleBtn = relativeLayout.findViewById(R.id.shuffleBtn);
+        final ImageButton shuffleBtn = constraintLayout.findViewById(R.id.shuffleBtn);
 
         shuffleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (PlayQueue.getSelf().getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
                     PlayQueue.getSelf().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE);
-                    shuffleBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+                    shuffleBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
                 } else {
                     PlayQueue.getSelf().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
-                    shuffleBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+                    shuffleBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
                 }
             }
         });
 
-        final ImageButton repeatBtn = relativeLayout.findViewById(R.id.repeatBtn);
+        final ImageButton repeatBtn = constraintLayout.findViewById(R.id.repeatBtn);
 
         repeatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,18 +164,18 @@ public class CurrentlyPlayingSheet implements Observer {
 
                 if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
                     repeatBtn.setImageResource(R.drawable.ic_repeat_white_24dp);
-                    repeatBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+                    repeatBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
                 } else if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_NONE) {
                     repeatBtn.setImageResource(R.drawable.ic_repeat_white_24dp);
-                    repeatBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+                    repeatBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
                 } else if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ONE) {
                     repeatBtn.setImageResource(R.drawable.ic_repeat_one_white_24dp);
-                    repeatBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+                    repeatBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
                 }
             }
         });
 
-        LinearLayout peekBar = relativeLayout.findViewById(R.id.peekBar);
+        ConstraintLayout peekBar = constraintLayout.findViewById(R.id.peekBar);
         peekBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,19 +202,20 @@ public class CurrentlyPlayingSheet implements Observer {
     }
 
     private void updateCurrTime(int time) {
-        ((TextView)relativeLayout.findViewById(R.id.currentTimeTextView)).setText(parseTime(time));
+        ((TextView) constraintLayout.findViewById(R.id.currentTimeTextView)).setText(parseTime(time));
     }
 
     @Override
     public void update(Observable observable, Object o) {
         if (MediaControllerHolder.getMediaController() != null && MediaControllerHolder.getMediaController().getPlaybackState() != null && MediaControllerHolder.getMediaController().getMetadata() != null) {
-            relativeLayout.findViewById(R.id.pausePlayBtnPeek).setVisibility(View.VISIBLE);
+            constraintLayout.findViewById(R.id.pausePlayBtnPeek).setVisibility(View.VISIBLE);
+            constraintLayout.findViewById(R.id.textViewOptions).setVisibility(View.VISIBLE);
         }
 
         if (o instanceof PlaybackStateCompat) {
             PlaybackStateCompat state = (PlaybackStateCompat)o;
-            ImageButton pausePlayBtn = relativeLayout.findViewById(R.id.pausePlayBtn);
-            ImageButton pausePlayBtnPeek = relativeLayout.findViewById(R.id.pausePlayBtnPeek);
+            ImageButton pausePlayBtn = constraintLayout.findViewById(R.id.pausePlayBtn);
+            ImageButton pausePlayBtnPeek = constraintLayout.findViewById(R.id.pausePlayBtnPeek);
 
             if (state.getState() == PlaybackStateCompat.STATE_PAUSED || state.getState() == PlaybackStateCompat.STATE_STOPPED || state.getState() == PlaybackStateCompat.STATE_NONE) {
                 pausePlayBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp);
@@ -226,31 +225,31 @@ public class CurrentlyPlayingSheet implements Observer {
                 pausePlayBtnPeek.setImageResource(R.drawable.ic_pause_white_24dp);
             }
 
-            ImageButton repeatBtn = relativeLayout.findViewById(R.id.repeatBtn);
+            ImageButton repeatBtn = constraintLayout.findViewById(R.id.repeatBtn);
 
             if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
                 repeatBtn.setImageResource(R.drawable.ic_repeat_white_24dp);
-                repeatBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+                repeatBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
             } else if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_NONE) {
                 repeatBtn.setImageResource(R.drawable.ic_repeat_white_24dp);
-                repeatBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+                repeatBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
             } else if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ONE) {
                 repeatBtn.setImageResource(R.drawable.ic_repeat_one_white_24dp);
-                repeatBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+                repeatBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
             }
 
-            ImageButton shuffleBtn = relativeLayout.findViewById(R.id.shuffleBtn);
+            ImageButton shuffleBtn = constraintLayout.findViewById(R.id.shuffleBtn);
 
             if (PlayQueue.getSelf().getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
-                shuffleBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+                shuffleBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
             } else {
-                shuffleBtn.setColorFilter(relativeLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+                shuffleBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
             }
 
         } else if (o instanceof MediaMetadataCompat) {
             MediaMetadataCompat metadata = (MediaMetadataCompat)o;
 
-            ImageView albumArtImageView = relativeLayout.findViewById(R.id.albumArtImageView);
+            ImageView albumArtImageView = constraintLayout.findViewById(R.id.albumArtImageView);
             String albumPath = null;
             if (PlayQueue.getSelf().getCurrSong() != null) {
                 albumPath = AlbumArtRetriever.getAlbumArt(Integer.valueOf(PlayQueue.getSelf().getCurrSong().getAlbumID()));
@@ -263,22 +262,22 @@ public class CurrentlyPlayingSheet implements Observer {
             } else {
                 albumArtImageView.getLayoutParams().height = ALBUM_ART_SIZE;
                 albumArtImageView.getLayoutParams().width = ALBUM_ART_SIZE;
-                albumArtImageView.setImageDrawable(relativeLayout.getResources().getDrawable(R.drawable.ic_album_white_24dp));
+                albumArtImageView.setImageDrawable(constraintLayout.getResources().getDrawable(R.drawable.ic_album_white_24dp));
             }
 
-            TextView songName = relativeLayout.findViewById(R.id.songNameTextView);
-            TextView artistName = relativeLayout.findViewById(R.id.artistNameTextView);
+            TextView songName = constraintLayout.findViewById(R.id.songNameTextView);
+            TextView artistName = constraintLayout.findViewById(R.id.artistNameTextView);
 
             songName.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
             artistName.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
 
-            TextView songNamePeek = relativeLayout.findViewById(R.id.songNameTextViewPeek);
-            TextView artistNamePeek = relativeLayout.findViewById(R.id.artistNameTextViewPeek);
+            TextView songNamePeek = constraintLayout.findViewById(R.id.songNameTextViewPeek);
+            TextView artistNamePeek = constraintLayout.findViewById(R.id.artistNameTextViewPeek);
 
             songNamePeek.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
             artistNamePeek.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
 
-            ((TextView)relativeLayout.findViewById(R.id.totalTimeTextView)).setText(parseTime(PlayQueue.getSelf().getCurrSong().getDuration().intValue()));
+            ((TextView) constraintLayout.findViewById(R.id.totalTimeTextView)).setText(parseTime(PlayQueue.getSelf().getCurrSong().getDuration().intValue()));
         }
     }
 
