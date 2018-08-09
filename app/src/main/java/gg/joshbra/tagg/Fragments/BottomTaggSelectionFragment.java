@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,7 +48,7 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 final EditText newTaggEditText = new EditText(view.getContext());
-                newTaggEditText.setTextColor((int) getResources().getColor(R.color.colorTextSecondary));
+                newTaggEditText.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorTextSecondary));
 
                 newTaggEditText.requestFocus();
 
@@ -133,7 +134,7 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
         if (taggs.size() == 0) {
             TextView noTaggs = new TextView(getContext());
             noTaggs.setText("No Taggs exist");
-            noTaggs.setTextColor(getResources().getColor(R.color.colorTextSecondary));
+            noTaggs.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
             noTaggs.setPadding(0, 50, 0, 20);
             ((LinearLayout)view.findViewById(R.id.noTaggMessageSpace)).addView(noTaggs);
             return;

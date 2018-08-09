@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.app.NotificationCompat.MediaStyle;
@@ -167,7 +168,7 @@ public class MediaNotificationManager extends BroadcastReceiver {
 
         notificationBuilder
                 .setStyle(new MediaStyle().setMediaSession(token).setShowActionsInCompactView(0, 1, 2))
-                .setColor(musicService.getApplication().getResources().getColor(R.color.colorOffWhite))
+                .setColor(ContextCompat.getColor(musicService, R.color.colorOffWhite))
                 .setSmallIcon(R.drawable.tagg_icon_very_small)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
                 .setContentIntent(createContentIntent())

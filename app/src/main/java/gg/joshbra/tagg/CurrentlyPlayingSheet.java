@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -48,7 +49,7 @@ public class CurrentlyPlayingSheet implements Observer {
 
         if (PlayQueue.getSelf().getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
             ImageButton shuffleBtn = constraintLayout.findViewById(R.id.shuffleBtn);
-            shuffleBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+            shuffleBtn.setColorFilter(ContextCompat.getColor(constraintLayout.getContext(), R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
         }
 
         ImageView albumArtImageView = constraintLayout.findViewById(R.id.albumArtImageView);
@@ -64,7 +65,7 @@ public class CurrentlyPlayingSheet implements Observer {
         } else {
             albumArtImageView.getLayoutParams().height = ALBUM_ART_SIZE;
             albumArtImageView.getLayoutParams().width = ALBUM_ART_SIZE;
-            albumArtImageView.setImageDrawable(constraintLayout.getResources().getDrawable(R.drawable.ic_album_white_24dp));
+            albumArtImageView.setImageDrawable(ContextCompat.getDrawable(constraintLayout.getContext(), R.drawable.ic_album_white_24dp));
         }
 
         seekBarController = new SeekBarController(constraintLayout, this);
@@ -154,10 +155,10 @@ public class CurrentlyPlayingSheet implements Observer {
             public void onClick(View view) {
                 if (PlayQueue.getSelf().getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
                     PlayQueue.getSelf().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE);
-                    shuffleBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+                    shuffleBtn.setColorFilter(ContextCompat.getColor(constraintLayout.getContext(), R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
                 } else {
                     PlayQueue.getSelf().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
-                    shuffleBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+                    shuffleBtn.setColorFilter(ContextCompat.getColor(constraintLayout.getContext(), R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
                 }
             }
         });
@@ -171,13 +172,13 @@ public class CurrentlyPlayingSheet implements Observer {
 
                 if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
                     repeatBtn.setImageResource(R.drawable.ic_repeat_white_24dp);
-                    repeatBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+                    repeatBtn.setColorFilter(ContextCompat.getColor(constraintLayout.getContext(), R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
                 } else if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_NONE) {
                     repeatBtn.setImageResource(R.drawable.ic_repeat_white_24dp);
-                    repeatBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+                    repeatBtn.setColorFilter(ContextCompat.getColor(constraintLayout.getContext(), R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
                 } else if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ONE) {
                     repeatBtn.setImageResource(R.drawable.ic_repeat_one_white_24dp);
-                    repeatBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+                    repeatBtn.setColorFilter(ContextCompat.getColor(constraintLayout.getContext(), R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
                 }
             }
         });
@@ -287,21 +288,21 @@ public class CurrentlyPlayingSheet implements Observer {
 
             if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
                 repeatBtn.setImageResource(R.drawable.ic_repeat_white_24dp);
-                repeatBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+                repeatBtn.setColorFilter(ContextCompat.getColor(constraintLayout.getContext(), R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
             } else if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_NONE) {
                 repeatBtn.setImageResource(R.drawable.ic_repeat_white_24dp);
-                repeatBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+                repeatBtn.setColorFilter(ContextCompat.getColor(constraintLayout.getContext(), R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
             } else if (PlayQueue.getSelf().getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ONE) {
                 repeatBtn.setImageResource(R.drawable.ic_repeat_one_white_24dp);
-                repeatBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+                repeatBtn.setColorFilter(ContextCompat.getColor(constraintLayout.getContext(), R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
             }
 
             ImageButton shuffleBtn = constraintLayout.findViewById(R.id.shuffleBtn);
 
             if (PlayQueue.getSelf().getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
-                shuffleBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
+                shuffleBtn.setColorFilter(ContextCompat.getColor(constraintLayout.getContext(), R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
             } else {
-                shuffleBtn.setColorFilter(constraintLayout.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+                shuffleBtn.setColorFilter(ContextCompat.getColor(constraintLayout.getContext(), R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
             }
 
         } else if (o instanceof MediaMetadataCompat) {
@@ -320,7 +321,7 @@ public class CurrentlyPlayingSheet implements Observer {
             } else {
                 albumArtImageView.getLayoutParams().height = ALBUM_ART_SIZE;
                 albumArtImageView.getLayoutParams().width = ALBUM_ART_SIZE;
-                albumArtImageView.setImageDrawable(constraintLayout.getResources().getDrawable(R.drawable.ic_album_white_24dp));
+                albumArtImageView.setImageDrawable(ContextCompat.getDrawable(constraintLayout.getContext(), R.drawable.ic_album_white_24dp));
             }
 
             TextView songName = constraintLayout.findViewById(R.id.songNameTextView);
