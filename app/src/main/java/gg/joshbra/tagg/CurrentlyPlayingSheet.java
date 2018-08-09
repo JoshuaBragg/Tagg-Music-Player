@@ -3,6 +3,7 @@ package gg.joshbra.tagg;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -11,6 +12,8 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -18,11 +21,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.util.Observable;
 import java.util.Observer;
 
+import gg.joshbra.tagg.Fragments.BottomSongMenuDialogFragment;
+import gg.joshbra.tagg.Fragments.BottomTaggUpdateFragment;
 import gg.joshbra.tagg.Helpers.AlbumArtRetriever;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
@@ -32,6 +38,7 @@ public class CurrentlyPlayingSheet implements Observer {
     private SeekBarController seekBarController;
     private ConstraintLayout constraintLayout;
     private BottomSheetBehavior bottomSheetBehavior;
+
     private final int ALBUM_ART_SIZE = (int) Math.round(Resources.getSystem().getDisplayMetrics().widthPixels * (5.0 / 9.0));
 
     public CurrentlyPlayingSheet(final ConstraintLayout constraintLayout) {
@@ -87,7 +94,7 @@ public class CurrentlyPlayingSheet implements Observer {
         return slideOffset < .625 ? ((float)1.6 * slideOffset - (float)1.0) * ((float)1.6 * slideOffset - (float)1.0) : 0;
     }
 
-    public void setOnClickListeners() {
+    private void setOnClickListeners() {
         ImageButton pausePlayBtn = constraintLayout.findViewById(R.id.pausePlayBtn);
 
         pausePlayBtn.setOnClickListener(new View.OnClickListener() {
@@ -176,6 +183,7 @@ public class CurrentlyPlayingSheet implements Observer {
         });
 
         ConstraintLayout peekBar = constraintLayout.findViewById(R.id.peekBar);
+
         peekBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,6 +191,56 @@ public class CurrentlyPlayingSheet implements Observer {
                     return;
                 }
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        });
+
+        TextView songMenu = constraintLayout.findViewById(R.id.textViewOptions);
+
+        songMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (PlayQueue.getSelf().getCurrSong() == null) { return; }
+
+                final SongInfo songInfo = PlayQueue.getSelf().getCurrSong();
+
+                BottomSongMenuDialogFragment bottomSongMenuDialogFragment = new BottomSongMenuDialogFragment();
+
+                Bundle bundle = new Bundle();
+
+                bundle.putString(BottomSongMenuDialogFragment.SONG_NAME, songInfo.getSongName());
+
+                bottomSongMenuDialogFragment.setArguments(bundle);
+
+                bottomSongMenuDialogFragment.setListener(new BottomSongMenuDialogFragment.BottomMenuListener() {
+                    @Override
+                    public void onOptionSelected(String type) {
+                        switch (type) {
+                            case (BottomSongMenuDialogFragment.OPTION_PLAY_NEXT):
+                                PlayQueue.getSelf().insertSongNextInQueue(songInfo);
+                                Toast toast = Toast.makeText(constraintLayout.getContext(), "Song added to queue", Toast.LENGTH_SHORT);
+                                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, (int) constraintLayout.getContext().getResources().getDimension(R.dimen.toast_offset));
+                                toast.show();
+                                break;
+                            case (BottomSongMenuDialogFragment.OPTION_PLAY):
+                                MediaControllerHolder.getMediaController().getTransportControls().playFromMediaId(songInfo.getMediaID().toString(), null);
+                                break;
+                            case (BottomSongMenuDialogFragment.OPTION_UPDATE_TAGGS):
+                                BottomTaggUpdateFragment bottomTaggUpdateFragment = new BottomTaggUpdateFragment();
+
+                                bottomTaggUpdateFragment.setListener(new BottomTaggUpdateFragment.BottomTaggUpdateListener() {
+                                    @Override
+                                    public SongInfo getSong() {
+                                        return songInfo;
+                                    }
+                                });
+
+                                bottomTaggUpdateFragment.show(((AppCompatActivity)constraintLayout.getContext()).getSupportFragmentManager(), "bottomTaggUpdateSheet");
+                                break;
+                        }
+                    }
+                });
+
+                bottomSongMenuDialogFragment.show(((AppCompatActivity)constraintLayout.getContext()).getSupportFragmentManager(), "bottomSheet");
             }
         });
     }

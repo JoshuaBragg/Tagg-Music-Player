@@ -109,7 +109,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
 
                 Bundle bundle = new Bundle();
 
-                bundle.putString("songName", c.getSongName());
+                bundle.putString(BottomSongMenuDialogFragment.SONG_NAME, c.getSongName());
 
                 bottomSongMenuDialogFragment.setArguments(bundle);
 
