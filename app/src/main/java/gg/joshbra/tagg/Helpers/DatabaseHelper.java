@@ -13,8 +13,6 @@ import java.util.HashMap;
 public class DatabaseHelper {
     private Context context;
 
-    // TODO: use selection/where args
-
     public DatabaseHelper(Context context) {
         this.context = context;
     }
@@ -46,8 +44,8 @@ public class DatabaseHelper {
             String[] projection = new String[]{
                     MediaStore.Audio.PlaylistsColumns.NAME
             };
-            String selection = MediaStore.Audio.PlaylistsColumns.NAME + " = '" + name + "'";
-            Cursor cursor = resolver.query(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, projection, selection, null, null);
+            String selection = MediaStore.Audio.PlaylistsColumns.NAME + " = ?";
+            Cursor cursor = resolver.query(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, projection, selection, new String[]{name}, null);
 
             if (cursor == null) { return -1; }
 
