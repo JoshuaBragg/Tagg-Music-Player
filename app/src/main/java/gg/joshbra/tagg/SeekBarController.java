@@ -69,11 +69,7 @@ public class SeekBarController {
                 try {
                     if (mediaController.getPlaybackState() != null && mediaController.getPlaybackState().getState() != PlaybackStateCompat.STATE_NONE) {
                         seekBar.setMax(Math.round(PlayQueue.getSelf().getCurrSong().getDuration()));
-                        if (Build.VERSION.SDK_INT >= 24) {
-                            seekBar.setProgress(Math.round(mediaController.getPlaybackState().getPosition()), true);
-                        } else {
-                            seekBar.setProgress(Math.round(mediaController.getPlaybackState().getPosition()));
-                        }
+                        seekBar.setProgress(Math.round(mediaController.getPlaybackState().getPosition()), true);
                         Message msg = new Message();
                         msg.arg1 = ((Long)mediaController.getPlaybackState().getPosition()).intValue();
                         handler.sendMessage(msg);

@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
@@ -29,9 +31,15 @@ public class MusicService extends MediaBrowserServiceCompat {
     private IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
     private BecomingNoisyReceiver noisyAudioStreamReceiver = new BecomingNoisyReceiver();
 
+    private AudioManager audioManager;
+    private AudioAttributes audioAttributes;
+    private AudioFocusRequest audioFocusRequest;
+
     final MediaSessionCompat.Callback callback = new MediaSessionCompat.Callback() {
         @Override
         public void onPlayFromMediaId(String mediaId, Bundle extras) {
+            if (audioManager.requestAudioFocus(audioFocusRequest) == AudioManager.AUDIOFOCUS_REQUEST_FAILED) { return; }
+
             session.setActive(true);
             registerReceiver(noisyAudioStreamReceiver, intentFilter);
             SongInfo song = playQueue.getSongByID(mediaId);
@@ -42,8 +50,9 @@ public class MusicService extends MediaBrowserServiceCompat {
 
         @Override
         public void onPlay() {
+            if (audioManager.requestAudioFocus(audioFocusRequest) == AudioManager.AUDIOFOCUS_REQUEST_FAILED) { return; }
+
             if (playQueue.getCurrentMediaId() != null) {
-                //onPlayFromMediaId(playQueue.getCurrentMediaId(), null);
                 musicController.playSong();
             }
         }
@@ -139,6 +148,19 @@ public class MusicService extends MediaBrowserServiceCompat {
                                 mediaNotificationManager.update(playQueue.getCurrSong().getMediaMetadataCompat(), state, getSessionToken());
                             }
                         });
+
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+        audioAttributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .build();
+
+        audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                .setAudioAttributes(audioAttributes)
+                .setAcceptsDelayedFocusGain(true)
+                .setOnAudioFocusChangeListener(musicController)
+                .build();
 
         running = true;
     }

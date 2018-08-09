@@ -1,6 +1,7 @@
 package gg.joshbra.tagg;
 
 import android.content.Context;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
