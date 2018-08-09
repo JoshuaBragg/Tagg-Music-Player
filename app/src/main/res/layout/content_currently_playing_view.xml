@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    app:behavior_peekHeight="75dp"
+    app:behavior_peekHeight="@dimen/now_playing_bar_height"
     app:layout_behavior=".Helpers.TempLockedBottomSheetBehavior"
     app:behavior_hideable="false"
     android:onClick="nothing"
@@ -15,7 +15,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/peekBar"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="@dimen/now_playing_bar_height"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

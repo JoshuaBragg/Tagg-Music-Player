@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorTertiary"
-        android:layout_marginBottom="75dp">
+        android:layout_marginBottom="@dimen/now_playing_bar_height">
     </android.support.v7.widget.RecyclerView>
 
     <com.turingtechnologies.materialscrollbar.TouchScrollBar
@@ -22,6 +22,6 @@
         app:msb_lightOnTouch="true"
         android:layout_alignParentEnd="true"
         app:msb_textColor="@color/colorPrimary"
-        android:layout_marginBottom="75dp"/>
+        android:layout_marginBottom="@dimen/now_playing_bar_height"/>
 
 </RelativeLayout>

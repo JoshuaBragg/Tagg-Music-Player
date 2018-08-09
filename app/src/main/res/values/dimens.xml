@@ -1,4 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="toast_offset">85dp</dimen>
+    <dimen name="now_playing_bar_height">75dp</dimen>
 </resources>
