@@ -187,7 +187,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(cursor != null) {
             if(cursor.moveToFirst()) {
                 do{
-                    // TODO: make permanent solution to quote and SQL injection
                     String id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
                     String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
                     String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));

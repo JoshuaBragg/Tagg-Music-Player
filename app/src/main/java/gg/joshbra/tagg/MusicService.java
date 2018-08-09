@@ -64,8 +64,11 @@ public class MusicService extends MediaBrowserServiceCompat {
 
         @Override
         public void onStop() {
+            musicController.stopSong();
             stopSelf();
-            unregisterReceiver(noisyAudioStreamReceiver);
+            try {
+                unregisterReceiver(noisyAudioStreamReceiver);
+            } catch (IllegalArgumentException e) {}
         }
 
         @Override

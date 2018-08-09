@@ -130,13 +130,15 @@ public class PlayQueue {
     }
 
     private SongInfo next() {
-        // TODO: this method and prev both iterate through list when getOrderSeq + 1 == size if repeat is none, return null right away to make faster
         if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_NONE) {
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL) {
                 if (currSong.getOrderSeq() + 1 == currQueue.size()) {
                     currSong = currQueue.get(0);
                     return currQueue.get(0).getSongInfo();
                 }
+            }
+            if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE && currSong.getOrderSeq() + 1 == currQueue.size()) {
+                return null;
             }
             for (SongPlayOrderTriplet s : currQueue) {
                 if (s.getOrderSeq() == currSong.getOrderSeq() + 1) {
@@ -150,6 +152,9 @@ public class PlayQueue {
                     currSong = currQueue.get(0);
                     return currQueue.get(0).getSongInfo();
                 }
+            }
+            if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE && currSong.getOrderShuffle() + 1 == currQueue.size()) {
+                return null;
             }
             for (SongPlayOrderTriplet s : currQueue) {
                 if (s.getOrderShuffle() == currSong.getOrderShuffle() + 1) {
@@ -169,6 +174,9 @@ public class PlayQueue {
                     return currQueue.get(currQueue.size() - 1).getSongInfo();
                 }
             }
+            if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE && currSong.getOrderSeq() - 1 < 0) {
+                return null;
+            }
             for (SongPlayOrderTriplet s : currQueue) {
                 if (s.getOrderSeq() == currSong.getOrderSeq() - 1) {
                     currSong = s;
@@ -181,6 +189,9 @@ public class PlayQueue {
                     currSong = currQueue.get(currQueue.size() - 1);
                     return currQueue.get(currQueue.size() - 1).getSongInfo();
                 }
+            }
+            if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE && currSong.getOrderShuffle() - 1 < 0) {
+                return null;
             }
             for (SongPlayOrderTriplet s : currQueue) {
                 if (s.getOrderShuffle() == currSong.getOrderShuffle() - 1) {

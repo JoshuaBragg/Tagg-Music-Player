@@ -100,10 +100,14 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
     }
 
     public void seekTo(int ms) {
+        if (mediaPlayer == null) { return; }
         mediaPlayer.seekTo(ms);
     }
 
     public int getCurrentPosition() {
+        if (mediaPlayer == null) {
+            return -1;
+        }
         return mediaPlayer.getCurrentPosition();
     }
 
@@ -132,7 +136,6 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
 
         if (gotFullFocus || canDuck) {
             if (mediaPlayer != null) {
-                // TODO: Figure ou thwat removing if statement did
                 mediaPlayer.start();
                 state = PlaybackStateCompat.STATE_PLAYING;
                 updatePlaybackState();
