@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
@@ -20,6 +21,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import gg.joshbra.tagg.Activities.MainActivity;
 import gg.joshbra.tagg.Activities.SplashActivity;
+import gg.joshbra.tagg.Helpers.AlbumArtRetriever;
 
 /**
  * Keeps track of a notification and updates it automatically for a given MediaSession. This is
@@ -177,7 +179,7 @@ public class MediaNotificationManager extends BroadcastReceiver {
                 .setContentIntent(createContentIntent())
                 .setContentTitle(description.getTitle())
                 .setContentText(description.getSubtitle())
-                //.setLargeIcon(MusicLibrary.getAlbumBitmap(musicService, description.getMediaId()))
+                .setLargeIcon(BitmapFactory.decodeFile(AlbumArtRetriever.getAlbumArt(Integer.valueOf(PlayQueue.getSelf().getCurrSong().getAlbumID()))))
                 .setOngoing(isPlaying)
                 .setWhen(isPlaying ? System.currentTimeMillis() - state.getPosition() : 0)
                 .setShowWhen(isPlaying)
