@@ -75,13 +75,6 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
                             public void onClick(View view) {
                                 String newTagg = newTaggEditText.getText().toString();
 
-                                if (!Pattern.matches("^[\\w\\s]*$", newTagg)) {
-                                    newTaggEditText.setError("Invalid tagg! Only letters and numbers accepted");
-                                    return;
-                                } else {
-                                    newTaggEditText.setError(null);
-                                }
-
                                 SongManager.getSelf().addTagg(newTagg);
                                 Collections.sort(SongManager.getSelf().getTaggs());
 
@@ -132,7 +125,7 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
      * Populates the recyclerView with the checkboxes
      * @param view The view that the recyclerView belongs to
      */
-    private void createCheckboxes(View view) {
+    private void createCheckboxes(final View view) {
         RecyclerView recyclerView = view.findViewById(R.id.taggSelectRGroup);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -160,6 +153,13 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
         }
 
         TaggAdapter taggAdapter = new TaggAdapter(view.getContext(), selectors, TaggAdapter.ACTIVATE_TYPE);
+
+        taggAdapter.setListener(new TaggAdapter.TaggAdapterListener() {
+            @Override
+            public void updateCheckboxes() {
+                createCheckboxes(view);
+            }
+        });
 
         recyclerView.setAdapter(taggAdapter);
     }

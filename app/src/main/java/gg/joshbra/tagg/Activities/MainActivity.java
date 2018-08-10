@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     loadSongs();
                 } else {
-                    Toast toast = Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(this, "Permission Denied. Storage permission is required to read music files from device. Please go to your settings and enable permissions to use Tagg.", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, (int) getResources().getDimension(R.dimen.toast_offset));
                     toast.show();
                     CheckPermission();

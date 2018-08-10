@@ -27,6 +27,7 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
     private ArrayList<TaggSelector> taggs;
     private Context context;
     private int type;
+    private TaggAdapterListener listener;
 
     // The two types of TaggAdapters
     public static final int ACTIVATE_TYPE = 0, UPDATE_TYPE = 1;
@@ -91,6 +92,9 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
                                 int pos = taggs.indexOf(new TaggSelector(holder.taggName.getText().toString(), false));
                                 taggs.remove(new TaggSelector(holder.taggName.getText().toString(), false));
                                 notifyItemRemoved(pos);
+                                if (listener != null && taggs.size() == 0) {
+                                    listener.updateCheckboxes();
+                                }
                                 break;
                         }
                     }
@@ -134,6 +138,17 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
     @Override
     public int getItemCount() {
         return taggs.size();
+    }
+
+    /**
+     * Interface to be created when using this Adapter
+     */
+    public interface TaggAdapterListener {
+        void updateCheckboxes();
+    }
+
+    public void setListener(TaggAdapterListener listener) {
+        this.listener = listener;
     }
 
     /**
