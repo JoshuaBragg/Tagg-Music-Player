@@ -26,6 +26,9 @@ import gg.joshbra.tagg.SongInfo;
 import gg.joshbra.tagg.SongManager;
 import gg.joshbra.tagg.TaggSelector;
 
+/**
+ * Fragment for the menu that appears from bottom of screen when updating Taggs
+ */
 public class BottomTaggUpdateFragment extends BottomSheetDialogFragment {
     private BottomTaggUpdateListener listener;
 
@@ -38,6 +41,7 @@ public class BottomTaggUpdateFragment extends BottomSheetDialogFragment {
 
         Button updateBtn = hostView.findViewById(R.id.updateTaggBtn);
 
+        // The update button
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,6 +65,11 @@ public class BottomTaggUpdateFragment extends BottomSheetDialogFragment {
         super.onDismiss(dialog);
     }
 
+    /**
+     * Populates the recyclerView with the checkboxes
+     * @param view The view containing the RecyclerView
+     * @param songInfo The song who's Taggs are being queried
+     */
     private void populateList(View view, SongInfo songInfo) {
         RecyclerView recyclerView = view.findViewById(R.id.taggSelectRGroup);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -69,6 +78,7 @@ public class BottomTaggUpdateFragment extends BottomSheetDialogFragment {
         ArrayList<String> taggs = SongManager.getSelf().getTaggs();
 
         if (taggs.size() == 0) {
+            // In this case there are no Taggs yet
             TextView noTaggs = new TextView(getContext());
             noTaggs.setText("No Taggs exist");
             noTaggs.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
@@ -76,6 +86,7 @@ public class BottomTaggUpdateFragment extends BottomSheetDialogFragment {
             ((LinearLayout)view.findViewById(R.id.noTaggMessageSpace)).addView(noTaggs);
             return;
         } else {
+            // This is needed to get rid of anything that is in the view right now
             ((LinearLayout)view.findViewById(R.id.noTaggMessageSpace)).removeAllViews();
         }
 
@@ -96,6 +107,9 @@ public class BottomTaggUpdateFragment extends BottomSheetDialogFragment {
         this.listener = listener;
     }
 
+    /**
+     * Interface to be created when using this fragment
+     */
     public interface BottomTaggUpdateListener {
         SongInfo getSong();
     }

@@ -23,7 +23,10 @@ import gg.joshbra.tagg.Activities.SplashActivity;
 
 /**
  * Keeps track of a notification and updates it automatically for a given MediaSession. This is
- * required so that the music service don't get killed during playback.
+ * required so that the music service will not get killed during playback.
+ *
+ * Modified minorly from example found at:
+ *      https://github.com/googlecodelabs/android-music-player
  */
 public class MediaNotificationManager extends BroadcastReceiver {
     private static final int NOTIFICATION_ID = 412;

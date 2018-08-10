@@ -1,16 +1,17 @@
 package gg.joshbra.tagg;
 
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 
+/**
+ * The controller and thread for the seekbar
+ */
 public class SeekBarController {
     private SeekBar seekBar;
     private MediaControllerCompat mediaController;
@@ -23,12 +24,12 @@ public class SeekBarController {
         seekBar = r.findViewById(R.id.seekBar);
         running = false;
         mediaController = MediaControllerHolder.getMediaController();
-        //observers = new ArrayList<>();
         handler = currentlyPlayingSheet.getHandler();
-        // seekBar.setMax(Math.round(PlayQueue.getSelf().getCurrSong().getDuration()));
-        // seekBar.setProgress(Math.round(mediaController.getPlaybackState().getPosition()));
     }
 
+    /**
+     * Starts the thread
+     */
     public void startThread() {
         try {
             if (!seekBarThread.isAlive())
@@ -39,15 +40,27 @@ public class SeekBarController {
         }
     }
 
+    // TODO: possibly make seekbar poll for updates more frequently for smoother transition
+
+    /**
+     * The thread that updates the seekbar every second
+     */
     public class SeekBarThread extends Thread{
         @Override
         public void run() {
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                /**
+                 * When the progress is changed update playback and the time displayed
+                 * @param seekBar The seekbar that was changed
+                 * @param i The progress
+                 * @param b True iff the user changed the progress of the bar
+                 */
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                     // Only update the mediaPlayer position if the user moved seekBar and song is loaded
                     if (b && mediaController.getPlaybackState() != null && mediaController.getPlaybackState().getState() != PlaybackStateCompat.STATE_NONE) {
                         mediaController.getTransportControls().seekTo((long)i);
+                        // Update the time shown in CurrentlyPlayingSheet
                         Message msg = new Message();
                         msg.arg1 = ((Long)mediaController.getPlaybackState().getPosition()).intValue();
                         handler.sendMessage(msg);
@@ -65,6 +78,7 @@ public class SeekBarController {
                 }
             });
 
+            // Poll every second for changes and update seekbar and time shown accordingly
             while (running) {
                 try {
                     if (mediaController.getPlaybackState() != null && mediaController.getPlaybackState().getState() != PlaybackStateCompat.STATE_NONE) {
@@ -89,6 +103,9 @@ public class SeekBarController {
         }
     }
 
+    /**
+     * Kills the thread
+     */
     public void killThread() {
         running = false;
         seekBarThread.interrupt();

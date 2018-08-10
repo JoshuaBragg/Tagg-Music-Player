@@ -24,6 +24,9 @@ import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.Adapters.SongAdapter;
 import gg.joshbra.tagg.SongInfo;
 
+/**
+ * Fragment that displays list of songs for selection
+ */
 public class SongListFragment extends Fragment implements Observer {
 
     private RecyclerView recyclerView;
@@ -31,10 +34,6 @@ public class SongListFragment extends Fragment implements Observer {
 
     public SongListFragment() {
         // Required empty public constructor
-    }
-
-    public static SongListFragment newInstance() {
-        return new SongListFragment();
     }
 
     @Override
@@ -64,12 +63,19 @@ public class SongListFragment extends Fragment implements Observer {
         scrollBar.setRecyclerView(recyclerView);
     }
 
+    /**
+     * Sets RecyclerView song adapter to have all songs passed in
+     * @param songs The songs to be displayed on the SongList
+     */
     public void initRecycler(ArrayList<SongInfo> songs) {
         songAdapter = new SongAdapter(getContext(), songs);
         recyclerView.setAdapter(songAdapter);
     }
 
-    public void enableIndicator(boolean e) {
+    /**
+     * Enables the alphabetical indicator on scrollbar
+     */
+    public void enableIndicator() {
         MaterialScrollBar scrollBar = getView().findViewById(R.id.touchScrollBar);
         scrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
     }
@@ -80,6 +86,11 @@ public class SongListFragment extends Fragment implements Observer {
         CurrentPlaybackNotifier.getSelf().detach(this);
     }
 
+    /**
+     * Updates the ActiveRows in the recyclerView
+     * @param o The observable object calling update
+     * @param arg The argument passed in
+     */
     @Override
     public void update(Observable o, Object arg) {
         if (recyclerView.getAdapter() == null) { return; }

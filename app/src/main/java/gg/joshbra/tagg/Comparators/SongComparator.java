@@ -4,6 +4,11 @@ import java.util.Comparator;
 
 import gg.joshbra.tagg.SongInfo;
 
+/**
+ * Comparator for SongInfo's
+ *
+ * Can sort in four modes: SORT_ALPH_ASC, SORT_ALPH_DESC, SORT_DATE_ASC and SORT_DATE_DESC
+ */
 public class SongComparator implements Comparator<SongInfo> {
     public final static int SORT_ALPH_ASC = 0;
     public final static int SORT_ALPH_DESC = 1;

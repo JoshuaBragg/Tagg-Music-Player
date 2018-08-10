@@ -12,12 +12,17 @@ import android.widget.TextView;
 
 import gg.joshbra.tagg.R;
 
+/**
+ * Fragment for the menu that appears from bottom of screen when you select 3 dots beside song in list
+ */
 public class BottomSongMenuDialogFragment extends BottomSheetDialogFragment {
     private BottomMenuListener listener;
 
+    // Different buttons that can be selected from this menu
     public final static String OPTION_UPDATE_TAGGS = "update_taggs";
     public final static String OPTION_PLAY = "play";
     public final static String OPTION_PLAY_NEXT = "play_next";
+
     public final static String SONG_NAME = "song_name";
 
     @Nullable
@@ -70,6 +75,9 @@ public class BottomSongMenuDialogFragment extends BottomSheetDialogFragment {
         this.listener = listener;
     }
 
+    /**
+     * Interface to be created when using this fragment
+     */
     public interface BottomMenuListener {
         void onOptionSelected(String type);
     }

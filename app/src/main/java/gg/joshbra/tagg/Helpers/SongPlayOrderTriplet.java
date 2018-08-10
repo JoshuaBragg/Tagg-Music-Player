@@ -2,6 +2,9 @@ package gg.joshbra.tagg.Helpers;
 
 import gg.joshbra.tagg.SongInfo;
 
+/**
+ * A data structure to hold a Song and its play order in both regular and shuffled playback modes
+ */
 public class SongPlayOrderTriplet {
     private SongInfo songInfo;
     private int orderSeq, orderShuffle;

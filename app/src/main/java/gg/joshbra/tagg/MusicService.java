@@ -19,6 +19,12 @@ import java.util.List;
 import gg.joshbra.tagg.Helpers.FlagManager;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 
+/**
+ * Service that creates interface between MusicController and rest of app
+ * Allows music to keep running even if app is closed while service runs in background
+ *
+ * Implements interface to allow for compatibility with android wear/car
+ */
 public class MusicService extends MediaBrowserServiceCompat {
 
     private MediaSessionCompat session;
@@ -26,7 +32,9 @@ public class MusicService extends MediaBrowserServiceCompat {
     private MusicController musicController;
     private PlayQueue playQueue;
     private MediaNotificationManager mediaNotificationManager;
+
     public static boolean running;
+    private static final int PREV_THRESHOLD = 6000;
 
     private IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
     private BecomingNoisyReceiver noisyAudioStreamReceiver = new BecomingNoisyReceiver();
@@ -35,7 +43,16 @@ public class MusicService extends MediaBrowserServiceCompat {
     private AudioAttributes audioAttributes;
     private AudioFocusRequest audioFocusRequest;
 
+    /**
+     * Media Session's callback
+     * Called when getTransportControls() is used on MediaController
+     */
     final MediaSessionCompat.Callback callback = new MediaSessionCompat.Callback() {
+        /**
+         * Plays the given song
+         * @param mediaId The ID of the song to be played
+         * @param extras Optional extra passed into musicController.playSong()
+         */
         @Override
         public void onPlayFromMediaId(String mediaId, Bundle extras) {
             if (audioManager.requestAudioFocus(audioFocusRequest) == AudioManager.AUDIOFOCUS_REQUEST_FAILED) { return; }
@@ -48,6 +65,9 @@ public class MusicService extends MediaBrowserServiceCompat {
             updateFlags();
         }
 
+        /**
+         * Resumes playback
+         */
         @Override
         public void onPlay() {
             if (audioManager.requestAudioFocus(audioFocusRequest) == AudioManager.AUDIOFOCUS_REQUEST_FAILED) { return; }
@@ -57,11 +77,17 @@ public class MusicService extends MediaBrowserServiceCompat {
             }
         }
 
+        /**
+         * Pauses playback
+         */
         @Override
         public void onPause() {
             musicController.pauseSong();
         }
 
+        /**
+         * Stops playback
+         */
         @Override
         public void onStop() {
             musicController.stopSong();
@@ -71,6 +97,10 @@ public class MusicService extends MediaBrowserServiceCompat {
             } catch (IllegalArgumentException e) {}
         }
 
+        /**
+         * Skips to next song
+         * If there is no next song then playback is stopped
+         */
         @Override
         public void onSkipToNext() {
             try {
@@ -82,9 +112,14 @@ public class MusicService extends MediaBrowserServiceCompat {
             }
         }
 
+        /**
+         * If the song has been playing for more than PREV_THRESHOLD then song is restarted
+         * Else the previous song is played
+         * If there is no previous song then playback is stopped
+         */
         @Override
         public void onSkipToPrevious() {
-            if (musicController.getCurrentPosition() > 6000) {
+            if (musicController.getCurrentPosition() > PREV_THRESHOLD) {
                 Bundle extra = new Bundle();
                 extra.putInt(MusicController.PLAY_TYPE, MusicController.PLAY_BY_COMPLETION);
                 onPlayFromMediaId(playQueue.getCurrentMediaId().toString(), extra);
@@ -99,6 +134,10 @@ public class MusicService extends MediaBrowserServiceCompat {
             }
         }
 
+        /**
+         * Seeks to position in playback
+         * @param pos The time to seek to in ms
+         */
         @Override
         public void onSeekTo(long pos) {
             super.onSeekTo(pos);
@@ -106,12 +145,20 @@ public class MusicService extends MediaBrowserServiceCompat {
             musicController.updatePlaybackState();
         }
 
+        /**
+         * Updates playback state when the repeatMode is changed
+         * @param repeatMode The new repeat mode
+         */
         @Override
         public void onSetRepeatMode(int repeatMode) {
             super.onSetRepeatMode(repeatMode);
             musicController.updatePlaybackState();
         }
 
+        /**
+         * Updates playback state when the shuffleMode is changed
+         * @param shuffleMode The new shuffleMode
+         */
         @Override
         public void onSetShuffleMode(int shuffleMode) {
             super.onSetShuffleMode(shuffleMode);
@@ -119,6 +166,9 @@ public class MusicService extends MediaBrowserServiceCompat {
         }
     };
 
+    /**
+     * Sets the song preferences
+     */
     private void updateFlags() {
         FlagManager.getSelf().setSongPreferences(this);
     }
@@ -143,6 +193,7 @@ public class MusicService extends MediaBrowserServiceCompat {
 
         mediaNotificationManager = new MediaNotificationManager(this);
 
+        // Create MusicController
         musicController = new MusicController(new MusicController.Callback() {
                             @Override
                             public void onPlaybackStatusChanged(PlaybackStateCompat state) {
@@ -152,13 +203,16 @@ public class MusicService extends MediaBrowserServiceCompat {
                             }
                         });
 
+        // Create Audio Manager
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
+        // Create Audio Attributes
         audioAttributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build();
 
+        // Create Audio Focus request
         audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
                 .setAudioAttributes(audioAttributes)
                 .setAcceptsDelayedFocusGain(true)
@@ -190,6 +244,10 @@ public class MusicService extends MediaBrowserServiceCompat {
         result.sendResult(PlayQueue.getSelf().getMediaItems());
     }
 
+    /**
+     * A receiver that pauses playback on ACTION_AUDIO_BECOMING_NOISY
+     * i.e. Playback paused if headphones unplugged, bluetooth disabled etc.
+     */
     private class BecomingNoisyReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

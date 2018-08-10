@@ -45,6 +45,9 @@ import gg.joshbra.tagg.SongInfo;
 import gg.joshbra.tagg.SongManager;
 import gg.joshbra.tagg.TaggSelector;
 
+/**
+ * RecyclerView Adapter that allows Tagg to create lists of songs
+ */
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> implements INameableAdapter {
 
     private ArrayList<SongInfo> songs;
@@ -53,15 +56,21 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
 
     private int[] activeRows = new int[]{};
 
+    // Required to allow the Letter to appear on scrolling through alphabetical orders song list
     @Override
     public Character getCharacterForElement(int element) {
         try {
-            return songs.get(element).getSongName().charAt(0);
+            return songs.get(element).getSongName().toUpperCase().charAt(0);
         } catch (IndexOutOfBoundsException e) {
             return '~';
         }
     }
 
+    /**
+     * Creates a SongAdapter for use in a RecyclerView
+     * @param context The context that contains the RecyclerView
+     * @param songs The arraylist of songs to display
+     */
     public SongAdapter(Context context, ArrayList<SongInfo> songs) {
         this.context = context;
         this.mediaController = MediaControllerHolder.getMediaController();
@@ -72,6 +81,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
     @Override
     public SongHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View myView;
+        // Has two cases, when the row is active or regular
         if (viewType == 0) {
             myView = LayoutInflater.from(context).inflate(R.layout.row_song, parent, false);
         } else {
@@ -83,8 +93,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
     @Override
     public void onBindViewHolder(@NonNull final SongHolder holder, int i) {
         final SongInfo c = songs.get(i);
+
         holder.songName.setText(c.getSongName());
         holder.artistName.setText(c.getArtistName());
+
+        // Initializing the onClickListeners for this Holder
+
+        // Plays song on click
         holder.getView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,6 +117,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
             }
         });
 
+        // Creates BottomSongMenuDialogFragment when clicking the 3 Dots
         holder.dropDownMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,6 +162,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
             }
         });
 
+        // If this row is active, attach it to the notifier
         for (int n : activeRows) {
             if (n == i) {
                 CurrentPlaybackNotifier.getSelf().attach(holder);
@@ -168,6 +185,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         return songs.get(i);
     }
 
+    /**
+     * Gets the index of all rows that display songInfo
+     * @param songInfo The song to search for
+     * @return A int[] of the indices for rows that display songInfo
+     */
     public int[] getRowsForSong(SongInfo songInfo) {
         ArrayList<Integer> temp = new ArrayList<>();
 
@@ -199,6 +221,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         return songs.size();
     }
 
+    /**
+     * A ViewHolder for RecyclerView to hold the information obtained from a SongInfo
+     */
     public class SongHolder extends RecyclerView.ViewHolder implements Observer{
         TextView songName, artistName, dropDownMenu;
         EqualizerView equalizer;

@@ -19,8 +19,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +32,9 @@ import gg.joshbra.tagg.Helpers.AlbumArtRetriever;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 
+/**
+ * The backend for the Now Playing Bar and the sheet that expands from bottom of screen
+ */
 public class CurrentlyPlayingSheet implements Observer {
     private MediaControllerCompat mediaController;
     private SeekBarController seekBarController;
@@ -47,11 +48,13 @@ public class CurrentlyPlayingSheet implements Observer {
 
         mediaController = MediaControllerHolder.getMediaController();
 
+        // Sets colour of Shuffle Button
         if (PlayQueue.getSelf().getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
             ImageButton shuffleBtn = constraintLayout.findViewById(R.id.shuffleBtn);
             shuffleBtn.setColorFilter(ContextCompat.getColor(constraintLayout.getContext(), R.color.colorActivated), PorterDuff.Mode.SRC_ATOP);
         }
 
+        // Sets initial album art
         ImageView albumArtImageView = constraintLayout.findViewById(R.id.albumArtImageView);
         String albumPath = null;
         if (PlayQueue.getSelf().getCurrSong() != null) {
@@ -81,6 +84,7 @@ public class CurrentlyPlayingSheet implements Observer {
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                // Responsible for fading out peekbar on scroll of sheet
                 ConstraintLayout peekBar = constraintLayout.findViewById(R.id.peekBar);
                 peekBar.setAlpha(fadeCurve(slideOffset));
             }
@@ -91,13 +95,22 @@ public class CurrentlyPlayingSheet implements Observer {
         setOnClickListeners();
     }
 
+    /**
+     * Function returning how much to fade out the peekbar on scroll
+     * @param slideOffset How far it is scrolled
+     * @return The amount to fade out peekbar. Always: 0 <= return <= 1
+     */
     private float fadeCurve(float slideOffset) {
         return slideOffset < .625 ? ((float)1.6 * slideOffset - (float)1.0) * ((float)1.6 * slideOffset - (float)1.0) : 0;
     }
 
+    /**
+     * Sets the onClickListeners for the screens multople buttons
+     */
     private void setOnClickListeners() {
         ImageButton pausePlayBtn = constraintLayout.findViewById(R.id.pausePlayBtn);
 
+        // Pause\Play button
         pausePlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,6 +126,7 @@ public class CurrentlyPlayingSheet implements Observer {
 
         ImageButton pausePlayBtnPeek = constraintLayout.findViewById(R.id.pausePlayBtnPeek);
 
+        // Pause\Play button on peekbar
         pausePlayBtnPeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,6 +142,7 @@ public class CurrentlyPlayingSheet implements Observer {
 
         ImageButton skipNextBtn = constraintLayout.findViewById(R.id.skipNextBtn);
 
+        // Skip next button
         skipNextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,6 +154,7 @@ public class CurrentlyPlayingSheet implements Observer {
 
         ImageButton skipPrevBtn = constraintLayout.findViewById(R.id.skipPrevBtn);
 
+        // Skip prev button
         skipPrevBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -150,6 +166,7 @@ public class CurrentlyPlayingSheet implements Observer {
 
         final ImageButton shuffleBtn = constraintLayout.findViewById(R.id.shuffleBtn);
 
+        // Shuffle button
         shuffleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,6 +182,7 @@ public class CurrentlyPlayingSheet implements Observer {
 
         final ImageButton repeatBtn = constraintLayout.findViewById(R.id.repeatBtn);
 
+        // Repeat button
         repeatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,6 +203,7 @@ public class CurrentlyPlayingSheet implements Observer {
 
         ConstraintLayout peekBar = constraintLayout.findViewById(R.id.peekBar);
 
+        // Peekbar
         peekBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,6 +216,7 @@ public class CurrentlyPlayingSheet implements Observer {
 
         TextView songMenu = constraintLayout.findViewById(R.id.textViewOptions);
 
+        // 3 Dots that opens bottom menu
         songMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -246,7 +266,12 @@ public class CurrentlyPlayingSheet implements Observer {
         });
     }
 
-    public String parseTime(int time) {
+    /**
+     * Parses ms time into 'minute : second' format
+     * @param time Time value in ms
+     * @return String of parsed time in 'minute : second' format
+     */
+    private String parseTime(int time) {
         time = time / 1000;
         String s = (time % 60) + "";
         if (s.length() == 1) { s = "0" + s; }
@@ -255,17 +280,25 @@ public class CurrentlyPlayingSheet implements Observer {
         return m + ":" + s;
     }
 
+    /**
+     * Called when destroying this sheet
+     */
     public void destroy() {
         seekBarController.killThread();
         CurrentPlaybackNotifier.getSelf().detach(this);
     }
 
+    /**
+     * Updates the current time value below seekbar
+     * @param time Current playback time in ms
+     */
     private void updateCurrTime(int time) {
         ((TextView) constraintLayout.findViewById(R.id.currentTimeTextView)).setText(parseTime(time));
     }
 
     @Override
     public void update(Observable observable, Object o) {
+        // Sets peekbar elements visible when song is being played
         if (MediaControllerHolder.getMediaController() != null && MediaControllerHolder.getMediaController().getPlaybackState() != null && MediaControllerHolder.getMediaController().getMetadata() != null) {
             constraintLayout.findViewById(R.id.pausePlayBtnPeek).setVisibility(View.VISIBLE);
             constraintLayout.findViewById(R.id.textViewOptions).setVisibility(View.VISIBLE);
@@ -340,18 +373,25 @@ public class CurrentlyPlayingSheet implements Observer {
         }
     }
 
-    //static inner class doesn't hold an implicit reference to the outer class
-    private static class MyHandler extends Handler {
-        //Using a weak reference means you won't prevent garbage collection
-        private final WeakReference<CurrentlyPlayingSheet> myClassWeakReference;
+    /**
+     * Handler needed to update time on display below seekbar
+     * This is the only way to have the seekbar update this time directly
+     *
+     * Any other method results in a:
+     *      CalledFromWrongThreadException: Only the original thread that created a view hierarchy can touch its views.
+     * Being thrown
+     */
+    private static class TimeUpdateHandler extends Handler {
+        // Using a weak reference means you won't prevent garbage collection
+        private final WeakReference<CurrentlyPlayingSheet> classWeakReference;
 
-        public MyHandler(CurrentlyPlayingSheet myClassInstance) {
-            myClassWeakReference = new WeakReference<>(myClassInstance);
+        public TimeUpdateHandler(CurrentlyPlayingSheet myClassInstance) {
+            classWeakReference = new WeakReference<>(myClassInstance);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            CurrentlyPlayingSheet myClass = myClassWeakReference.get();
+            CurrentlyPlayingSheet myClass = classWeakReference.get();
             if (myClass != null) {
                 myClass.updateCurrTime(msg.arg1);
             }
@@ -359,9 +399,12 @@ public class CurrentlyPlayingSheet implements Observer {
     }
 
     public Handler getHandler() {
-        return new MyHandler(this);
+        return new TimeUpdateHandler(this);
     }
 
+    /**
+     * Using this currently playing sheet requires that these methods are implemented/overridden
+     */
     public interface UsesCurrentlyPlayingSheet {
         public void nothing(View v);
         public boolean onKeyDown(int keyCode, KeyEvent event);

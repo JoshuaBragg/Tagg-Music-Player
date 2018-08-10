@@ -10,6 +10,9 @@ import android.provider.MediaStore;
 
 import java.util.HashMap;
 
+/**
+ * Interface between Tagg and SQL databases that store songs/playlists/albums
+ */
 public class DatabaseHelper {
     private Context context;
 
@@ -17,6 +20,10 @@ public class DatabaseHelper {
         this.context = context;
     }
 
+    /**
+     * Gets all Taggs from MediaStore.Audio.PlaylistColumns
+     * @return Returns HashMap of Tagg name to Tagg ID pairs
+     */
     public HashMap<String, Integer> getTaggs() {
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, new String[]{ MediaStore.Audio.PlaylistsColumns.NAME, BaseColumns._ID },
@@ -36,7 +43,9 @@ public class DatabaseHelper {
     }
 
     /**
-     * Creates new playlist with title 'name'
+     * Creates new Tagg with title 'name'
+     * @param name The title of the new Tagg
+     * @return
      */
     public long createTagg(String name) {
         if (name != null && name.length() > 0) {
@@ -62,7 +71,9 @@ public class DatabaseHelper {
     }
 
     /**
-     * Gets playlist length
+     * Get the amount of songs associated with a given Tagg
+     * @param taggID The ID of the Tagg to query
+     * @return The number of songs associated with this Tagg
      */
     private int getTaggLength(long taggID) {
         Cursor c = context.getContentResolver().query(MediaStore.Audio.Playlists.Members.getContentUri("external", taggID),
@@ -78,7 +89,9 @@ public class DatabaseHelper {
     }
 
     /**
-     * Makes cursor for a playlist
+     * Gets cursor for a Tagg
+     * @param taggID The ID of the Tagg to query
+     * @return A cursor that can iterate through a Tagg's songs
      */
     public Cursor getTaggSongCursor(int taggID) {
         String selection = MediaStore.Audio.AudioColumns.IS_MUSIC + " = 1 AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''";
@@ -92,7 +105,9 @@ public class DatabaseHelper {
     }
 
     /**
-     * Given a cursor querying a playlist, returns the id's of songs within that playlist
+     * Given a cursor querying a Tagg, returns the id's of songs associated with that Tagg
+     * @param cursor A cursor obtained from a Tagg
+     * @return Returns two int[] within int[][], one for song ID's and the other for the play orders
      */
     public int[][] getSongListForCursor(Cursor cursor) {
         if (cursor == null) {
@@ -111,6 +126,11 @@ public class DatabaseHelper {
         return new int[][]{list, orders};
     }
 
+    /**
+     * Gets song list for a given Tagg
+     * @param taggID The ID of the Tagg to be queried
+     * @return Returns an int[] of song ID's associated with this Tagg
+     */
     public int[] getSongListFromTagg(int taggID) {
         String selection = MediaStore.Audio.AudioColumns.IS_MUSIC + " = 1 AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''";
         Cursor cursor = context.getContentResolver().query(
@@ -138,7 +158,9 @@ public class DatabaseHelper {
     }
 
     /**
-     * Gets the id for a given playlist
+     * Given a Tagg name returns the taggID
+     * @param name The name of the Tagg to query
+     * @return The ID of the given Tagg
      */
     public long getTaggID(String name) {
         Cursor cursor = context.getContentResolver().query(
@@ -157,7 +179,9 @@ public class DatabaseHelper {
     }
 
     /**
-     * Returns the name of the playlist with the given ID
+     * Given a taggID returns the Tagg name
+     * @param id The taggID to be queried
+     * @return The name of the Tagg with the ID given
      */
     public String getTaggName(long id) {
         Cursor cursor = context.getContentResolver().query(
@@ -180,7 +204,9 @@ public class DatabaseHelper {
     }
 
     /**
-     * Adds song to playlist
+     * Adds songs to Tagg
+     * @param ids Array of song ids to add to Tagg
+     * @param taggID The ID of the tagg to add songs to
      */
     public void addToTagg(long[] ids, long taggID) {
         ContentResolver resolver = context.getContentResolver();
@@ -198,7 +224,9 @@ public class DatabaseHelper {
     }
 
     /**
-     * Removes song from playlist
+     * Removes song from Tagg
+     * @param id The id of the song to remove
+     * @param taggID The taggID of the Tagg to remove the song from
      */
     public void removeFromTagg(long id, long taggID) {
         Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", taggID);
@@ -207,7 +235,8 @@ public class DatabaseHelper {
     }
 
     /**
-     * Deletes tagg
+     * Permanently removes the Tagg from the device
+     * @param taggName The name of the tagg to remove
      */
     public void deleteTagg(String taggName) {
         Long playlistid = getTaggID(taggName);

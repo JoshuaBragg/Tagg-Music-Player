@@ -11,6 +11,9 @@ import java.util.List;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.Helpers.SongPlayOrderTriplet;
 
+/**
+ * Stores and provides an interface for obtaining songs in their order
+ */
 public class PlayQueue {
     private ArrayList<SongPlayOrderTriplet> currQueue, addedToQueue;
     private SongPlayOrderTriplet currSong;
@@ -35,10 +38,19 @@ public class PlayQueue {
 
     ////////////////////////////// Singleton ///////////////////////////////
 
+    /**
+     * Sets the current song
+     * @param songInfo The song to set the current song to
+     */
     public void setCurrSong(SongInfo songInfo) {
         currSong = currQueue.get(getSongIndex(songInfo));
     }
 
+    /**
+     * Gets the index of the song given
+     * @param songInfo The songInfo to search for
+     * @return Returns the index of this song in the queue
+     */
     public int getSongIndex(SongInfo songInfo) {
         // TODO: consider going back to indexOffset since that may be a faster method.
         for (int i = 0; i < currQueue.size(); i++) {
@@ -49,6 +61,10 @@ public class PlayQueue {
         return -1;
     }
 
+    /**
+     * Sets the current queue
+     * @param currQueue The songs the queue should consist of
+     */
     public void setCurrQueue(ArrayList<SongInfo> currQueue) {
         ArrayList<SongPlayOrderTriplet> triplets = new ArrayList<>();
 
@@ -62,6 +78,10 @@ public class PlayQueue {
         addedToQueue = new ArrayList<>();
     }
 
+    /**
+     * Shuffles the order of the currQueue's shuffledOrders
+     * @param triplets The array of SongPlayOrderTriples to shuffle
+     */
     private void shuffle(ArrayList<SongPlayOrderTriplet> triplets) {
         ArrayList<Integer> orders = new ArrayList<>();
         for (int i = 0; i < triplets.size(); i++) {
@@ -74,24 +94,34 @@ public class PlayQueue {
         }
     }
 
+    /**
+     * Inserts the given song next into the queue
+     * @param songInfo The song to be inserted into the queue
+     */
     public void insertSongNextInQueue(SongInfo songInfo) {
-        int index = currQueue.indexOf(currSong) + 1;
+        int indexSeq = currSong.getOrderSeq() + 1;
+        int indexShuffle = currSong.getOrderShuffle() + 1;
 
         for (SongPlayOrderTriplet s : currQueue) {
-            if (s.getOrderSeq() >= index) {
+            if (s.getOrderSeq() >= indexSeq) {
                 s.setOrderSeq(s.getOrderSeq() + 1);
+            }
+            if (s.getOrderShuffle() >= indexShuffle) {
+                s.setOrderShuffle(s.getOrderShuffle() + 1);
             }
         }
 
-        SongPlayOrderTriplet triplet = new SongPlayOrderTriplet(songInfo, index, index);
+        SongPlayOrderTriplet triplet = new SongPlayOrderTriplet(songInfo, indexSeq, indexShuffle);
 
-        currQueue.add(index, triplet);
+        currQueue.add(indexSeq, triplet);
 
         addedToQueue.add(triplet);
-
-        shuffle(currQueue);
     }
 
+    /**
+     * Adds all songs given into the queue
+     * @param songs The songs to be added into queue
+     */
     public void addIntoQueue(ArrayList<SongPlayOrderTriplet> songs) {
         // TODO: make this run in faster time
         for (SongPlayOrderTriplet triplet : songs) {
@@ -106,15 +136,27 @@ public class PlayQueue {
         shuffle(currQueue);
     }
 
+    /**
+     * Get the current song
+     * @return Returns the current song
+     */
     public SongInfo getCurrSong() {
         if (currSong == null) { return null; }
         return currSong.getSongInfo();
     }
 
+    /**
+     * Gets all the songs that have been added to the queue
+     * @return Array of songs added to the queue
+     */
     public ArrayList<SongPlayOrderTriplet> getSongsAddedToQueue() {
         return addedToQueue;
     }
 
+    /**
+     * Gets the next song to be played and updates the currSong to the return value
+     * @return The song to be played next
+     */
     public SongInfo getNextSong() {
         if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE) {
             return currSong.getSongInfo();
@@ -122,6 +164,10 @@ public class PlayQueue {
         return next();
     }
 
+    /**
+     * Gets the prev song played and updates the currSong to the return value
+     * @return The previous song in the queue
+     */
     public SongInfo getPrevSong() {
         if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE) {
             return currSong.getSongInfo();
@@ -129,12 +175,23 @@ public class PlayQueue {
         return prev();
     }
 
+    /**
+     * Helper method that actually finds next song
+     * Has to take into account the shuffle and repeat modes to find the next song
+     * @return The next song
+     */
     private SongInfo next() {
         if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_NONE) {
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL) {
                 if (currSong.getOrderSeq() + 1 == currQueue.size()) {
-                    currSong = currQueue.get(0);
-                    return currQueue.get(0).getSongInfo();
+                    for (SongPlayOrderTriplet s : currQueue) {
+                        if (s.getOrderSeq() == 0) {
+                            currSong = s;
+                            return currSong.getSongInfo();
+                        }
+                    }
+                    // Song should have been found, if not stop playback
+                    return null;
                 }
             }
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE && currSong.getOrderSeq() + 1 == currQueue.size()) {
@@ -149,8 +206,14 @@ public class PlayQueue {
         } else if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL) {
                 if (currSong.getOrderShuffle() + 1 == currQueue.size()) {
-                    currSong = currQueue.get(0);
-                    return currQueue.get(0).getSongInfo();
+                    for (SongPlayOrderTriplet s : currQueue) {
+                        if (s.getOrderShuffle() == 0) {
+                            currSong = s;
+                            return currSong.getSongInfo();
+                        }
+                    }
+                    // Song should have been found, if not stop playback
+                    return null;
                 }
             }
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE && currSong.getOrderShuffle() + 1 == currQueue.size()) {
@@ -159,19 +222,30 @@ public class PlayQueue {
             for (SongPlayOrderTriplet s : currQueue) {
                 if (s.getOrderShuffle() == currSong.getOrderShuffle() + 1) {
                     currSong = s;
-                    return s.getSongInfo();
+                    return currSong.getSongInfo();
                 }
             }
         }
         return null;
     }
 
+    /**
+     * Helper method that actually finds prev song
+     * Has to take into account the shuffle and repeat modes to find the prev song
+     * @return The prev song
+     */
     private SongInfo prev() {
         if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_NONE) {
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL) {
                 if (currSong.getOrderSeq() - 1 < 0) {
-                    currSong = currQueue.get(currQueue.size() - 1);
-                    return currQueue.get(currQueue.size() - 1).getSongInfo();
+                    for (SongPlayOrderTriplet s : currQueue) {
+                        if (s.getOrderSeq() == currQueue.size() - 1) {
+                            currSong = s;
+                            return currSong.getSongInfo();
+                        }
+                    }
+                    // Song should have been found, if not stop playback
+                    return null;
                 }
             }
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE && currSong.getOrderSeq() - 1 < 0) {
@@ -186,8 +260,14 @@ public class PlayQueue {
         } else if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL) {
                 if (currSong.getOrderShuffle() - 1 < 0) {
-                    currSong = currQueue.get(currQueue.size() - 1);
-                    return currQueue.get(currQueue.size() - 1).getSongInfo();
+                    for (SongPlayOrderTriplet s : currQueue) {
+                        if (s.getOrderShuffle() == currQueue.size() - 1) {
+                            currSong = s;
+                            return currSong.getSongInfo();
+                        }
+                    }
+                    // Song should have been found, if not stop playback
+                    return null;
                 }
             }
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE && currSong.getOrderShuffle() - 1 < 0) {
@@ -203,6 +283,11 @@ public class PlayQueue {
         return null;
     }
 
+    /**
+     * Given a songID return the songInfo associated with this ID
+     * @param id The ID to find
+     * @return The song with the given ID or null if no song with such an ID is found
+     */
     public SongInfo getSongByID(String id) {
         for (SongPlayOrderTriplet s : currQueue) {
             if (s.getSongInfo().getMediaID().toString().equals(id)) {
@@ -212,11 +297,19 @@ public class PlayQueue {
         return null;
     }
 
+    /**
+     * Gets the MediaID of the current song
+     * @return The MediaID of currSong
+     */
     public Long getCurrentMediaId() {
         if (currSong == null) { return null; }
         return currSong.getSongInfo().getMediaID();
     }
 
+    /**
+     * Sets the repeatMode
+     * @param mode The new repeat mode
+     */
     public void setRepeatMode(int mode) {
         repeatMode = mode;
         MediaControllerHolder.getMediaController().getTransportControls().setRepeatMode(mode);
@@ -226,6 +319,10 @@ public class PlayQueue {
         return repeatMode;
     }
 
+    /**
+     * Gets the next repeat mode
+     * @return The next sequential repeat mode
+     */
     public int getNextRepeatMode() {
         if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE)
             return PlaybackStateCompat.REPEAT_MODE_ALL;
@@ -234,6 +331,10 @@ public class PlayQueue {
         return  PlaybackStateCompat.REPEAT_MODE_NONE;
     }
 
+    /**
+     * Sets the shuffleMode
+     * @param mode The new shuffle mode
+     */
     public void setShuffleMode(int mode) {
         shuffleMode = mode;
         shuffle(currQueue);
@@ -244,6 +345,11 @@ public class PlayQueue {
         return shuffleMode;
     }
 
+    /**
+     * Converts array of songplayordertriplets to array of songInfos
+     * @param songPlayOrderTriplets The array to be converted
+     * @return The converted array
+     */
     private ArrayList<SongInfo> tripletToSongInfoConvert(ArrayList<SongPlayOrderTriplet> songPlayOrderTriplets) {
         ArrayList<SongInfo> out = new ArrayList<>();
         for (SongPlayOrderTriplet songPlayOrderTriplet : songPlayOrderTriplets) {
@@ -252,8 +358,16 @@ public class PlayQueue {
         return out;
     }
 
+    /**
+     * Returns "root"
+     * @return "root"
+     */
     public static String getRoot() { return "root"; }
 
+    /**
+     * Gets a List of all mediaItems
+     * @return List of mediaItems
+     */
     public List<MediaBrowserCompat.MediaItem> getMediaItems() {
         List<MediaBrowserCompat.MediaItem> result = new ArrayList<>();
         for (SongPlayOrderTriplet song : currQueue) {

@@ -24,6 +24,9 @@ import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongManager;
 
+/**
+ * Activity which has a list of chronologically sorted songs
+ */
 public class RecentlyAddedActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CurrentlyPlayingSheet.UsesCurrentlyPlayingSheet {
 
     private DrawerLayout mDrawerLayout;
@@ -38,6 +41,7 @@ public class RecentlyAddedActivity extends AppCompatActivity implements Navigati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recently_added);
 
+        // Set up side drawer menu
         mDrawerLayout = findViewById(R.id.drawer);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
         mDrawerLayout.addDrawerListener(mToggle);
@@ -58,6 +62,7 @@ public class RecentlyAddedActivity extends AppCompatActivity implements Navigati
         currentlyPlayingSheet = new CurrentlyPlayingSheet((ConstraintLayout) v);
         bottomSheetBehavior = BottomSheetBehavior.from(v);
 
+        // Manually update the CurrentPlaybackNotifier to trigger the update methods of this classes members
         CurrentPlaybackNotifier.getSelf().notifyPlaybackStateChanged(MediaControllerHolder.getMediaController().getPlaybackState());
         CurrentPlaybackNotifier.getSelf().notifyMetadataChanged(MediaControllerHolder.getMediaController().getMetadata());
     }
@@ -66,23 +71,22 @@ public class RecentlyAddedActivity extends AppCompatActivity implements Navigati
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
+        // Handles launching different activities from Drawer Menu
+
         if (id == R.id.songMenu) {
             item.setChecked(true);
-            //Toast.makeText(this, "Songs", Toast.LENGTH_LONG).show();
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             Intent intent = new Intent(this, gg.joshbra.tagg.Activities.MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         } else if (id == R.id.taggMenu) {
             item.setChecked(true);
-            //Toast.makeText(this, "Taggs", Toast.LENGTH_LONG).show();
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             Intent intent = new Intent(this, TaggActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         } else if (id == R.id.recentMenu) {
             item.setChecked(true);
-            //Toast.makeText(this, "Recently Added", Toast.LENGTH_LONG).show();
         } else if (id == R.id.aboutMenu) {
             AboutDialogGenerator.createDialog(this);
         }
@@ -113,6 +117,11 @@ public class RecentlyAddedActivity extends AppCompatActivity implements Navigati
         currentlyPlayingSheet.destroy();
     }
 
+    /**
+     * Method which has no function but is required to make the Currently Playing Sheet 'solid'.
+     * i.e. Prevents user from clicking elements below the Currently Playing Sheet
+     * @param v
+     */
     @Override
     public void nothing(View v) {}
 

@@ -1,9 +1,10 @@
 package gg.joshbra.tagg.Helpers;
 
-import android.util.Log;
-
 import gg.joshbra.tagg.SongInfo;
 
+/**
+ * A data structure to store a songInfo and the playOrder from the playlist order in SQL database
+ */
 public class SongPlayOrderTuple {
     public final SongInfo songInfo;
     public final int playOrder;

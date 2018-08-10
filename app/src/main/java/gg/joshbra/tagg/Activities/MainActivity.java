@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.MediaStore;
@@ -23,12 +22,10 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -46,10 +43,15 @@ import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongInfo;
 import gg.joshbra.tagg.SongManager;
 
+/**
+ * The Main Activity for Tagg Music Player
+ *
+ * Has an alphabetical list of all songs in order on display
+ */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CurrentlyPlayingSheet.UsesCurrentlyPlayingSheet {
 
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mToggle;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
 
     private ArrayList<SongInfo> loadedSongs;
     private SongManager songManager;
@@ -60,6 +62,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private MediaBrowserCompat mediaBrowser;
 
+    /**
+     * The Callback that is executed when the MediaBrowser is connected
+     *
+     * Initializes much of the app's MediaController functionality
+     */
     private final MediaBrowserCompat.ConnectionCallback connectionCallback = new MediaBrowserCompat.ConnectionCallback() {
             @Override
             public void onConnected() {
@@ -87,6 +94,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         };
 
+    /**
+     * Callback that is used by MediaController
+     */
     private final MediaControllerCompat.Callback controllerCallback = new MediaControllerCompat.Callback() {
         @Override
         public void onSessionDestroyed() {
@@ -112,10 +122,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDrawerLayout = findViewById(R.id.drawer);
-        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
-        mDrawerLayout.addDrawerListener(mToggle);
-        mToggle.syncState();
+        // Set up side drawer menu
+        drawerLayout = findViewById(R.id.drawer);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setTitle("Songs");
@@ -129,15 +140,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         currentPlaybackNotifier = CurrentPlaybackNotifier.getSelf();
 
         songListFragment = (SongListFragment) getSupportFragmentManager().findFragmentById(R.id.songList);
-        songListFragment.enableIndicator(true);
+        songListFragment.enableIndicator();
         songListFragment.initRecycler(loadedSongs);
 
         CheckPermission();
 
+        // Connects the media browser which is used to create music service and handle much of music backend
         mediaBrowser = new MediaBrowserCompat(this, new ComponentName(this, MusicService.class), connectionCallback,null);
         mediaBrowser.connect();
     }
 
+    /**
+     * Makes sure we have the proper permissions before attempting to load songs from device
+     */
     private void CheckPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 120);
@@ -172,21 +187,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mToggle.onOptionsItemSelected(item)) {
+        if (toggle.onOptionsItemSelected(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Loads the songs from the device
+     */
     private void loadSongs() {
         String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
         ContentResolver contentResolver = getContentResolver();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor cursor = contentResolver.query(uri, null, selection, null, null);
 
-        if(cursor != null) {
-            if(cursor.moveToFirst()) {
-                do{
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
                     String id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
                     String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
                     String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
@@ -202,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     SongInfo s = new SongInfo(id, name, artist, url, album, Long.parseLong(duration), albumID, dateAdded);
                     loadedSongs.add(s);
-                }while (cursor.moveToNext());
+                } while (cursor.moveToNext());
             }
             cursor.close();
 
@@ -218,19 +236,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
+        // Handles launching different activities from Drawer Menu
+
         if (id == R.id.songMenu) {
             item.setChecked(true);
-            //Toast.makeText(this, "Songs", Toast.LENGTH_LONG).show();
         } else if (id == R.id.taggMenu) {
             item.setChecked(true);
-            //Toast.makeText(this, "Taggs", Toast.LENGTH_LONG).show();
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             Intent intent = new Intent(this, TaggActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         } else if (id == R.id.recentMenu) {
             item.setChecked(true);
-            //Toast.makeText(this, "Recently Added", Toast.LENGTH_LONG).show();
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             Intent intent = new Intent(this, RecentlyAddedActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -239,11 +256,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             AboutDialogGenerator.createDialog(this);
         }
 
-        mDrawerLayout.closeDrawer(Gravity.START);
+        drawerLayout.closeDrawer(Gravity.START);
 
         return false;
     }
 
+    /**
+     * Method which has no function but is required to make the Currently Playing Sheet 'solid'.
+     * i.e. Prevents user from clicking elements below the Currently Playing Sheet
+     * @param v
+     */
     @Override
     public void nothing(View v) {}
 

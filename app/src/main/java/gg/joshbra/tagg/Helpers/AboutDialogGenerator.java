@@ -11,9 +11,16 @@ import android.widget.Toast;
 
 import gg.joshbra.tagg.R;
 
+/**
+ * Helper to create about dialog from any context
+ */
 public class AboutDialogGenerator {
     private AboutDialogGenerator() {}
 
+    /**
+     * Create and display about dialog
+     * @param context The context to display the dialog
+     */
     public static void createDialog(final Context context) {
         DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
             @Override

@@ -29,6 +29,9 @@ import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongManager;
 import gg.joshbra.tagg.TaggSelector;
 
+/**
+ * Fragment for the menu that appears from bottom of screen when selecting Taggs
+ */
 public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
     private BottomTaggSelectionListener listener;
     private ArrayList<String> aTagg;
@@ -44,6 +47,7 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
 
         ImageButton addTaggBtn = hostView.findViewById(R.id.addTaggBtn);
 
+        // Creates new Tagg
         addTaggBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,6 +99,7 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
 
         ImageButton editTaggBtn = hostView.findViewById(R.id.editTaggBtn);
 
+        // Enables the remove tagg button
         editTaggBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,6 +128,10 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
         listener.dismissed(aTagg);
     }
 
+    /**
+     * Populates the recyclerView with the checkboxes
+     * @param view The view that the recyclerView belongs to
+     */
     private void createCheckboxes(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.taggSelectRGroup);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -132,6 +141,7 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
         ArrayList<String> activeTaggs = SongManager.getSelf().getActiveTaggs();
 
         if (taggs.size() == 0) {
+            // In this case there are no Taggs yet
             TextView noTaggs = new TextView(getContext());
             noTaggs.setText("No Taggs exist");
             noTaggs.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
@@ -139,6 +149,7 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
             ((LinearLayout)view.findViewById(R.id.noTaggMessageSpace)).addView(noTaggs);
             return;
         } else {
+            // This is needed to get rid of anything that is in the view right now
             ((LinearLayout)view.findViewById(R.id.noTaggMessageSpace)).removeAllViews();
         }
 
@@ -153,6 +164,14 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
         recyclerView.setAdapter(taggAdapter);
     }
 
+    /**
+     * Programmatically change the margins of a view
+     * @param view The view to change the margins of
+     * @param left Left margin
+     * @param top Top margin
+     * @param right Right margin
+     * @param bottom Bottom margin
+     */
     private void setMargins (View view, int left, int top, int right, int bottom) {
         if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -173,6 +192,9 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
         this.listener = listener;
     }
 
+    /**
+     * Interface to be created when using this fragment
+     */
     public interface BottomTaggSelectionListener {
         void dismissed(ArrayList<String> aTagg);
     }

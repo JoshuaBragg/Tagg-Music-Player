@@ -6,6 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
+/**
+ * A custom RecyclerView that restricts the max height to 2/3 of the screen height
+ *
+ * Used in the bottom dialog fragments to prevent them from covering entire screen
+ */
 public class MaxDimensionRecycler extends RecyclerView {
     public MaxDimensionRecycler(Context context) {
         super(context);

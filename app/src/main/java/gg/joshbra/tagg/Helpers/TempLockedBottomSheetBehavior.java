@@ -10,6 +10,11 @@ import android.view.View;
 
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 
+/**
+ * Custom BottomSheetBehavior that locks the BottomSheet if no song is loaded
+ * Is responsible for keeping the now playing bar unopenable before a song has begun playing
+ * @param <V>
+ */
 public class TempLockedBottomSheetBehavior<V extends View> extends BottomSheetBehavior<V> {
 
     public TempLockedBottomSheetBehavior() {

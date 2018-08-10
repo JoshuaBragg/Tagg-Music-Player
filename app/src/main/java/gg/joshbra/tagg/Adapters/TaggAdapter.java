@@ -19,13 +19,24 @@ import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongManager;
 import gg.joshbra.tagg.TaggSelector;
 
+/**
+ * RecyclerView Adapter that allows Tagg to create lists of Taggs
+ */
 public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
 
     private ArrayList<TaggSelector> taggs;
     private Context context;
     private int type;
+
+    // The two types of TaggAdapters
     public static final int ACTIVATE_TYPE = 0, UPDATE_TYPE = 1;
 
+    /**
+     * Creates a TaggAdapter for use in a RecyclerView
+     * @param context The context that contains the RecyclerView
+     * @param taggs The arraylist of Taggs to display
+     * @param type The type of Adapter this should be (ACTIVATE_TYPE or UPDATE_TYPE)
+     */
     public TaggAdapter(Context context, ArrayList<TaggSelector> taggs, int type) {
         this.context = context;
         this.taggs = taggs;
@@ -46,6 +57,7 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
         holder.taggName.setText(tagg.getTaggName());
         holder.checkBox.setChecked(tagg.isChecked());
 
+        // Two different listeners for each type of adapter
         if (type == ACTIVATE_TYPE) {
             holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -66,6 +78,7 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
             });
         }
 
+        // Sets onClickListener for when you delete a tagg
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,6 +96,7 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
                     }
                 };
 
+                // Creates Dialog box for confirmation for deletion
                 new AlertDialog.Builder(view.getContext(), R.style.Dialog)
                         .setTitle("Remove Tagg: " + holder.taggName.getText().toString())
                         .setMessage("Are you sure? You cannot undo this action.")
@@ -101,6 +115,10 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
         });
     }
 
+    /**
+     * Gets the Taggs that are currently checked
+     * @return ArrayList of Taggs that are currently checked
+     */
     public ArrayList<String> getCheckedTaggs() {
         ArrayList<String> out = new ArrayList<>();
 
@@ -118,6 +136,9 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
         return taggs.size();
     }
 
+    /**
+     * A ViewHolder for RecyclerView to hold the information obtained from a TaggSelector
+     */
     public class TaggHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
         TextView taggName;

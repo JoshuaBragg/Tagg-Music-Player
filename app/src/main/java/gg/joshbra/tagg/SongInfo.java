@@ -6,9 +6,11 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+/**
+ * Data structure to store song information
+ */
 public class SongInfo implements Comparable<SongInfo> {
     private MediaMetadataCompat mediaMetadataCompat;
-    private ArrayList<String> taggs;
 
     public SongInfo(String mediaID, String songName, String artistName, String songUrl, String albumName, long duration, String albumArt, String dateAdded) {
         mediaMetadataCompat = new MediaMetadataCompat.Builder()
@@ -21,27 +23,6 @@ public class SongInfo implements Comparable<SongInfo> {
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, albumArt)
                 .putString(MediaMetadataCompat.METADATA_KEY_DATE, dateAdded)
                 .build();
-        this.taggs = new ArrayList<>();
-    }
-
-    public void removeTagg(String tagg) {
-        if (taggs.contains(tagg)) {
-            taggs.remove(tagg);
-        }
-    }
-
-    public void addTagg(String tagg) {
-        if (!taggs.contains(tagg)) {
-            taggs.add(tagg);
-        }
-    }
-
-    public boolean hasTagg(String tagg) {
-        return taggs.contains(tagg);
-    }
-
-    public ArrayList<String> getTaggs() {
-        return taggs;
     }
 
     public Long getMediaID() {
@@ -84,6 +65,12 @@ public class SongInfo implements Comparable<SongInfo> {
         return getMediaID() + " - " + getSongName();
     }
 
+    /**
+     * Determine if two songInfos are equal or if a songInfo is equal to a Long
+     * @param o The object to compare to
+     * @return True iff the two songInfos have the same mediaID or If the mediaID is the same as the Long passed in
+     */
+    @Override
     public boolean equals(Object o) {
         if (o instanceof SongInfo) {
             return ((SongInfo)o).getMediaID().equals(getMediaID());
@@ -93,6 +80,11 @@ public class SongInfo implements Comparable<SongInfo> {
         return false;
     }
 
+    /**
+     * Compares two songInfos
+     * @param songInfo The songInfo to compare to
+     * @return compares the names of the songs
+     */
     @Override
     public int compareTo(@NonNull SongInfo songInfo) {
         return getSongName().toUpperCase().compareTo(songInfo.getSongName().toUpperCase());

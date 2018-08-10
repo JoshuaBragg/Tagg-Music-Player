@@ -27,6 +27,9 @@ import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongManager;
 
+/**
+ * Activity that allows user to enable/disable Taggs and generate playlists
+ */
 public class TaggActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CurrentlyPlayingSheet.UsesCurrentlyPlayingSheet {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
@@ -43,6 +46,7 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         
         songManager = SongManager.getSelf();
 
+        // Set up side drawer menu
         mDrawerLayout = findViewById(R.id.drawer);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
         mDrawerLayout.addDrawerListener(mToggle);
@@ -67,6 +71,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
 
         updateSongRepeater();
 
+        // Set up FAB functionality
+
         FloatingActionButton fab = findViewById(R.id.taggFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +92,9 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    /**
+     * Sets title to include the current amount of active Taggs and initilizes SongListFragment
+     */
     private void updateSongRepeater() {
         setTitle(songManager.getActiveTaggs().size() == 0 ? "Taggs" : "Taggs (" + songManager.getActiveTaggs().size() + ")");
         songListFragment.initRecycler(songManager.getCurrSongsFromTaggs());
@@ -103,20 +112,18 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
+        // Handles launching different activities from Drawer Menu
+
         if (id == R.id.songMenu) {
             item.setChecked(true);
-            //Toast.makeText(this, "Songs", Toast.LENGTH_LONG).show();
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
             Intent intent = new Intent(this, gg.joshbra.tagg.Activities.MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         } else if (id == R.id.taggMenu) {
             item.setChecked(true);
-            //Toast.makeText(this, "Taggs", Toast.LENGTH_LONG).show();
         } else if (id == R.id.recentMenu) {
             item.setChecked(true);
-            //Toast.makeText(this, "Recently Added", Toast.LENGTH_LONG).show();
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             Intent intent = new Intent(this, RecentlyAddedActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -143,6 +150,11 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         currentlyPlayingSheet.destroy();
     }
 
+    /**
+     * Method which has no function but is required to make the Currently Playing Sheet 'solid'.
+     * i.e. Prevents user from clicking elements below the Currently Playing Sheet
+     * @param v
+     */
     @Override
     public void nothing(View v) {}
 

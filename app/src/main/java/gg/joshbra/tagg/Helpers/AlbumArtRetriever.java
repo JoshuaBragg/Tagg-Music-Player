@@ -5,13 +5,25 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
+/**
+ * Helper to get the AlbumArt for a given song
+ */
 public class AlbumArtRetriever {
     private static ContentResolver contentResolver;
 
+    /**
+     * Sets the content resolver to be used in the future, must be set before getAlbumArt is called
+     * @param contentResolver A content resolver
+     */
     public static void setContentResolver(ContentResolver contentResolver) {
         AlbumArtRetriever.contentResolver = contentResolver;
     }
 
+    /**
+     * Given an AlbumID, returns either the path to a songs album art
+     * @param albumID The albumID to retrieve albumArt for
+     * @return Returns the path to the albumArt or null if no album with that ID exists
+     */
     public static String getAlbumArt(int albumID) {
         if (contentResolver == null) {
             return null;

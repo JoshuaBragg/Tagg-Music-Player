@@ -1,7 +1,5 @@
 package gg.joshbra.tagg;
 
-import android.content.Context;
-import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -9,13 +7,12 @@ import android.os.SystemClock;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 
+/**
+ * Responsible for controlling the mediaPlayer and all music playback
+ */
 public class MusicController implements AudioManager.OnAudioFocusChangeListener {
 
     private MediaPlayer mediaPlayer;
@@ -24,6 +21,8 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
 
     private final Callback callback;
 
+    // The two ways songs can be played, needed to prevent obscure bug with currSong in playQueue
+    // and the way ArrayList.contains works
     public static final int PLAY_BY_USER = 0, PLAY_BY_COMPLETION = 1;
     public static final String PLAY_TYPE = "play_type";
 
@@ -33,6 +32,11 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
         this.callback = callback;
     }
 
+    /**
+     * Play the song provided
+     * @param songInfo The song to be played
+     * @param extras May contain data about how the song has begun playing (PLAY_BY_USER or PLAY_BY_COMPLETION)
+     */
     public void playSong(SongInfo songInfo, Bundle extras) {
         try {
             if (mediaPlayer == null) {
@@ -75,6 +79,9 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
         }
     }
 
+    /**
+     * Resumes the current song
+     */
     public void playSong() {
         if (mediaPlayer == null) { return; }
         mediaPlayer.start();
@@ -82,6 +89,9 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
         updatePlaybackState();
     }
 
+    /**
+     * Pauses the current song
+     */
     public void pauseSong() {
         if (mediaPlayer == null) { return; }
         mediaPlayer.pause();
@@ -89,6 +99,9 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
         updatePlaybackState();
     }
 
+    /**
+     * Stops playback
+     */
     public void stopSong() {
         if (mediaPlayer != null) {
             mediaPlayer.reset();
@@ -99,11 +112,19 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
         updatePlaybackState();
     }
 
+    /**
+     * Seeks to position
+     * @param ms The position in ms to seek to
+     */
     public void seekTo(int ms) {
         if (mediaPlayer == null) { return; }
         mediaPlayer.seekTo(ms);
     }
 
+    /**
+     * The mediaPlayers current position
+     * @return Returns the currentPosition of playback or -1 if mediaPlayer is null
+     */
     public int getCurrentPosition() {
         if (mediaPlayer == null) {
             return -1;
@@ -111,14 +132,30 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
         return mediaPlayer.getCurrentPosition();
     }
 
+    /**
+     * The duration of the current song
+     * @return Returns the duration of the current song or -1 if mediaPlayer is null
+     */
     public int getDuration() {
+        if (mediaPlayer == null) {
+            return -1;
+        }
         return mediaPlayer.getDuration();
     }
 
+    /**
+     * Gets if the mediaPlayer is currently playing
+     * @return True iff mediaPlayer.isPlaying()
+     */
     public boolean isPlaying() {
         return mediaPlayer != null && mediaPlayer.isPlaying();
     }
 
+    /**
+     * Handles audio focus changes
+     * i.e. If another app requests audio focus it will pause playback or lower playback volume during notification noises
+     * @param focusChange The focus type we have
+     */
     @Override
     public void onAudioFocusChange(int focusChange) {
         boolean gotFullFocus = false;
@@ -167,10 +204,18 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
         return actions;
     }
 
+    /**
+     * Similar to getCurrentPosition
+     * @return Returns currentPosition or 0 if mediaPlayer is null
+     */
     public int getCurrentStreamPosition() {
         return mediaPlayer != null ? mediaPlayer.getCurrentPosition() : 0;
     }
 
+    /**
+     * Called when the playback state has changed
+     * Notifies the callback that the state has changed
+     */
     public void updatePlaybackState() {
         if (callback == null) {
             return;

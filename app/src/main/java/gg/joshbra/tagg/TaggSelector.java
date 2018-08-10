@@ -2,6 +2,9 @@ package gg.joshbra.tagg;
 
 import android.support.annotation.NonNull;
 
+/**
+ * Stores a Tagg and checkbox pair
+ */
 public class TaggSelector implements Comparable<TaggSelector> {
     private String taggName;
     private boolean checked;

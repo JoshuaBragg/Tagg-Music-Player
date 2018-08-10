@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * Responsible for updating all aspects of the App that display information about the current media playback
+ */
 public class CurrentPlaybackNotifier extends Observable {
     private final static CurrentPlaybackNotifier self = new CurrentPlaybackNotifier();
 
