@@ -220,6 +220,7 @@ public class CurrentlyPlayingSheet implements Observer {
         songMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mediaController.getPlaybackState() == null || mediaController.getPlaybackState().getState() == PlaybackStateCompat.STATE_NONE || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) { return; }
                 if (PlayQueue.getSelf().getCurrSong() == null) { return; }
 
                 final SongInfo songInfo = PlayQueue.getSelf().getCurrSong();
