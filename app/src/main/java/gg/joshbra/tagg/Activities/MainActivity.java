@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private MediaBrowserCompat mediaBrowser;
 
+    private static final int REQUEST_CODE = 120;
+
     /**
      * The Callback that is executed when the MediaBrowser is connected
      *
@@ -155,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private void CheckPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 120);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
         } else {
             loadSongs();
         }
@@ -170,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case 120:
+            case REQUEST_CODE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     loadSongs();
                 } else {
