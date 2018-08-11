@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,7 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
             public void onClick(View view) {
                 final EditText newTaggEditText = new EditText(view.getContext());
                 newTaggEditText.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorTextSecondary));
-
+                newTaggEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
                 newTaggEditText.requestFocus();
 
                 InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);

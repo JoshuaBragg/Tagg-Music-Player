@@ -200,11 +200,7 @@ public class MediaNotificationManager extends BroadcastReceiver {
         Notification notification = notificationBuilder.build();
 
         if (isPlaying && !started) {
-            if (Build.VERSION.SDK_INT >= 26) {
-                musicService.startForegroundService(new Intent(musicService.getApplicationContext(), MusicService.class));
-            } else {
-                musicService.startService(new Intent(musicService.getApplicationContext(), MusicService.class));
-            }
+            musicService.startForegroundService(new Intent(musicService.getApplicationContext(), MusicService.class));
             musicService.startForeground(NOTIFICATION_ID, notification);
             started = true;
         } else {
