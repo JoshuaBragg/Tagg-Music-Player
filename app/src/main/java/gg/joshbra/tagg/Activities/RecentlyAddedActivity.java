@@ -22,6 +22,7 @@ import gg.joshbra.tagg.Helpers.AboutDialogGenerator;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.R;
+import gg.joshbra.tagg.SleepTimerController;
 import gg.joshbra.tagg.SongManager;
 
 /**

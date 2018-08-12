@@ -16,6 +16,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Picker">
+        <item name="android:textColorPrimary">@color/colorTextPrimary</item>
+    </style>
+
     <style name="Popup">
         <item name="android:windowIsTranslucent">true</item>
     </style>

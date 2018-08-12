@@ -32,9 +32,10 @@ public class SeekBarController {
      */
     public void startThread() {
         try {
-            if (!seekBarThread.isAlive())
+            if (!seekBarThread.isAlive()) {
                 running = true;
                 seekBarThread.start();
+            }
         } catch (IllegalThreadStateException e) {
             e.printStackTrace();
         }
@@ -45,7 +46,7 @@ public class SeekBarController {
     /**
      * The thread that updates the seekbar every second
      */
-    public class SeekBarThread extends Thread{
+    public class SeekBarThread extends Thread {
         @Override
         public void run() {
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
