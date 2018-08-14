@@ -3,28 +3,29 @@ package gg.joshbra.tagg;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
-import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.Helpers.ThemedNumberPicker;
 
 /**
  * Creates interface for and manages the Sleep Timer
  */
 public class SleepTimerController {
-    private SleepTimerThread thread;
     private boolean running;
+
+    public static final String SLEEP_TIMER_AMOUNT = "sleep_timer_amount";
 
     ////////////////////////////// Singleton ///////////////////////////////
 
     private static final SleepTimerController self = new SleepTimerController();
 
     private SleepTimerController() {
-        thread = null;
         running = false;
     }
 
@@ -39,7 +40,7 @@ public class SleepTimerController {
      * @param context The context from which this method was called
      */
     public void create(Context context) {
-        if (thread != null && thread.isAlive()) {
+        if (running) {
             createSnackBar(context);
         } else {
             createSleepTimerDialog(context);
@@ -75,19 +76,19 @@ public class SleepTimerController {
     }
 
     /**
-     * Creates the snackbar letting the user know how much time remains
+     * Creates the snackbar letting the user disable sleep timer
      * @param context The context to display the snackbar
      */
-    private void createSnackBar(Context context) {
-        int[] timeRemaining = thread.getTimeRemaining();
-        Snackbar snackbar = Snackbar.make(((AppCompatActivity)context).findViewById(R.id.drawer),
-                timeRemaining[0] == 0 ? timeRemaining[1] + " seconds remaining" :
-                        timeRemaining[0] + " minutes and " + timeRemaining[1] + " seconds remaining", Snackbar.LENGTH_LONG);
+    private void createSnackBar(final Context context) {
+        Snackbar snackbar = Snackbar.make(((AppCompatActivity)context).findViewById(R.id.drawer), "Sleep Timer is active", Snackbar.LENGTH_LONG);
 
         snackbar.setAction("DISABLE", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cancelTimer();
+                cancelTimer(context);
+                Toast toast = Toast.makeText(context, "Sleep Timer Disabled", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, (int) context.getResources().getDimension(R.dimen.toast_offset));
+                toast.show();
             }
         });
 
@@ -104,90 +105,27 @@ public class SleepTimerController {
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, (int) context.getResources().getDimension(R.dimen.toast_offset));
         toast.show();
 
-        beginTimer(amount);
+        beginTimer(context, amount);
     }
 
     /**
-     * Begins the thread responsible for handling the timer
+     * Begins the service responsible for handling the timer
      * @param amount The amount of minutes to set the timer to
      */
-    private void beginTimer(int amount) {
-        killThread();
-        thread = new SleepTimerThread(amount * 60);
+    private void beginTimer(Context context, int amount) {
+        Intent serviceIntent = new Intent(context, SleepTimerService.class);
+        serviceIntent.putExtra(SLEEP_TIMER_AMOUNT, amount * 60);
         running = true;
-        try {
-            if (!thread.isAlive()) {
-                running = true;
-                thread.start();
-            }
-        } catch (IllegalThreadStateException e) {
-            e.printStackTrace();
-        }
+        ContextCompat.startForegroundService(context, serviceIntent);
     }
 
     /**
-     * Cancels the timer by killing thread
+     * Cancels the timer by killing service
      */
-    private void cancelTimer() {
-        killThread();
-    }
-
-    /**
-     * A thread that keeps track of the time that has passed and pauses playback upon the timer ending
-     */
-    private class SleepTimerThread extends Thread {
-        private int runTime;
-        private int amount;
-
-        /**
-         * Creates the thread
-         * @param amount The amount of time in seconds to set the timer to
-         */
-        SleepTimerThread(int amount) {
-            this.amount = amount;
-            runTime = 0;
-        }
-
-        /**
-         * Keep track of elapsed time and increment internal timer
-         */
-        @Override
-        public void run() {
-            while (running && runTime <= amount) {
-                runTime++;
-                try {
-                    Thread.interrupted();
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    Thread.interrupted();
-                }
-            }
-            if (running) {
-                MediaControllerHolder.getMediaController().getTransportControls().pause();
-            }
-            killThread();
-        }
-
-        /**
-         * Gets the time remaining on the timer
-         * @return Returns an int[] where the first element is the number of minutes remaining and the second element is the number of seconds remaining
-         */
-        int[] getTimeRemaining() {
-            return new int[]{((amount - runTime) - (amount - runTime) % 60) / 60, (amount - runTime) % 60};
-        }
-    }
-
-    /**
-     * Kills the thread
-     */
-    private void killThread() {
+    private void cancelTimer(Context context) {
+        Intent serviceIntent = new Intent(context, SleepTimerService.class);
         running = false;
-        if (thread != null) {
-            thread.interrupt();
-            thread = null;
-        }
-        running = false;
+        context.stopService(serviceIntent);
     }
 
     /**

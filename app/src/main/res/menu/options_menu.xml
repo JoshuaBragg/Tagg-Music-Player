@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/sleepTimerOption"
+        android:title="Sleep Timer"
+        />
+
+    <item
+        android:id="@+id/searchOption"
+        android:title="Search"
+        />
+
+</menu>

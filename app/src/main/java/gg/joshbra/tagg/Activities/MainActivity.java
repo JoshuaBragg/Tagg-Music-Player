@@ -22,8 +22,11 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -40,6 +43,7 @@ import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.MusicService;
 import gg.joshbra.tagg.PlayQueue;
 import gg.joshbra.tagg.R;
+import gg.joshbra.tagg.SleepTimerController;
 import gg.joshbra.tagg.SongInfo;
 import gg.joshbra.tagg.SongManager;
 
@@ -192,6 +196,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (toggle.onOptionsItemSelected(item)) {
             return true;
         }
+        switch (item.getItemId()) {
+            case R.id.sleepTimerOption:
+                SleepTimerController.getSelf().create(this);
+                return true;
+            case R.id.searchOption:
+                return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -232,6 +243,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             songListFragment.initRecycler(loadedSongs);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
     }
 
     @Override

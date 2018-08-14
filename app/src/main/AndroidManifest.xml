@@ -52,6 +52,9 @@
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
+        <service android:name=".SleepTimerService">
+
+        </service>
     </application>
 
 </manifest>

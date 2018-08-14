@@ -82,7 +82,7 @@ public class SeekBarController {
             // Poll every second for changes and update seekbar and time shown accordingly
             while (running) {
                 try {
-                    if (mediaController.getPlaybackState() != null && mediaController.getPlaybackState().getState() != PlaybackStateCompat.STATE_NONE) {
+                    if (mediaController.getPlaybackState() != null && mediaController.getPlaybackState().getState() != PlaybackStateCompat.STATE_NONE && PlayQueue.getSelf().getCurrSong() != null) {
                         seekBar.setMax(Math.round(PlayQueue.getSelf().getCurrSong().getDuration()));
                         seekBar.setProgress(Math.round(mediaController.getPlaybackState().getPosition()), true);
                         Message msg = new Message();

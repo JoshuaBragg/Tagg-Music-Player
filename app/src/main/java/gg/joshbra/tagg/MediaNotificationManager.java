@@ -19,7 +19,6 @@ import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
-import gg.joshbra.tagg.Activities.MainActivity;
 import gg.joshbra.tagg.Activities.SplashActivity;
 import gg.joshbra.tagg.Helpers.AlbumArtRetriever;
 
