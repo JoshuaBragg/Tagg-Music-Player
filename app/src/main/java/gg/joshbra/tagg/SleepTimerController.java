@@ -55,7 +55,7 @@ public class SleepTimerController {
         final ThemedNumberPicker numberPicker = new ThemedNumberPicker(context);
         numberPicker.setMaxValue(120);
         numberPicker.setMinValue(1);
-        numberPicker.setValue(5);
+        numberPicker.setValue(15);
         numberPicker.setDisplayedValues(getMinuteValues());
 
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {

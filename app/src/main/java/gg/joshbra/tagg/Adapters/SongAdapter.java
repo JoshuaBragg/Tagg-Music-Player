@@ -31,6 +31,7 @@ import java.util.Observer;
 import es.claucookie.miniequalizerlibrary.EqualizerView;
 import gg.joshbra.tagg.Activities.MainActivity;
 import gg.joshbra.tagg.Activities.RecentlyAddedActivity;
+import gg.joshbra.tagg.Activities.SearchActivity;
 import gg.joshbra.tagg.Activities.TaggActivity;
 import gg.joshbra.tagg.Fragments.BottomSongMenuDialogFragment;
 import gg.joshbra.tagg.Fragments.BottomTaggSelectionFragment;
@@ -109,6 +110,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                     SongManager.getSelf().updateCurrQueue(SongManager.TYPE_TAGG);
                 } else if (context instanceof RecentlyAddedActivity) {
                     SongManager.getSelf().updateCurrQueue(SongManager.TYPE_RECENT);
+                } else if (context instanceof SearchActivity) {
+                    SongManager.getSelf().updateCurrQueue(SongManager.TYPE_ALL_SONGS);
                 }
                 Bundle extra = new Bundle();
                 extra.putInt(MusicController.PLAY_TYPE, MusicController.PLAY_BY_USER);

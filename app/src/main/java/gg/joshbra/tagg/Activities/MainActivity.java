@@ -201,6 +201,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 SleepTimerController.getSelf().create(this);
                 return true;
             case R.id.searchOption:
+                Intent intent = new Intent(this, SearchActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);

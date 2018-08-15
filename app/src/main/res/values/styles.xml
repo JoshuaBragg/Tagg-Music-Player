@@ -16,6 +16,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorSecondary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorControlNormal">@color/colorAccent</item>
     </style>
 
     <style name="Picker">
