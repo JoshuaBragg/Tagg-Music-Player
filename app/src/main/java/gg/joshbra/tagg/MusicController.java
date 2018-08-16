@@ -22,17 +22,21 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
     private final Callback callback;
 
     private boolean awaitingFocus;
+    private boolean headphonesWerePluggedIn;
+    private AudioManager audioManager;
 
     // The two ways songs can be played, needed to prevent obscure bug with currSong in playQueue
     // and the way ArrayList.contains works
     public static final int PLAY_BY_USER = 0, PLAY_BY_COMPLETION = 1;
     public static final String PLAY_TYPE = "play_type";
 
-    public MusicController(Callback callback) {
+    public MusicController(AudioManager audioManager, Callback callback) {
         mediaPlayer = new MediaPlayer();
         playQueue = PlayQueue.getSelf();
         this.callback = callback;
+        this.audioManager = audioManager;
         awaitingFocus = false;
+        headphonesWerePluggedIn = false;
     }
 
     /**
@@ -185,6 +189,9 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
             }
         } else if (gotFullFocus) {
             if (mediaPlayer != null && awaitingFocus) {
+                if (headphonesWerePluggedIn && !audioManager.isWiredHeadsetOn()) {
+                    return;
+                }
                 mediaPlayer.start();
                 awaitingFocus = false;
                 state = PlaybackStateCompat.STATE_PLAYING;
@@ -194,13 +201,10 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
         } else if (state == PlaybackStateCompat.STATE_PLAYING) {
             mediaPlayer.pause();
             awaitingFocus = true;
+            headphonesWerePluggedIn = audioManager.isWiredHeadsetOn();
             state = PlaybackStateCompat.STATE_PAUSED;
             updatePlaybackState();
         }
-    }
-
-    public void setAwaitingFocus(boolean awaitingFocus) {
-        this.awaitingFocus = awaitingFocus;
     }
 
     public interface Callback {

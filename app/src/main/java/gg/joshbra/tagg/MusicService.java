@@ -193,8 +193,11 @@ public class MusicService extends MediaBrowserServiceCompat {
 
         mediaNotificationManager = new MediaNotificationManager(this);
 
+        // Create Audio Manager
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         // Create MusicController
-        musicController = new MusicController(new MusicController.Callback() {
+        musicController = new MusicController(audioManager, new MusicController.Callback() {
                             @Override
                             public void onPlaybackStatusChanged(PlaybackStateCompat state) {
                                 session.setPlaybackState(state);
@@ -202,9 +205,6 @@ public class MusicService extends MediaBrowserServiceCompat {
                                 mediaNotificationManager.update(playQueue.getCurrSong().getMediaMetadataCompat(), state, getSessionToken());
                             }
                         });
-
-        // Create Audio Manager
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         // Create Audio Attributes
         audioAttributes = new AudioAttributes.Builder()
