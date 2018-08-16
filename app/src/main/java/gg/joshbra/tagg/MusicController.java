@@ -21,6 +21,8 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
 
     private final Callback callback;
 
+    private boolean awaitingFocus;
+
     // The two ways songs can be played, needed to prevent obscure bug with currSong in playQueue
     // and the way ArrayList.contains works
     public static final int PLAY_BY_USER = 0, PLAY_BY_COMPLETION = 1;
@@ -30,6 +32,7 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
         mediaPlayer = new MediaPlayer();
         playQueue = PlayQueue.getSelf();
         this.callback = callback;
+        awaitingFocus = false;
     }
 
     /**
@@ -62,6 +65,7 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     mediaPlayer.start();
+                    awaitingFocus = false;
                 }
             });
 
@@ -85,6 +89,7 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
     public void playSong() {
         if (mediaPlayer == null) { return; }
         mediaPlayer.start();
+        awaitingFocus = false;
         state = PlaybackStateCompat.STATE_PLAYING;
         updatePlaybackState();
     }
@@ -171,19 +176,31 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
             canDuck = focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK;
         }
 
-        if (gotFullFocus || canDuck) {
+        if (canDuck) {
             if (mediaPlayer != null) {
                 mediaPlayer.start();
                 state = PlaybackStateCompat.STATE_PLAYING;
                 updatePlaybackState();
-                float volume = canDuck ? 0.2f : 1.0f;
-                mediaPlayer.setVolume(volume, volume);
+                mediaPlayer.setVolume(0.2f, 0.2f);
+            }
+        } else if (gotFullFocus) {
+            if (mediaPlayer != null && awaitingFocus) {
+                mediaPlayer.start();
+                awaitingFocus = false;
+                state = PlaybackStateCompat.STATE_PLAYING;
+                updatePlaybackState();
+                mediaPlayer.setVolume(1.0f, 1.0f);
             }
         } else if (state == PlaybackStateCompat.STATE_PLAYING) {
             mediaPlayer.pause();
+            awaitingFocus = true;
             state = PlaybackStateCompat.STATE_PAUSED;
             updatePlaybackState();
         }
+    }
+
+    public void setAwaitingFocus(boolean awaitingFocus) {
+        this.awaitingFocus = awaitingFocus;
     }
 
     public interface Callback {
