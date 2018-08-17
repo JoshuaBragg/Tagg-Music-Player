@@ -91,7 +91,7 @@ public class SeekBarController {
                     }
                     try {
                         Thread.interrupted();
-                        Thread.sleep(1000);
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                         Thread.interrupted();
