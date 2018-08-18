@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import gg.joshbra.tagg.CurrentlyPlayingSheet;
 import gg.joshbra.tagg.Fragments.SongListFragment;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
+import gg.joshbra.tagg.Helpers.FlagManager;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.Helpers.SongFinder;
 import gg.joshbra.tagg.R;
@@ -97,6 +98,19 @@ public class SearchActivity extends AppCompatActivity implements CurrentlyPlayin
                 }
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FlagManager.getSelf().setFlags(this);
+        FlagManager.getSelf().setSongPreferences(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        currentlyPlayingSheet.destroy();
     }
 
     /**

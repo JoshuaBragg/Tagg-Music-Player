@@ -10,6 +10,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -25,6 +26,7 @@ import gg.joshbra.tagg.Fragments.BottomTaggSelectionFragment;
 import gg.joshbra.tagg.Fragments.SongListFragment;
 import gg.joshbra.tagg.Helpers.AboutDialogGenerator;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
+import gg.joshbra.tagg.Helpers.FlagManager;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SleepTimerController;
@@ -162,6 +164,13 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
         super.onResume();
         ((NavigationView)findViewById(R.id.navView)).getMenu().getItem(1).setChecked(true);
         CurrentPlaybackNotifier.getSelf().notifyPlaybackStateChanged(MediaControllerHolder.getMediaController().getPlaybackState());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FlagManager.getSelf().setFlags(this);
+        FlagManager.getSelf().setSongPreferences(this);
     }
 
     @Override

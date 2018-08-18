@@ -304,12 +304,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mediaBrowser.disconnect();
-        currentlyPlayingSheet.destroy();
+    protected void onPause() {
+        super.onPause();
         FlagManager.getSelf().setFlags(this);
         FlagManager.getSelf().setSongPreferences(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mediaBrowser.disconnect();
+        currentlyPlayingSheet.destroy();
+        super.onDestroy();
     }
 
     @Override

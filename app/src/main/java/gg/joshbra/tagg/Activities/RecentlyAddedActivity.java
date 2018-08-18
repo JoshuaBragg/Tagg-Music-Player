@@ -22,6 +22,7 @@ import gg.joshbra.tagg.CurrentlyPlayingSheet;
 import gg.joshbra.tagg.Fragments.SongListFragment;
 import gg.joshbra.tagg.Helpers.AboutDialogGenerator;
 import gg.joshbra.tagg.Helpers.CurrentPlaybackNotifier;
+import gg.joshbra.tagg.Helpers.FlagManager;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SleepTimerController;
@@ -129,6 +130,13 @@ public class RecentlyAddedActivity extends AppCompatActivity implements Navigati
         super.onResume();
         ((NavigationView)findViewById(R.id.navView)).getMenu().getItem(2).setChecked(true);
         CurrentPlaybackNotifier.getSelf().notifyPlaybackStateChanged(MediaControllerHolder.getMediaController().getPlaybackState());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FlagManager.getSelf().setFlags(this);
+        FlagManager.getSelf().setSongPreferences(this);
     }
 
     @Override
