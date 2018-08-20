@@ -223,6 +223,20 @@ public class MusicService extends MediaBrowserServiceCompat {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        if (MediaControllerHolder.getMediaController().getPlaybackState().getState() != PlaybackStateCompat.STATE_PLAYING) {
+            stopSelf();
+            stopForeground(true);
+        }
+    }
+
+    @Override
     public void onDestroy() {
         musicController.stopSong();
         session.release();
