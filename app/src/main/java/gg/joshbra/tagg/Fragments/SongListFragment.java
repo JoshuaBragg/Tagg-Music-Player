@@ -96,7 +96,6 @@ public class SongListFragment extends Fragment implements Observer {
         if (recyclerView.getAdapter() == null) { return; }
         int[] temp = ((SongAdapter) recyclerView.getAdapter()).getRowsForSong(PlayQueue.getSelf().getCurrSong());
         ((SongAdapter) recyclerView.getAdapter()).setActiveRows(temp);
-        if (((SongAdapter) recyclerView.getAdapter()).getActiveRows().length == 0) { return; }
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 }

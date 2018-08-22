@@ -61,7 +61,13 @@ public class SongManager {
         }
 
         taggs = databaseHelper.getTaggs();
-        activeTaggs = FlagManager.getSelf().getActiveTaggs();
+        HashMap<String, Integer> temp = FlagManager.getSelf().getActiveTaggs();
+        activeTaggs = new HashMap<>();
+        for (String s : temp.keySet()) {
+            if (taggs.containsKey(s)) {
+                activeTaggs.put(s, temp.get(s));
+            }
+        }
 
         int queueType = FlagManager.getSelf().getQueueType();
         updateCurrQueue(queueType);
