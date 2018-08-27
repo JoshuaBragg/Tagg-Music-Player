@@ -160,7 +160,7 @@ public class FlagManager {
      */
     public HashMap<String, Integer> getActiveTaggs() {
         String serializedActiveTaggs = songPreferences[0];
-        if (serializedActiveTaggs.equals(DEFAULT_SONG_PREF_VAL[0])) {
+        if (serializedActiveTaggs == null || serializedActiveTaggs.equals(DEFAULT_SONG_PREF_VAL[0])) {
             return new HashMap<>();
         }
 
@@ -192,7 +192,7 @@ public class FlagManager {
     public ArrayList<SongPlayOrderTriplet> getSongsAddedToQueue() {
         String serializedSongsAddedToQueue = songPreferences[2];
 
-        if (serializedSongsAddedToQueue.equals(DEFAULT_SONG_PREF_VAL[2])) {
+        if (serializedSongsAddedToQueue == null || serializedSongsAddedToQueue.equals(DEFAULT_SONG_PREF_VAL[2])) {
             return new ArrayList<>();
         }
 
@@ -214,7 +214,7 @@ public class FlagManager {
      * @return The queueType from last time the app was open
      */
     public int getQueueType() {
-        return Integer.valueOf(songPreferences[3]);
+        return songPreferences[3] == null ? Integer.valueOf(DEFAULT_SONG_PREF_VAL[3]) : Integer.valueOf(songPreferences[3]);
     }
 }
 
