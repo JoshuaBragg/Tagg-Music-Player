@@ -3,17 +3,23 @@ package gg.joshbra.tagg.Adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongManager;
@@ -111,6 +117,49 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
             }
         });
 
+        holder.renameBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final EditText renameTaggEditText = new EditText(view.getContext());
+                renameTaggEditText.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorTextSecondary));
+                renameTaggEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+                renameTaggEditText.requestFocus();
+
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                String newTaggName = renameTaggEditText.getText().toString();
+
+                                if (newTaggName.length() == 0) {
+                                    return;
+                                }
+
+                                SongManager.getSelf().renameTagg(holder.getTaggName().getText().toString(), newTaggName);
+
+                                if (listener != null) {
+                                    listener.updateCheckboxes();
+                                }
+
+                                break;
+                        }
+                    }
+                };
+
+                new AlertDialog.Builder(view.getContext(), R.style.Dialog)
+                        .setView(renameTaggEditText)
+                        .setTitle("Rename Tagg: " + holder.getTaggName().getText().toString())
+                        .setPositiveButton("Rename", dialogClickListener)
+                        .setNegativeButton("Cancel", null)
+                        .create()
+                        .show();
+            }
+        });
+
         holder.getView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,6 +207,7 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
         CheckBox checkBox;
         TextView taggName;
         ImageButton deleteBtn;
+        ImageButton renameBtn;
         View view;
 
         public TaggHolder(View itemView) {
@@ -166,6 +216,11 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
             taggName = itemView.findViewById(R.id.taggNameTextView);
             checkBox = itemView.findViewById(R.id.taggCheckbox);
             deleteBtn = itemView.findViewById(R.id.removeTaggBtn);
+            renameBtn = itemView.findViewById(R.id.renameTaggBtn);
+        }
+
+        public ImageButton getRenameBtn() {
+            return renameBtn;
         }
 
         public ImageButton getDeleteBtn() {

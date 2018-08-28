@@ -243,4 +243,13 @@ public class DatabaseHelper {
         ContentResolver resolver = context.getContentResolver();
         resolver.delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, MediaStore.Audio.Playlists._ID + " = ?", new String[] {playlistid.toString()});
     }
+
+    public void renameTagg(String newTaggName, long taggID) {
+        ContentResolver resolver = context.getContentResolver();
+        ContentValues values = new ContentValues();
+        String where = MediaStore.Audio.Playlists._ID + " = ?";
+        String[] whereVal = { Long.toString(taggID) };
+        values.put(MediaStore.Audio.Playlists.NAME, newTaggName);
+        resolver.update(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, values, where, whereVal);
+    }
 }

@@ -187,6 +187,26 @@ public class SongManager {
         taggs.put(tagg, ((Long) databaseHelper.getTaggID(tagg)).intValue());
     }
 
+    public void renameTagg(String oldTaggName, String newTaggName) {
+        databaseHelper.renameTagg(newTaggName, taggs.get(oldTaggName));
+
+        for (String taggName : taggs.keySet()) {
+            if (taggName.equals(oldTaggName)) {
+                taggs.put(newTaggName, taggs.get(taggName));
+                taggs.remove(taggName);
+                break;
+            }
+        }
+
+        for (String taggName : activeTaggs.keySet()) {
+            if (taggName.equals(oldTaggName)) {
+                activeTaggs.put(newTaggName, activeTaggs.get(taggName));
+                activeTaggs.remove(taggName);
+                break;
+            }
+        }
+    }
+
     /**
      * Deletes the tagg with the given name
      * @param tagg The name of the tagg to delete

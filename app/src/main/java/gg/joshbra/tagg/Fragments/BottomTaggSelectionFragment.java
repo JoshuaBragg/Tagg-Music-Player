@@ -76,6 +76,11 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
                             public void onClick(View view) {
                                 String newTagg = newTaggEditText.getText().toString();
 
+                                if (newTagg.length() == 0) {
+                                    alert.cancel();
+                                    return;
+                                }
+
                                 SongManager.getSelf().addTagg(newTagg);
                                 Collections.sort(SongManager.getSelf().getTaggs());
 
@@ -101,12 +106,15 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
                 for (int i = 0; i < taggRV.getChildCount(); i++) {
                     TaggAdapter.TaggHolder holder = (TaggAdapter.TaggHolder) taggRV.findViewHolderForAdapterPosition(i);
                     ImageButton removeBtn = holder.getDeleteBtn();
+                    ImageButton renameBtn = holder.getRenameBtn();
                     TextView taggName = holder.getTaggName();
                     if (removeBtn.getVisibility() == View.GONE) {
                         removeBtn.setVisibility(View.VISIBLE);
-                        setMargins(taggName, 0, 0, 24, 0);
+                        renameBtn.setVisibility(View.VISIBLE);
+                        setMargins(taggName, 0, 0, 55, 0);
                     } else {
                         removeBtn.setVisibility(View.GONE);
+                        renameBtn.setVisibility(View.GONE);
                         setMargins(taggName, 0, 0, 0, 0);
                     }
                 }

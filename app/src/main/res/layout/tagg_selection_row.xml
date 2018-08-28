@@ -37,6 +37,18 @@
             android:textSize="15sp" />
 
         <ImageButton
+            android:id="@+id/renameTaggBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_edit_white_24dp"
+            android:tint="@color/colorAccent"
+            android:background="@null"
+            android:layout_toStartOf="@+id/removeTaggBtn"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="7dp"
+            android:visibility="gone"/>
+
+        <ImageButton
             android:id="@+id/removeTaggBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
