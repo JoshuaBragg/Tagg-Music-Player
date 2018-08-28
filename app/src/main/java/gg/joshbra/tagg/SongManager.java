@@ -187,6 +187,11 @@ public class SongManager {
         taggs.put(tagg, ((Long) databaseHelper.getTaggID(tagg)).intValue());
     }
 
+    /**
+     * Renames Tagg
+     * @param oldTaggName The name of the Tagg to change
+     * @param newTaggName The name to update the Tagg to
+     */
     public void renameTagg(String oldTaggName, String newTaggName) {
         databaseHelper.renameTagg(newTaggName, taggs.get(oldTaggName));
 

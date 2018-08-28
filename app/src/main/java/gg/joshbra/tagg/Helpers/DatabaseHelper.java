@@ -244,6 +244,11 @@ public class DatabaseHelper {
         resolver.delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, MediaStore.Audio.Playlists._ID + " = ?", new String[] {playlistid.toString()});
     }
 
+    /**
+     * Renames tagg
+     * @param newTaggName The name to change the Tagg to
+     * @param taggID The id if the tagg to change
+     */
     public void renameTagg(String newTaggName, long taggID) {
         ContentResolver resolver = context.getContentResolver();
         ContentValues values = new ContentValues();
