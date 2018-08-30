@@ -298,4 +298,47 @@ public class SongManager {
      * @return HashMap of tagg names to tagg ID's for active taggs
      */
     public HashMap<String, Integer> getActiveTaggsRaw() { return activeTaggs; }
+
+    /**
+     * Given a Tagg name returns a string of details in the format "num songs | duration of tagg"
+     * @param taggName The tagg to retrieve details for
+     * @return A parsed string of tagg details
+     */
+    public String getTaggDetailsString(String taggName) {
+        int[] songIDs = databaseHelper.getSongListFromTagg(taggs.get(taggName));
+
+        // To number of songs associated with this Tagg
+        int numSongs = songIDs.length;
+
+        // taggLength is duration in ms
+        int taggLength = 0;
+        for (int id : songIDs) {
+            taggLength += allSongsMap.get(id).getDuration();
+        }
+
+        // taggLength now in seconds
+        taggLength = taggLength / 1000;
+        int m = ((taggLength - (taggLength % 60)) / 60);
+
+        String taggLengthOut;
+
+        if (numSongs == 0) {
+            // There are no songs
+            taggLengthOut = "0 minutes";
+        } else if (m == 0) {
+            // The length of songs is less than one minute
+            taggLengthOut = "< 1 minute";
+        } else if (m > 59) {
+            // The length of songs is over an hour so we must calculate the amount of hours
+            int totalMin = m;
+            m = m % 60;
+            int h = ((totalMin - (totalMin % 60))/60);
+            taggLengthOut = h + " hour" + (h == 1 ? "" : "s") + (m == 0 ? "" : " and " + m + " minute" + (m == 1 ? "" : "s"));
+        } else {
+            // The length of songs is less than hour and greater than one minute
+            taggLengthOut = m + " minute" + (m == 1 ? "" : "s");
+        }
+
+        return numSongs + " songs | " + taggLengthOut;
+    }
 }

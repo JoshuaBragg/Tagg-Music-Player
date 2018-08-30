@@ -57,7 +57,7 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
                 newTaggEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
                 newTaggEditText.requestFocus();
 
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
                 final AlertDialog alert = new AlertDialog.Builder(view.getContext(), R.style.Dialog)
@@ -77,14 +77,18 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
                                 String newTagg = newTaggEditText.getText().toString();
 
                                 if (newTagg.length() == 0) {
-                                    alert.cancel();
+                                    newTaggEditText.setError("Tagg name must contain at least one character.");
                                     return;
+                                } else {
+                                    newTaggEditText.setError(null);
                                 }
 
                                 SongManager.getSelf().addTagg(newTagg);
                                 Collections.sort(SongManager.getSelf().getTaggs());
 
                                 createCheckboxes(hostView);
+
+                                imm.hideSoftInputFromWindow(newTaggEditText.getWindowToken(), 0);
 
                                 alert.cancel();
                             }
@@ -105,16 +109,13 @@ public class BottomTaggSelectionFragment extends BottomSheetDialogFragment {
                 RecyclerView taggRV = hostView.findViewById(R.id.taggSelectRGroup);
                 for (int i = 0; i < taggRV.getChildCount(); i++) {
                     TaggAdapter.TaggHolder holder = (TaggAdapter.TaggHolder) taggRV.findViewHolderForAdapterPosition(i);
-                    ImageButton removeBtn = holder.getDeleteBtn();
-                    ImageButton renameBtn = holder.getRenameBtn();
+                    ImageButton optionBtn = holder.getTaggOptionsBtn();
                     TextView taggName = holder.getTaggName();
-                    if (removeBtn.getVisibility() == View.GONE) {
-                        removeBtn.setVisibility(View.VISIBLE);
-                        renameBtn.setVisibility(View.VISIBLE);
-                        setMargins(taggName, 0, 0, 55, 0);
+                    if (optionBtn.getVisibility() == View.GONE) {
+                        optionBtn.setVisibility(View.VISIBLE);
+                        setMargins(taggName, 0, 0, 24, 0);
                     } else {
-                        removeBtn.setVisibility(View.GONE);
-                        renameBtn.setVisibility(View.GONE);
+                        optionBtn.setVisibility(View.GONE);
                         setMargins(taggName, 0, 0, 0, 0);
                     }
                 }

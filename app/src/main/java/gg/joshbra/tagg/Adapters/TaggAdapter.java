@@ -1,17 +1,14 @@
 package gg.joshbra.tagg.Adapters;
 
 import android.content.Context;
-import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -19,8 +16,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
+import gg.joshbra.tagg.Fragments.BottomTaggOptionFragment;
 import gg.joshbra.tagg.R;
 import gg.joshbra.tagg.SongManager;
 import gg.joshbra.tagg.TaggSelector;
@@ -85,78 +82,51 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
             });
         }
 
-        // Sets onClickListener for when you delete a tagg
-        holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+        // Tagg options button on click listener
+        holder.taggOptionsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            public void onClick(View v) {
+                // Creates bottomTaggOptionFragment
+                BottomTaggOptionFragment bottomTaggOptionFragment = new BottomTaggOptionFragment();
+
+                Bundle args = new Bundle();
+
+                args.putString(BottomTaggOptionFragment.TAGG_NAME, holder.getTaggName().getText().toString());
+
+                bottomTaggOptionFragment.setArguments(args);
+
+                // Sets listener allowing the optionFragment to run code within this class
+                bottomTaggOptionFragment.setListener(new BottomTaggOptionFragment.TaggOptionListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case DialogInterface.BUTTON_POSITIVE:
-                                SongManager.getSelf().removeTagg(holder.taggName.getText().toString());
-                                int pos = taggs.indexOf(new TaggSelector(holder.taggName.getText().toString(), false));
-                                taggs.remove(new TaggSelector(holder.taggName.getText().toString(), false));
-                                notifyItemRemoved(pos);
-                                if (listener != null && taggs.size() == 0) {
-                                    listener.updateCheckboxes();
-                                }
-                                break;
+                    public void deleteTagg() {
+                        SongManager.getSelf().removeTagg(holder.taggName.getText().toString());
+                        int pos = taggs.indexOf(new TaggSelector(holder.taggName.getText().toString(), false));
+                        taggs.remove(new TaggSelector(holder.taggName.getText().toString(), false));
+                        notifyItemRemoved(pos);
+                        if (listener != null && taggs.size() == 0) {
+                            listener.updateCheckboxes();
                         }
                     }
-                };
 
-                // Creates Dialog box for confirmation for deletion
-                new AlertDialog.Builder(view.getContext(), R.style.Dialog)
-                        .setTitle("Remove Tagg: " + holder.taggName.getText().toString())
-                        .setMessage("Are you sure? You cannot undo this action.")
-                        .setPositiveButton("Yes, Delete Tagg", dialogClickListener)
-                        .setNegativeButton("Cancel", null)
-                        .create()
-                        .show();
-            }
-        });
-
-        holder.renameBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final EditText renameTaggEditText = new EditText(view.getContext());
-                renameTaggEditText.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorTextSecondary));
-                renameTaggEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-                renameTaggEditText.requestFocus();
-
-                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case DialogInterface.BUTTON_POSITIVE:
-                                String newTaggName = renameTaggEditText.getText().toString();
-
-                                if (newTaggName.length() == 0) {
-                                    return;
-                                }
-
-                                SongManager.getSelf().renameTagg(holder.getTaggName().getText().toString(), newTaggName);
-
-                                if (listener != null) {
-                                    listener.updateCheckboxes();
-                                }
-
-                                break;
+                    public boolean renameTagg(String newTaggName, EditText editText) {
+                        if (newTaggName.length() == 0) {
+                            editText.setError("Tagg name must contain at least one character.");
+                            return false;
+                        } else {
+                            editText.setError(null);
                         }
-                    }
-                };
 
-                new AlertDialog.Builder(view.getContext(), R.style.Dialog)
-                        .setView(renameTaggEditText)
-                        .setTitle("Rename Tagg: " + holder.getTaggName().getText().toString())
-                        .setPositiveButton("Rename", dialogClickListener)
-                        .setNegativeButton("Cancel", null)
-                        .create()
-                        .show();
+                        SongManager.getSelf().renameTagg(holder.getTaggName().getText().toString(), newTaggName);
+
+                        if (listener != null) {
+                            listener.updateCheckboxes();
+                        }
+
+                        return true;
+                    }
+                });
+                bottomTaggOptionFragment.show((context instanceof AppCompatActivity ? (AppCompatActivity)context : ((AppCompatActivity)((ContextThemeWrapper)context).getBaseContext())).getSupportFragmentManager(), "bottomTaggOptions");
             }
         });
 
@@ -206,8 +176,7 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
     public class TaggHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
         TextView taggName;
-        ImageButton deleteBtn;
-        ImageButton renameBtn;
+        ImageButton taggOptionsBtn;
         View view;
 
         public TaggHolder(View itemView) {
@@ -215,16 +184,11 @@ public class TaggAdapter extends RecyclerView.Adapter<TaggAdapter.TaggHolder> {
             view = itemView;
             taggName = itemView.findViewById(R.id.taggNameTextView);
             checkBox = itemView.findViewById(R.id.taggCheckbox);
-            deleteBtn = itemView.findViewById(R.id.removeTaggBtn);
-            renameBtn = itemView.findViewById(R.id.renameTaggBtn);
+            taggOptionsBtn = itemView.findViewById(R.id.taggOptionBtn);
         }
 
-        public ImageButton getRenameBtn() {
-            return renameBtn;
-        }
-
-        public ImageButton getDeleteBtn() {
-            return deleteBtn;
+        public ImageButton getTaggOptionsBtn() {
+            return taggOptionsBtn;
         }
 
         public TextView getTaggName() {
