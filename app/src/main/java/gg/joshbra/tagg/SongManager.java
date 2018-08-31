@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import gg.joshbra.tagg.Activities.AlbumSongListActivity;
 import gg.joshbra.tagg.Comparators.SongComparator;
 import gg.joshbra.tagg.Comparators.SongPlayOrderComparator;
 import gg.joshbra.tagg.Helpers.DatabaseHelper;
@@ -27,7 +28,7 @@ public class SongManager {
     private DatabaseHelper databaseHelper;
 
     // Different queueTypes
-    public static final int TYPE_ALL_SONGS = 0, TYPE_TAGG = 1, TYPE_RECENT = 2;
+    public static final int TYPE_ALL_SONGS = 0, TYPE_TAGG = 1, TYPE_RECENT = 2, TYPE_ALBUM = 3;
 
     ////////////////////////////// Singleton ///////////////////////////////
 
@@ -148,6 +149,36 @@ public class SongManager {
     }
 
     /**
+     * Gets the songs from the given album
+     * @param album The album to retrieve songs for
+     * @return An array of songs that belong to the given album
+     */
+    public ArrayList<SongInfo> getAlbumSongs(AlbumInfo album) {
+        ArrayList<SongInfo> out = new ArrayList<>();
+
+        for (SongInfo song : allSongs) {
+            if (song.getAlbumID().equals(String.valueOf(album.getAlbumID()))) {
+                out.add(song);
+            }
+        }
+
+        return out;
+    }
+
+    /**
+     * Updates the current play queue to the songs from the current album
+     *
+     * If the current album is null then the play queue is reset to use all songs
+     */
+    private void updateCurrSongsFromAlbum() {
+        if (AlbumSongListActivity.getCurrAlbum() == null) {
+            resetCurrSongs();
+            return;
+        }
+        playQueue.setCurrQueue(getAlbumSongs(AlbumSongListActivity.getCurrAlbum()));
+    }
+
+    /**
      * Updates the current queue type and sets the currQueue in PlayQueue
      * @param queueType The queueType
      */
@@ -161,6 +192,9 @@ public class SongManager {
                 break;
             case (TYPE_RECENT):
                 updateCurrSongsFromSorted(SongComparator.SORT_DATE_DESC);
+                break;
+            case (TYPE_ALBUM):
+                updateCurrSongsFromAlbum();
                 break;
         }
         this.queueType = queueType;

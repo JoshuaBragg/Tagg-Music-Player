@@ -18,17 +18,17 @@
             android:name=".Activities.MainActivity"
             android:configChanges="orientation"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.TaggActivity"
             android:configChanges="orientation"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.RecentlyAddedActivity"
             android:configChanges="orientation"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.SplashActivity"
             android:configChanges="orientation"
@@ -52,10 +52,21 @@
         <service android:name=".SleepTimerService">
         </service>
 
-        <activity android:name=".Activities.SearchActivity"
+        <activity
+            android:name=".Activities.SearchActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar">
+        </activity>
+        <activity
+            android:name=".Activities.AlbumActivity"
+            android:configChanges="orientation"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".Activities.AlbumSongListActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

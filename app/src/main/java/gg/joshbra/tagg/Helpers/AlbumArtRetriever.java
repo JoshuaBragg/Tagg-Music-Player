@@ -4,12 +4,16 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.util.Log;
 
 /**
  * Helper to get the AlbumArt for a given song
  */
 public class AlbumArtRetriever {
     private static ContentResolver contentResolver;
+
+    // Instances of this class cannot be made
+    private AlbumArtRetriever() {}
 
     /**
      * Sets the content resolver to be used in the future, must be set before getAlbumArt is called

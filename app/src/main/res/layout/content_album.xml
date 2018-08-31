@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Activities.AlbumActivity"
+    tools:showIn="@layout/activity_album">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/albumRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorTertiary"
+        android:layout_marginBottom="@dimen/now_playing_bar_height">
+    </android.support.v7.widget.RecyclerView>
+
+    <include
+        android:id="@+id/bottomSheet"
+        layout="@layout/content_currently_playing_view"/>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -275,6 +275,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, RecentlyAddedActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
+        } else if (id == R.id.albumMenu) {
+            item.setChecked(true);
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            Intent intent = new Intent(this, AlbumActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
         } else if (id == R.id.aboutMenu) {
             AboutDialogGenerator.createDialog(this);
         }

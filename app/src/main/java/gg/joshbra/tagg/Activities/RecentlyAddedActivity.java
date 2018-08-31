@@ -91,6 +91,12 @@ public class RecentlyAddedActivity extends AppCompatActivity implements Navigati
             startActivity(intent);
         } else if (id == R.id.recentMenu) {
             item.setChecked(true);
+        } else if (id == R.id.albumMenu) {
+            item.setChecked(true);
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            Intent intent = new Intent(this, AlbumActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
         } else if (id == R.id.aboutMenu) {
             AboutDialogGenerator.createDialog(this);
         }

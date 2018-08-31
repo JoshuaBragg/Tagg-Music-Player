@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Activities.SearchActivity"
+    tools:showIn="@layout/activity_album_song_list">
+
+    <fragment
+        android:name="gg.joshbra.tagg.Fragments.SongListFragment"
+        android:id="@+id/songList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top">
+    </fragment>
+
+    <include
+        android:id="@+id/bottomSheet"
+        layout="@layout/content_currently_playing_view"/>
+
+</android.support.design.widget.CoordinatorLayout>
