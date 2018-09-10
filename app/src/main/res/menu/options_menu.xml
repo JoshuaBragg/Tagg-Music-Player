@@ -11,4 +11,9 @@
         android:title="Search"
         />
 
+    <item
+        android:id="@+id/currPlayQueueOption"
+        android:title="Current Play Queue"
+        />
+
 </menu>

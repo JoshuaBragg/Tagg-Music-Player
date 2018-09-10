@@ -2,12 +2,12 @@ package gg.joshbra.tagg;
 
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import gg.joshbra.tagg.Comparators.SongPlayOrderTripletComparator;
 import gg.joshbra.tagg.Helpers.MediaControllerHolder;
 import gg.joshbra.tagg.Helpers.SongPlayOrderTriplet;
 
@@ -44,6 +44,21 @@ public class PlayQueue {
      */
     public void setCurrSong(SongInfo songInfo) {
         currSong = currQueue.get(getSongIndex(songInfo));
+    }
+
+    /**
+     * If the song at the position given in the current queue is the same as the songInfo then that
+     * Is set as the current song, if not then the first occurrence of songInfo in the queue is set
+     * to the current song
+     * @param songInfo The song to search for
+     * @param position the position to check
+     */
+    public void setCurrSong(SongInfo songInfo, int position) {
+        if (position != MusicController.DEFAULT_SONG_POSIITON && currQueue.get(position).getSongInfo().equals(songInfo)) {
+            currSong = currQueue.get(position);
+            return;
+        }
+        setCurrSong(songInfo);
     }
 
     /**
@@ -130,10 +145,21 @@ public class PlayQueue {
                     s.setOrderSeq(s.getOrderSeq() + 1);
                 }
             }
-            currQueue.add(triplet.getOrderSeq(), triplet);
+            try {
+                currQueue.add(triplet.getOrderSeq(), triplet);
+            } catch (IndexOutOfBoundsException e) {}
         }
 
         shuffle(currQueue);
+    }
+
+    /**
+     * Gets the order of the current song
+     * @return The position of the current song in the queue (will return the position depending on the shuffle mode)
+     */
+    public int getCurrSongOrder() {
+        if (currSong == null) { return -1; }
+        return shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_NONE ? currSong.getOrderSeq() : currSong.getOrderShuffle();
     }
 
     /**
@@ -350,12 +376,21 @@ public class PlayQueue {
      * @param songPlayOrderTriplets The array to be converted
      * @return The converted array
      */
-    private ArrayList<SongInfo> tripletToSongInfoConvert(ArrayList<SongPlayOrderTriplet> songPlayOrderTriplets) {
+    public static ArrayList<SongInfo> tripletToSongInfoConvert(ArrayList<SongPlayOrderTriplet> songPlayOrderTriplets) {
         ArrayList<SongInfo> out = new ArrayList<>();
         for (SongPlayOrderTriplet songPlayOrderTriplet : songPlayOrderTriplets) {
             out.add(songPlayOrderTriplet.getSongInfo());
         }
         return out;
+    }
+
+    public static ArrayList<SongInfo> tripletToSongInfoConvert(ArrayList<SongPlayOrderTriplet> songPlayOrderTriplets, SongPlayOrderTripletComparator songPlayOrderTripletComparator) {
+        Collections.sort(songPlayOrderTriplets, songPlayOrderTripletComparator);
+        return tripletToSongInfoConvert(songPlayOrderTriplets);
+    }
+
+    public ArrayList<SongPlayOrderTriplet> getCurrQueue() {
+        return currQueue;
     }
 
     /**

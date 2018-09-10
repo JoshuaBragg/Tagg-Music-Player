@@ -29,8 +29,8 @@ import gg.joshbra.tagg.SongInfo;
  */
 public class SongListFragment extends Fragment implements Observer {
 
-    private RecyclerView recyclerView;
-    private SongAdapter songAdapter;
+    RecyclerView recyclerView;
+    SongAdapter songAdapter;
 
     public SongListFragment() {
         // Required empty public constructor

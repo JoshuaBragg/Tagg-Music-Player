@@ -205,6 +205,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 return true;
+            case R.id.currPlayQueueOption:
+                Intent intentCurrentPlayQueue = new Intent(this, CurrentPlayQueueActivity.class);
+                intentCurrentPlayQueue.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intentCurrentPlayQueue);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

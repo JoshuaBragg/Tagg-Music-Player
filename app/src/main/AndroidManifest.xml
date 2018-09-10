@@ -50,6 +50,7 @@
             </intent-filter>
         </service>
         <service android:name=".SleepTimerService">
+
         </service>
 
         <activity
@@ -57,16 +58,25 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar">
+
         </activity>
         <activity
             android:name=".Activities.AlbumActivity"
             android:configChanges="orientation"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
+
         </activity>
-        <activity android:name=".Activities.AlbumSongListActivity"
+        <activity
+            android:name=".Activities.AlbumSongListActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
+
+        </activity>
+        <activity android:name=".Activities.CurrentPlayQueueActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
+
         </activity>
     </application>
 

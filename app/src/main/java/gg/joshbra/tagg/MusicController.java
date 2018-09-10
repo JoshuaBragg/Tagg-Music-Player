@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -29,6 +30,8 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
     // and the way ArrayList.contains works
     public static final int PLAY_BY_USER = 0, PLAY_BY_COMPLETION = 1;
     public static final String PLAY_TYPE = "play_type";
+    public static final String SONG_POSITION = "song_position";
+    public static final int DEFAULT_SONG_POSIITON = -1;
 
     public MusicController(AudioManager audioManager, Callback callback) {
         mediaPlayer = new MediaPlayer();
@@ -63,20 +66,16 @@ public class MusicController implements AudioManager.OnAudioFocusChangeListener 
             });
 
             mediaPlayer.setDataSource(songInfo.getSongUrl());
-            mediaPlayer.prepareAsync();
 
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mediaPlayer) {
-                    mediaPlayer.start();
-                    awaitingFocus = false;
-                }
-            });
+            // Prevents bug with preparing async during doze mode
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            awaitingFocus = false;
 
             if (extras != null) {
                 int extra = extras.getInt(PLAY_TYPE);
                 if (extra == PLAY_BY_USER) {
-                    playQueue.setCurrSong(songInfo);
+                    playQueue.setCurrSong(songInfo, extras.getInt(SONG_POSITION, DEFAULT_SONG_POSIITON));
                 }
             }
 
