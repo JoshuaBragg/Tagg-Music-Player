@@ -39,7 +39,7 @@ public class AboutDialogGenerator {
 
         new AlertDialog.Builder(context, R.style.Dialog)
                 .setTitle("About Tagg Music Player")
-                .setMessage("Created and Developed by Joshua Bragg")
+                .setMessage("Created and Developed by Joshua Bragg \n\nThanks to: \n\nhttps://github.com/turing-tech/MaterialScrollBar \n\nhttps://github.com/googlecodelabs/android-music-player")
                 .setPositiveButton("More from Josh", dialogListener)
                 .create()
                 .show();
