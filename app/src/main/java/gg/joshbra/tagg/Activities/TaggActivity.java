@@ -84,6 +84,8 @@ public class TaggActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View view) {
                 BottomTaggSelectionFragment bottomTaggSelectionFragment = new BottomTaggSelectionFragment();
 
+                Log.i("W", "opening");
+
                 bottomTaggSelectionFragment.setListener(new BottomTaggSelectionFragment.BottomTaggSelectionListener() {
                     @Override
                     public void dismissed(ArrayList<String> aTagg) {
