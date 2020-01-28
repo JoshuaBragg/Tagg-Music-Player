@@ -8,4 +8,4 @@ Active Taggs can be changed at any time allowing you to switch the music selecti
 
 For more information click [here](https://joshbra.gg/tagg).
 
-To download the application click [here](https://play.google.com/store/apps/details?id=gg.joshbra.tagg).
+To download the application from the Google Play Store click [here](https://play.google.com/store/apps/details?id=gg.joshbra.tagg).
